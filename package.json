@@ -1,0 +1,16 @@
+{
+  "name": "gulp-sw-precache",
+  "private": true,
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^1.8.2",
+    "del": "^1.1.1",
+    "glob": "^4.3.2",
+    "gulp": "^3.8.10",
+    "gulp-rename": "^1.2.0",
+    "gulp-template": "^1.1.1",
+    "run-sequence": "^1.0.2"
+  }
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Service Worker Precache Test</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+
+  <body>
+    <p>Ignore the boxes!</p>
+    <img src="images/one.png">
+    <img src="images/two.png">
+
+    <!-- Build your site exactly like you normally would.
+         Include service-worker-registration.js to attempt registering the service worker to
+         handle precaching.
+         On browsers that do not support service workers, or when served from app/,
+         this will be a no-op. -->
+    <script src="service-worker-helpers/service-worker-registration.js"></script>
+  </body>
+</html>
