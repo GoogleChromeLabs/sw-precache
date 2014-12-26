@@ -55,3 +55,6 @@ There are a few other [helper files](https://github.com/jeffposnick/gulp-sw-prec
 Clone this repo, run `npm install`, and then `gulp serve-dist`. Take a look at the contents of the generated `dist` directory. Go to `http://localhost:3000` using Chrome 40 or newer (I prefer testing using [Chrome Canary](https://www.google.com/chrome/browser/canary.html)). Visit `chrome://serviceworker-internals` and check out the logged activity for the registered service worker, as well as the service worker cache inspector.
 
 Try changing some files in `app` and then running `gulp build` to generate a new `dist/service-worker.js` file, then close and re-open `http://localhost:3000`. Examine the logging via `chrome://serviceworker-internals` and notice how the service worker cache inspector has updated to include the latest set of cached resources with a new `hash`.
+
+### Feedback, please!
+There are a lot of `TODO`s in the code where I've hacked something together that seems to work, but given my rather limited experience working with `gulp`, probably isn't the right approach. I'd love to hear suggestions about improving that. And in general, let me know if this seems like something you'd find useful (or if you even do actually start using it)!
