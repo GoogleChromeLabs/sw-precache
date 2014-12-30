@@ -1,11 +1,12 @@
 'use strict';
 
 var CacheOptions = <%= cacheOptions %>;
+var CACHE_NAME_PREFIX = 'gulp-sw-precache-';
 
 importScripts('service-worker-helpers/service-worker-cache-polyfill.js');
 
 function getCacheNameFromCacheOption(cacheOption) {
-  return 'gulp-sw-precache-' + cacheOption[0] + '-' + cacheOption[1];
+  return CACHE_NAME_PREFIX + cacheOption[0] + '-' + cacheOption[1];
 }
 
 self.addEventListener('install', function(event) {
@@ -38,7 +39,8 @@ self.addEventListener('activate', function(event) {
       console.log('During the activate phase, the current cache names are:', allCacheNames);
       return Promise.all(
         allCacheNames.filter(function(cacheName) {
-          return currentCacheNames.indexOf(cacheName) == -1;
+          return cacheName.indexOf(CACHE_NAME_PREFIX) == 0 &&
+                 currentCacheNames.indexOf(cacheName) == -1;
         }).map(function(cacheName) {
           console.log('About to delete the out-of-date cache named:', cacheName);
           return caches.delete(cacheName);
