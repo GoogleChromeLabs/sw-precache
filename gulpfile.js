@@ -35,6 +35,8 @@ function getHash(data) {
   return md5.digest('hex');
 }
 
+gulp.task('default', ['serve-dist']);
+
 gulp.task('build', function() {
   $.runSequence('copy-service-worker-files', 'copy-dev-to-dist', 'generate-service-worker-js');
 });
