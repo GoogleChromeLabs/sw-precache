@@ -1,14 +1,9 @@
 'use strict';
 
-var browserSync = require('browser-sync');
-var crypto = require('crypto');
-var del = require('del');
-var fs = require('fs');
-var glob = require('glob');
 var gulp = require('gulp');
-var rename = require('gulp-rename');
-var runSequence = require('run-sequence');
-var template = require('gulp-template');
+var $ = require('gulp-load-plugins')({pattern: '*'});
+var crypto = require('crypto');
+var fs = require('fs');
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
@@ -16,7 +11,7 @@ var SERVICE_WORKER_HELPERS_DEV_DIR = DEV_DIR + '/service-worker-helpers';
 
 function getFilesAndHashForGlobPattern(globPattern) {
   // TODO: I'd imagine there's some gulp plugin that could automate all this.
-  var files = glob.sync(globPattern).filter(function(file) {
+  var files = $.glob.sync(globPattern).filter(function(file) {
     var stat = fs.statSync(file);
     return stat.isFile();
   });
@@ -41,24 +36,24 @@ function getHash(data) {
 }
 
 gulp.task('build', function() {
-  runSequence('copy-service-worker-files', 'copy-dev-to-dist', 'generate-service-worker-js');
+  $.runSequence('copy-service-worker-files', 'copy-dev-to-dist', 'generate-service-worker-js');
 });
 
 gulp.task('clean', function() {
-  del([DIST_DIR, SERVICE_WORKER_HELPERS_DEV_DIR]);
+  $.del([DIST_DIR, SERVICE_WORKER_HELPERS_DEV_DIR]);
 });
 
 gulp.task('serve-dev', ['copy-service-worker-files'], function() {
-  browserSync({
+  $.browserSync({
     notify: false,
     server: DEV_DIR
   });
 
-  gulp.watch(DEV_DIR + '/**', browserSync.reload);
+  gulp.watch(DEV_DIR + '/**', $.browserSync.reload);
 });
 
 gulp.task('serve-dist', ['build'], function() {
-  browserSync({
+  $.browserSync({
     notify: false,
     server: DIST_DIR
   });
@@ -96,8 +91,8 @@ gulp.task('generate-service-worker-js', function() {
   // TODO: I'm SURE there's a better way of inserting serialized JavaScript into a file than
   // calling JSON.stringify() and throwing it into a lo-dash template.
   return gulp.src('service-worker-helpers/service-worker.tmpl')
-    .pipe(template({cacheOptions: JSON.stringify(cacheOptions)}))
-    .pipe(rename('service-worker.js'))
+    .pipe($.template({cacheOptions: JSON.stringify(cacheOptions)}))
+    .pipe($.rename('service-worker.js'))
     .pipe(gulp.dest(DIST_DIR));
 });
 
