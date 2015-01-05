@@ -5,15 +5,27 @@ var $ = require('gulp-load-plugins')({pattern: '*'});
 var crypto = require('crypto');
 var fs = require('fs');
 
+// These two values can be tweaked. They provide a safeguard against generating cache lists that
+// are very large, either in bytes or in raw number of files.
+// E.g. if there's a 15MB image that gets picked up in your glob pattern, you probably shouldn't
+// have that precached every time a new user visits your page (unless you know you need it).
+var MAXIMUM_CACHE_SIZE_IN_BYTES = 1024 * 1024; // 1MB
+var MAXIMUM_FILES_IN_CACHE = 100;
+
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
 var SERVICE_WORKER_HELPERS_DEV_DIR = DEV_DIR + '/service-worker-helpers';
 
-function getFilesAndHashForGlobPattern(globPattern) {
+function getFilesAndSizeAndHashForGlobPattern(globPattern) {
+  var cumulativeSize = 0;
+
   // TODO: I'd imagine there's some gulp plugin that could automate all this.
   var files = $.glob.sync(globPattern).filter(function(file) {
     var stat = fs.statSync(file);
-    return stat.isFile();
+    if (stat.isFile()) {
+      cumulativeSize += stat.size;
+      return true;
+    }
   });
 
   var md5Hashes = files.map(function(file) {
@@ -24,7 +36,8 @@ function getFilesAndHashForGlobPattern(globPattern) {
   var concatenatedHashes = md5Hashes.sort().join('');
   return {
     hash: getHash(concatenatedHashes),
-    files: files
+    files: files,
+    cumulativeSize: cumulativeSize
   };
 }
 
@@ -83,11 +96,26 @@ gulp.task('generate-service-worker-js', function() {
   // relies on detecting even a single byte change in service-worker.js to trigger an update.
   // Because of this, we write out the cache options as a series of sorted, nested arrays rather
   // than as objects whose serialized key ordering might vary.
-  var cacheOptions = Object.keys(fileSets).sort().map(function(key) {
-    var filesAndHash = getFilesAndHashForGlobPattern(fileSets[key]);
-    return [key, filesAndHash.hash, filesAndHash.files.map(function(file) {
-      return file.replace(DIST_DIR + '/', '');
-    })];
+  var cacheOptions = [];
+  Object.keys(fileSets).sort().forEach(function(key) {
+    var filesAndSizeAndHash = getFilesAndSizeAndHashForGlobPattern(fileSets[key]);
+
+    // Check to make sure the total size of all the files and total number of files is reasonable.
+    if (filesAndSizeAndHash.cumulativeSize <= MAXIMUM_CACHE_SIZE_IN_BYTES &&
+        filesAndSizeAndHash.files.length <= MAXIMUM_FILES_IN_CACHE) {
+      cacheOptions.push([
+        key,
+        filesAndSizeAndHash.hash,
+        filesAndSizeAndHash.files.map(function (file) {
+          return file.replace(DIST_DIR + '/', '');
+        })
+      ]);
+      $.util.log('  Added', key, '-', filesAndSizeAndHash.files.length,
+          'files,', filesAndSizeAndHash.cumulativeSize, 'bytes');
+    } else {
+      $.util.log('  Skipped', key, '-', filesAndSizeAndHash.files.length,
+          'files,', filesAndSizeAndHash.cumulativeSize, 'bytes');
+    }
   });
 
   // TODO: I'm SURE there's a better way of inserting serialized JavaScript into a file than
