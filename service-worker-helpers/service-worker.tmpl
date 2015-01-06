@@ -19,9 +19,9 @@ self.addEventListener('install', function(event) {
           return allCacheNames.indexOf(cacheName) == -1;
         }).map(function(cacheOption) {
           var cacheName = getCacheNameFromCacheOption(cacheOption);
-          console.log('About to add %O to cache named %s', cacheOption[2], cacheName);
+          console.log('About to add %O to cache named %s', cacheOption[0], cacheName);
           return caches.open(cacheName).then(function(cache) {
-            return cache.addAll(cacheOption[2]);
+            return cache.add(cacheOption[0]);
           });
         })
       )

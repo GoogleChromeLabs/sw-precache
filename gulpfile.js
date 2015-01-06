@@ -5,40 +5,31 @@ var $ = require('gulp-load-plugins')({pattern: '*'});
 var crypto = require('crypto');
 var fs = require('fs');
 
-// These two values can be tweaked. They provide a safeguard against generating cache lists that
-// are very large, either in bytes or in raw number of files.
-// E.g. if there's a 15MB image that gets picked up in your glob pattern, you probably shouldn't
-// have that precached every time a new user visits your page (unless you know you need it).
-var MAXIMUM_CACHE_SIZE_IN_BYTES = 1024 * 1024; // 1MB
-var MAXIMUM_FILES_IN_CACHE = 100;
+// This provides a safegaurd against accidentally precaching a very large file. It can be tweaked.
+var MAXIMUM_CACHE_SIZE_IN_BYTES = 2 * 1024 * 1024; // 2MB
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
 var SERVICE_WORKER_HELPERS_DEV_DIR = DEV_DIR + '/service-worker-helpers';
 
-function getFilesAndSizeAndHashForGlobPattern(globPattern) {
-  var cumulativeSize = 0;
+function getFilesAndSizesAndHashesForGlobPattern(globPattern) {
+  var filesAndSizesAndHashes = [];
 
-  // TODO: I'd imagine there's some gulp plugin that could automate all this.
-  var files = $.glob.sync(globPattern).filter(function(file) {
+  // It would be nicer to do this with a filter()/map() combo, but then we'd need to stat
+  // each file twice.
+  $.glob.sync(globPattern).forEach(function(file) {
     var stat = fs.statSync(file);
     if (stat.isFile()) {
-      cumulativeSize += stat.size;
-      return true;
+      var buffer = fs.readFileSync(file);
+      filesAndSizesAndHashes.push({
+        file: file,
+        size: stat.size,
+        hash: getHash(buffer)
+      });
     }
   });
 
-  var md5Hashes = files.map(function(file) {
-    var buffer = fs.readFileSync(file);
-    return getHash(buffer);
-  });
-
-  var concatenatedHashes = md5Hashes.sort().join('');
-  return {
-    hash: getHash(concatenatedHashes),
-    files: files,
-    cumulativeSize: cumulativeSize
-  };
+  return filesAndSizesAndHashes;
 }
 
 function getHash(data) {
@@ -75,20 +66,37 @@ gulp.task('serve-dist', ['build'], function() {
 });
 
 gulp.task('generate-service-worker-js', function() {
-  // Each entry will be treated as a separate logical cache. If any file that matches the glob
-  // pattern for an entry is changed/added/deleted, that will cause the entire logical cache to
-  // expire and be re-fetched.
-  // In this example, we divide up the entries based on file types, but it would be equally
-  // reasonable to divide up entries with globs that group relatively non-volatile files into one
-  // cache and files that are more likely to change in another cache.
-  // TODO: Can this be converted to use gulp.src() somehow? Is that preferable?
-  var fileSets = {
-    css: DIST_DIR + '/css/**.css',
-    html: DIST_DIR + '/**.html',
-    images: DIST_DIR + '/images/**.*',
-    js: DIST_DIR + '/js/**.js'
-  };
-  
+  // Specify as many glob patterns as needed to indentify all the files that need to be cached.
+  // If the same file is picked up by multiple patterns, it will only be cached once.
+  var globPatterns = [
+    DIST_DIR + '/css/**.css',
+    DIST_DIR + '/**.html',
+    DIST_DIR + '/images/**.*',
+    DIST_DIR + '/js/**.js'
+  ];
+
+  var relativeUrlToHash = {};
+  var cumulativeSize = 0;
+  globPatterns.forEach(function(globPattern) {
+    var filesAndSizesAndHashes = getFilesAndSizesAndHashesForGlobPattern(globPattern);
+
+    // The files returned from glob are sorted by default, so we don't need to sort here.
+    filesAndSizesAndHashes.forEach(function(fileAndSizeAndHash) {
+      if (fileAndSizeAndHash.size <= MAXIMUM_CACHE_SIZE_IN_BYTES) {
+        // Strip the prefix to turn this into a URL relative to DIST_DIR.
+        var relativeUrl = fileAndSizeAndHash.file.replace(DIST_DIR + '/', '');
+        relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
+
+        $.util.log('  Added', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
+        cumulativeSize += fileAndSizeAndHash.size;
+      } else {
+        $.util.log('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
+      }
+    });
+  });
+
+  $.util.log('Total precache size:', Math.round(cumulativeSize / 1024), 'KB');
+
   // It's very important that running this operation multiple times with the same input files
   // produces identical output, since we need the generated service-worker.js file to change iff
   // the input files changes. The service worker update algorithm,
@@ -96,26 +104,8 @@ gulp.task('generate-service-worker-js', function() {
   // relies on detecting even a single byte change in service-worker.js to trigger an update.
   // Because of this, we write out the cache options as a series of sorted, nested arrays rather
   // than as objects whose serialized key ordering might vary.
-  var cacheOptions = [];
-  Object.keys(fileSets).sort().forEach(function(key) {
-    var filesAndSizeAndHash = getFilesAndSizeAndHashForGlobPattern(fileSets[key]);
-
-    // Check to make sure the total size of all the files and total number of files is reasonable.
-    if (filesAndSizeAndHash.cumulativeSize <= MAXIMUM_CACHE_SIZE_IN_BYTES &&
-        filesAndSizeAndHash.files.length <= MAXIMUM_FILES_IN_CACHE) {
-      cacheOptions.push([
-        key,
-        filesAndSizeAndHash.hash,
-        filesAndSizeAndHash.files.map(function (file) {
-          return file.replace(DIST_DIR + '/', '');
-        })
-      ]);
-      $.util.log('  Added', key, '-', filesAndSizeAndHash.files.length,
-          'files,', filesAndSizeAndHash.cumulativeSize, 'bytes');
-    } else {
-      $.util.log('  Skipped', key, '-', filesAndSizeAndHash.files.length,
-          'files,', filesAndSizeAndHash.cumulativeSize, 'bytes');
-    }
+  var cacheOptions = Object.keys(relativeUrlToHash).sort().map(function(relativeUrl) {
+    return [relativeUrl, relativeUrlToHash[relativeUrl]];
   });
 
   // TODO: I'm SURE there's a better way of inserting serialized JavaScript into a file than
