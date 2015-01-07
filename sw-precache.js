@@ -39,6 +39,7 @@ function getHash(data) {
 module.exports = function(params) {
   _.defaults(params, {
     dynamicUrlToDependencies: {},
+    handleFetch: true,
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
@@ -101,5 +102,8 @@ module.exports = function(params) {
     'KB for', relativeUrls.length, 'resources.');
 
   var templateBuffer = fs.readFileSync(params.templateFilePath);
-  return _.template(templateBuffer, {precacheConfig: JSON.stringify(precacheConfig)});
+  return _.template(templateBuffer, {
+    handleFetch: params.handleFetch,
+    precacheConfig: JSON.stringify(precacheConfig)
+  });
 };
