@@ -1,7 +1,7 @@
 'use strict';
 
-var CacheOptions = <%= cacheOptions %>;
-var CACHE_NAME_PREFIX = 'gulp-sw-precache-';
+var PrecacheConfig = <%= precacheConfig %>;
+var CACHE_NAME_PREFIX = 'sw-precache-';
 
 importScripts('service-worker-helpers/service-worker-cache-polyfill.js');
 
@@ -14,7 +14,7 @@ self.addEventListener('install', function(event) {
     caches.keys().then(function(allCacheNames) {
       console.log('During the install phase, the current cache names are:', allCacheNames);
       Promise.all(
-        CacheOptions.filter(function(cacheOption) {
+        PrecacheConfig.filter(function(cacheOption) {
           var cacheName = getCacheNameFromCacheOption(cacheOption);
           return allCacheNames.indexOf(cacheName) == -1;
         }).map(function(cacheOption) {
@@ -30,7 +30,7 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-  var currentCacheNames = CacheOptions.map(function(cacheOption) {
+  var currentCacheNames = PrecacheConfig.map(function(cacheOption) {
     return getCacheNameFromCacheOption(cacheOption);
   });
 
