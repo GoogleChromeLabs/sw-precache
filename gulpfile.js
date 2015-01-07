@@ -39,6 +39,24 @@ function getHash(data) {
   return md5.digest('hex');
 }
 
+function runExpress(port, staticDir) {
+  var app = $.express();
+
+  app.use($.express.static(staticDir));
+  app.set('views', staticDir + '/views');
+  app.set('view engine', 'jade');
+
+  app.get('/dynamic/:page', function (req, res) {
+    res.render(req.params.page);
+  });
+
+  var server = app.listen(port, function () {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('Server running at http://%s:%s', host, port);
+  });
+}
+
 gulp.task('default', ['serve-dist']);
 
 gulp.task('build', function() {
@@ -50,19 +68,11 @@ gulp.task('clean', function() {
 });
 
 gulp.task('serve-dev', ['copy-service-worker-files'], function() {
-  $.browserSync({
-    notify: false,
-    server: DEV_DIR
-  });
-
-  gulp.watch(DEV_DIR + '/**', $.browserSync.reload);
+  runExpress(3001, DEV_DIR);
 });
 
 gulp.task('serve-dist', ['build'], function() {
-  $.browserSync({
-    notify: false,
-    server: DIST_DIR
-  });
+  runExpress(3000, DIST_DIR);
 });
 
 gulp.task('generate-service-worker-js', function() {

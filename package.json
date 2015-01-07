@@ -7,12 +7,14 @@
   "devDependencies": {
     "browser-sync": "^1.8.2",
     "del": "^1.1.1",
+    "express": "^4.10.7",
     "glob": "^4.3.2",
     "gulp": "^3.8.10",
     "gulp-load-plugins": "^0.8.0",
     "gulp-rename": "^1.2.0",
     "gulp-template": "^1.1.1",
     "gulp-util": "^3.0.1",
+    "jade": "^1.8.2",
     "run-sequence": "^1.0.2"
   }
 }
