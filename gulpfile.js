@@ -12,24 +12,27 @@ var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
 var SERVICE_WORKER_HELPERS_DEV_DIR = DEV_DIR + '/service-worker-helpers';
 
+function getFileAndSizeAndHashForFile(file) {
+  var stat = fs.statSync(file);
+  var buffer = fs.readFileSync(file);
+
+  if (stat.isFile()) {
+    return {
+      file: file,
+      size: stat.size,
+      hash: getHash(buffer)
+    };
+  }
+
+  return null;
+}
+
 function getFilesAndSizesAndHashesForGlobPattern(globPattern) {
-  var filesAndSizesAndHashes = [];
-
-  // It would be nicer to do this with a filter()/map() combo, but then we'd need to stat
-  // each file twice.
-  $.glob.sync(globPattern).forEach(function(file) {
-    var stat = fs.statSync(file);
-    if (stat.isFile()) {
-      var buffer = fs.readFileSync(file);
-      filesAndSizesAndHashes.push({
-        file: file,
-        size: stat.size,
-        hash: getHash(buffer)
-      });
-    }
+  return $.glob.sync(globPattern).map(function(file) {
+    return getFileAndSizeAndHashForFile(file);
+  }).filter(function(fileAndSizeAndHash) {
+    return fileAndSizeAndHash != null;
   });
-
-  return filesAndSizesAndHashes;
 }
 
 function getHash(data) {
@@ -76,18 +79,19 @@ gulp.task('serve-dist', ['build'], function() {
 });
 
 gulp.task('generate-service-worker-js', function() {
+  var relativeUrlToHash = {};
+  var cumulativeSize = 0;
+
   // Specify as many glob patterns as needed to indentify all the files that need to be cached.
   // If the same file is picked up by multiple patterns, it will only be cached once.
-  var globPatterns = [
+  var staticFileGlobs = [
     DIST_DIR + '/css/**.css',
     DIST_DIR + '/**.html',
     DIST_DIR + '/images/**.*',
     DIST_DIR + '/js/**.js'
   ];
 
-  var relativeUrlToHash = {};
-  var cumulativeSize = 0;
-  globPatterns.forEach(function(globPattern) {
+  staticFileGlobs.forEach(function(globPattern) {
     var filesAndSizesAndHashes = getFilesAndSizesAndHashesForGlobPattern(globPattern);
 
     // The files returned from glob are sorted by default, so we don't need to sort here.
@@ -97,7 +101,8 @@ gulp.task('generate-service-worker-js', function() {
         var relativeUrl = fileAndSizeAndHash.file.replace(DIST_DIR + '/', '');
         relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
 
-        $.util.log('  Added', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
+        $.util.log('  Added static URL', fileAndSizeAndHash.file, '-',
+          fileAndSizeAndHash.size, 'bytes');
         cumulativeSize += fileAndSizeAndHash.size;
       } else {
         $.util.log('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
@@ -105,7 +110,32 @@ gulp.task('generate-service-worker-js', function() {
     });
   });
 
-  $.util.log('Total precache size:', Math.round(cumulativeSize / 1024), 'KB');
+  // Specify a mapping of "dynamic" URLs that depend on server-side generation with ALL the files
+  // that uniquely determine their content. If any of the files that a given URL depends on changes,
+  // then the URL will have a new hash associated with it and any previously cached versions will
+  // be discarded.
+  var dynamicUrlToDependencies = {
+    'dynamic/page1': [DIST_DIR + '/views/layout.jade', DIST_DIR + '/views/page1.jade'],
+    'dynamic/page2': [DIST_DIR + '/views/layout.jade', DIST_DIR + '/views/page2.jade']
+  };
+
+  Object.keys(dynamicUrlToDependencies).forEach(function(dynamicUrl) {
+    var filesAndSizesAndHashes = dynamicUrlToDependencies[dynamicUrl]
+      .sort()
+      .map(getFileAndSizeAndHashForFile);
+    var concatenatedHashes = '';
+
+    filesAndSizesAndHashes.forEach(function(fileAndSizeAndHash) {
+      // Let's assume that the response size of a server-generated page is roughly equal to the
+      // total size of all its components.
+      cumulativeSize += fileAndSizeAndHash.size;
+      concatenatedHashes += fileAndSizeAndHash.hash;
+    });
+
+    relativeUrlToHash[dynamicUrl] = getHash(concatenatedHashes);
+    $.util.log('  Added dynamic URL', dynamicUrl, 'with dependencies on',
+      dynamicUrlToDependencies[dynamicUrl]);
+  });
 
   // It's very important that running this operation multiple times with the same input files
   // produces identical output, since we need the generated service-worker.js file to change iff
@@ -114,9 +144,13 @@ gulp.task('generate-service-worker-js', function() {
   // relies on detecting even a single byte change in service-worker.js to trigger an update.
   // Because of this, we write out the cache options as a series of sorted, nested arrays rather
   // than as objects whose serialized key ordering might vary.
-  var cacheOptions = Object.keys(relativeUrlToHash).sort().map(function(relativeUrl) {
+  var relativeUrls = Object.keys(relativeUrlToHash);
+  var cacheOptions = relativeUrls.sort().map(function(relativeUrl) {
     return [relativeUrl, relativeUrlToHash[relativeUrl]];
   });
+
+  $.util.log('Total precache size is', Math.round(cumulativeSize / 1024),
+    'KB for', relativeUrls.length, 'resources.');
 
   // TODO: I'm SURE there's a better way of inserting serialized JavaScript into a file than
   // calling JSON.stringify() and throwing it into a lo-dash template.
