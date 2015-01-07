@@ -10,6 +10,7 @@
     "express": "^4.10.7",
     "glob": "^4.3.2",
     "gulp": "^3.8.10",
+    "gulp-file": "^0.2.0",
     "gulp-load-plugins": "^0.8.0",
     "gulp-rename": "^1.2.0",
     "gulp-template": "^1.1.1",

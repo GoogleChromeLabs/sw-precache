@@ -41,7 +41,8 @@ module.exports = function(params) {
     dynamicUrlToDependencies: {},
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
-    staticFileGlobs: []
+    staticFileGlobs: [],
+    templateFilePath: './service-worker-helpers/service-worker.tmpl'
   });
 
   var relativeUrlToHash = {};
@@ -99,5 +100,6 @@ module.exports = function(params) {
   gutil.log('  Total precache size is', Math.round(cumulativeSize / 1024),
     'KB for', relativeUrls.length, 'resources.');
 
-  return precacheConfig;
-}
+  var templateBuffer = fs.readFileSync(params.templateFilePath);
+  return _.template(templateBuffer, {precacheConfig: JSON.stringify(precacheConfig)});
+};

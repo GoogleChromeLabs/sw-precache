@@ -45,7 +45,7 @@ gulp.task('serve-dist', ['build'], function() {
 });
 
 gulp.task('generate-service-worker-js', function() {
-  var precacheConfig = swPrecache({
+  var serviceWorkerFileContents = swPrecache({
     staticFileGlobs: [
       DIST_DIR + '/css/**.css',
       DIST_DIR + '/**.html',
@@ -59,11 +59,7 @@ gulp.task('generate-service-worker-js', function() {
     stripPrefix: DIST_DIR + '/'
   });
 
-  // TODO: I'm SURE there's a better way of inserting serialized JavaScript into a file than
-  // calling JSON.stringify() and throwing it into a lo-dash template.
-  return gulp.src('service-worker-helpers/service-worker.tmpl')
-    .pipe($.template({precacheConfig: JSON.stringify(precacheConfig)}))
-    .pipe($.rename('service-worker.js'))
+  return $.file('service-worker.js', serviceWorkerFileContents)
     .pipe(gulp.dest(DIST_DIR));
 });
 
