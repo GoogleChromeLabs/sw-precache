@@ -7,9 +7,9 @@ var _ = require('lodash');
 
 function getFileAndSizeAndHashForFile(file) {
   var stat = fs.statSync(file);
-  var buffer = fs.readFileSync(file);
 
   if (stat.isFile()) {
+    var buffer = fs.readFileSync(file);
     return {
       file: file,
       size: stat.size,
