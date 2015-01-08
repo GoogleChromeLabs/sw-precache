@@ -40,6 +40,7 @@ module.exports = function(params) {
     dynamicUrlToDependencies: {},
     handleFetch: true,
     importScripts: [],
+    includeCachePolyfill: true,
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
@@ -105,6 +106,7 @@ module.exports = function(params) {
   return _.template(templateBuffer, {
     handleFetch: params.handleFetch,
     importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
+    includeCachePolyfill: params.includeCachePolyfill,
     precacheConfig: JSON.stringify(precacheConfig)
   });
 };
