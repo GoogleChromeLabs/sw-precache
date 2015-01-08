@@ -30,31 +30,31 @@ There are two difficulties here that someone implementing this pattern with a re
 ### So what does this project aim to do?
 Versioning and generating lists of local files are both solved problems, and `gulp` in particular (which you're hopefully using already as part of your build tooling) is ideal for that purpose. What's missing is something to tie the things that `gulp` can do in with the service worker logic to ensure that your cache versioning is always correct, and your lists of resources for each cache are always up to date. This project is an exploration of one approach to automating that process.
 
-Eventually, it may make sense to refactor this out as a standalone `gulp` plugin, or incorporate the logic into the [Web Starter Kit](https://developers.google.com/web/starter-kit/) or [Yeoman](http://yeoman.io/). For the time being, if you wanted to use this in your own project, extracting the logic out of  [`gulpfile.js`](https://github.com/jeffposnick/gulp-sw-precache/blob/master/gulpfile.js) and including a local copy of the [helper files](https://github.com/jeffposnick/gulp-sw-precache/tree/master/service-worker-helpers) is necessary.
+(**Update**: The code has recently been refactored to be a standalone node module, with the goal of making the output work equally well as part of a `gulp` or `grunt` build process.)
 
 ### How's it all work?
 
-Inside the [`gulpfile.js`](https://github.com/jeffposnick/gulp-sw-precache/blob/master/gulpfile.js), there's a mapping of multiple identifiers to [glob patterns](https://github.com/isaacs/node-glob), like so:
+Inside the sample [`gulpfile.js`](https://github.com/jeffposnick/gulp-sw-precache/blob/master/gulpfile.js), there's a list of [glob patterns](https://github.com/isaacs/node-glob) corresponding to static files, as well as a mapping of server-generated resource URLs to the component files that are used to generated that URL's output:
 
-    var fileSets = {
-      css: DIST_DIR + '/css/**.css',
-      html: DIST_DIR + '/**.html',
-      images: DIST_DIR + '/images/**.*',
-      js: DIST_DIR + '/js/**.js'
-    };
+    dynamicUrlToDependencies: {
+      'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],
+      'dynamic/page2': [rootDir + '/views/layout.jade', rootDir + '/views/page2.jade']
+    },
+    staticFileGlobs: [
+      rootDir + '/css/**.css',
+      rootDir + '/**.html',
+      rootDir + '/images/**.*',
+      rootDir + '/js/**.js'
+    ],
 
-For each of those entries, there's code to expand the glob pattern and calculate the [MD5 hash](http://en.wikipedia.org/wiki/MD5) of the contents of each file. The list of MD5 hashes (as hex strings) are then sorted and concatenated, and the MD5 hash of that string is generated. For each entry, we end up with an array consisting of the identifier (e.g. `css`), the list of files (e.g. `['css/main.css', 'css/fonts.css']`), and an MD5 hash that (semi-)uniquely identifies the aggregated contents of each of the files (e.g. `'e4d909...'`). If the process runs again and an existing file's contents change, or a new file is added or an existing file is deleted, then a new MD5 hash *should* be generated. Conversely, if the process runs agains and every file that matches the glob pattern is exactly the same as last time, then the same MD5 hash *should* be generated.
+For each of those entries, there's code to expand the glob pattern and calculate the [MD5 hash](http://en.wikipedia.org/wiki/MD5) of the contents of each file. The MD5 hash along with the file's relative path is used to uniquely name the [cache](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cache-objects) entry that will be used to store that resource. If the process runs again and an existing file's contents change, or a new file is added or an existing file is deleted, those changes will result in a different list of cache names being generated. Conversely, if the process runs agains and every file is exactly the same as last time, then the same MD5 hashes and names *should* be generated, and the service worker won't attempt to update anything.
 
-Once this process is complete for each entry, we write out the resulting array of [`identifier`, `file_list`, `hash`] arrays to a [template](https://github.com/jeffposnick/gulp-sw-precache/blob/master/service-worker-helpers/service-worker.tmpl) that contains the logic behind the service worker. The combination of `identifier` + `hash` is used as the cache name (with `hash` taking the place of a monotonically increasing version number).
-
-Regardless of what files we're working with, most of the logic stays the same—there's an `install` handler that caches anything that isn't already present in the cache (using the `hash` to determine whether the exact contents of each file set is present or not), and an `activate` handler that takes care of deleting old caches that we no longer need. There's also a `fetch` handler that attempst to serve each response from the cache, falling back to the network only if a given resource URL isn't present.
-
-There are a few other [helper files](https://github.com/jeffposnick/gulp-sw-precache/tree/master/service-worker-helpers) included in this project—a [polyfill](https://github.com/jeffposnick/gulp-sw-precache/blob/master/service-worker-helpers/service-worker-cache-polyfill.js) that's needed to provide some advanced cache functionality in Chrome 40, and a [small script](https://github.com/jeffposnick/gulp-sw-precache/blob/master/service-worker-helpers/service-worker-registration.js) to handle service worker registration.
+Regardless of what files we're working with, most of the logic stays the same—there's an `install` handler that caches anything that isn't already present in the cache (using the `hash` to determine whether the exact version of each resource is present or not), and an `activate` handler that takes care of deleting old caches that we no longer need. There's also a `fetch` handler that attempst to serve each response from the cache, falling back to the network only if a given resource URL isn't present.
 
 ### Try it out!
 Clone this repo, run `npm install`, and then `gulp serve-dist`. Take a look at the contents of the generated `dist` directory. Go to `http://localhost:3000` using Chrome 40 or newer (I prefer testing using [Chrome Canary](https://www.google.com/chrome/browser/canary.html)). Visit `chrome://serviceworker-internals` and check out the logged activity for the registered service worker, as well as the service worker cache inspector.
 
-Try changing some files in `app` and then running `gulp build` to generate a new `dist/service-worker.js` file, then close and re-open `http://localhost:3000`. Examine the logging via `chrome://serviceworker-internals` and notice how the service worker cache inspector has updated to include the latest set of cached resources with a new `hash`.
+Try changing some files in `dist` and then running `gulp generate-service-worker-dist` to generate a new `dist/service-worker.js` file, then close and re-open `http://localhost:3000`. Examine the logging via `chrome://serviceworker-internals` and notice how the service worker cache inspector has updated to include the latest set named caches.
 
 ### Feedback, please!
-There are a lot of `TODO`s in the code where I've hacked something together that seems to work, but given my rather limited experience working with `gulp`, probably isn't the right approach. I'd love to hear suggestions about improving that. And in general, let me know if this seems like something you'd find useful (or if you even do actually start using it)!
+There are a lot of `TODO`s in the code where I've hacked something together that seems to work, but given my rather limited experience working with node modules, may not be the right approach. I'd love to hear suggestions about improving that. And in general, let me know if this seems like something you'd find useful (or if you even do actually start using it)!
