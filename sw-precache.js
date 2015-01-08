@@ -3,7 +3,6 @@
 var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
-var gutil = require('gulp-util');
 var _ = require('lodash');
 
 function getFileAndSizeAndHashForFile(file) {
@@ -59,11 +58,11 @@ module.exports = function(params) {
         var relativeUrl = fileAndSizeAndHash.file.replace(params.stripPrefix, '');
         relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
 
-        gutil.log('  Added static URL', fileAndSizeAndHash.file, '-',
+        console.log('  Added static URL', fileAndSizeAndHash.file, '-',
           fileAndSizeAndHash.size, 'bytes');
         cumulativeSize += fileAndSizeAndHash.size;
       } else {
-        gutil.log('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
+        console.log('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
       }
     });
   });
@@ -82,7 +81,7 @@ module.exports = function(params) {
     });
 
     relativeUrlToHash[dynamicUrl] = getHash(concatenatedHashes);
-    gutil.log('  Added dynamic URL', dynamicUrl, 'with dependencies on',
+    console.log('  Added dynamic URL', dynamicUrl, 'with dependencies on',
       params.dynamicUrlToDependencies[dynamicUrl]);
   });
 
@@ -98,7 +97,7 @@ module.exports = function(params) {
     return [relativeUrl, relativeUrlToHash[relativeUrl]];
   });
 
-  gutil.log('  Total precache size is', Math.round(cumulativeSize / 1024),
+  console.log('  Total precache size is', Math.round(cumulativeSize / 1024),
     'KB for', relativeUrls.length, 'resources.');
 
   var templateBuffer = fs.readFileSync(params.templateFilePath);
