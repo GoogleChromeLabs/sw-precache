@@ -1,5 +1,5 @@
 # tl;dr
-This project is an exploration into integrating service worker-based caching patterns into  [`gulp`](http://gulpjs.com/) build scripts. If you have a website, adding in offline-first support should be as easy as adding some additional logic to your `gulp` build process.
+This project is an exploration into integrating service worker-based caching patterns into  [`gulp`](http://gulpjs.com/) or [`grunt`](http://gruntjs.com/) build scripts. If you have a website, adding in offline-first support should be as easy as adding some additional logic to your build process.
 
 ### What's all this, then?
 [Service workers](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html) give JavaScript developers almost complete control over a browser's network stack. There are a number of [patterns](http://jakearchibald.com/2014/offline-cookbook/) around offline use cases, and one of the most useful is [cache on install as a dependency](http://jakearchibald.com/2014/offline-cookbook/#on-install-as-a-dependency). The first time a user visits your page using a browser that supports service workers, all of the resources needed to use the page offline can be automatically cached locally, and each subsequent visit to any page on the site will be a) fast (since there's no network dependency) and b) work offline (for the same reason).
