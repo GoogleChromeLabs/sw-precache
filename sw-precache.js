@@ -36,6 +36,18 @@ function getHash(data) {
   return md5.digest('hex');
 }
 
+function formatBytesAsString(bytes) {
+  if (bytes < 1024) {
+    return bytes + ' B';
+  }
+
+  if (bytes < (1024 * 1024)) {
+    return Math.round(bytes / 1024) + ' KB';
+  }
+
+  return Math.round(bytes / (1024 * 1024)) + ' MB';
+}
+
 module.exports = function(params) {
   _.defaults(params, {
     dynamicUrlToDependencies: {},
@@ -62,10 +74,11 @@ module.exports = function(params) {
         relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
 
         console.log('  Added static URL', fileAndSizeAndHash.file, '-',
-          fileAndSizeAndHash.size, 'bytes');
+          formatBytesAsString(fileAndSizeAndHash.size));
         cumulativeSize += fileAndSizeAndHash.size;
       } else {
-        console.error('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
+        console.log('  Skipped', fileAndSizeAndHash.file, '-',
+          formatBytesAsString(fileAndSizeAndHash.size));
       }
     });
   });
@@ -100,8 +113,8 @@ module.exports = function(params) {
     return [relativeUrl, relativeUrlToHash[relativeUrl]];
   });
 
-  console.log('  Total precache size is', Math.round(cumulativeSize / 1024),
-    'KB for', relativeUrls.length, 'resources.');
+  console.log('  Total precache size is about', formatBytesAsString(cumulativeSize),
+    'for', relativeUrls.length, 'resources.');
 
   var templateBuffer = fs.readFileSync(params.templateFilePath);
   return _.template(templateBuffer, {
