@@ -1,5 +1,9 @@
 'use strict';
 
+<% if (importScripts) { %>
+importScripts(<%= importScripts %>);
+<% } %>
+
 var PrecacheConfig = <%= precacheConfig %>;
 var CACHE_NAME_PREFIX = 'sw-precache-';
 

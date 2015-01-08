@@ -39,6 +39,7 @@ module.exports = function(params) {
   _.defaults(params, {
     dynamicUrlToDependencies: {},
     handleFetch: true,
+    importScripts: [],
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
@@ -103,6 +104,7 @@ module.exports = function(params) {
   var templateBuffer = fs.readFileSync(params.templateFilePath);
   return _.template(templateBuffer, {
     handleFetch: params.handleFetch,
+    importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
     precacheConfig: JSON.stringify(precacheConfig)
   });
 };
