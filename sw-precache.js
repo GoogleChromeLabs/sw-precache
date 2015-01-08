@@ -3,6 +3,7 @@
 var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
+var path = require('path');
 var _ = require('lodash');
 
 function getFileAndSizeAndHashForFile(file) {
@@ -44,7 +45,7 @@ module.exports = function(params) {
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
-    templateFilePath: './service-worker.tmpl'
+    templateFilePath: path.dirname(fs.realpathSync(__filename)) + '/service-worker.tmpl'
   });
 
   var relativeUrlToHash = {};
