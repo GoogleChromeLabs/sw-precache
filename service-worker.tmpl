@@ -52,17 +52,18 @@ self.addEventListener('activate', function(event) {
 
 <% if (handleFetch) { %>
 self.addEventListener('fetch', function(event) {
-  var prefetchedUrls = PrecacheConfig.map(function(cacheOption) {
-    // The URLs in PrecacheConfig are all relative to the project root. Constructing a new URL()
-    // and using the service worker's location as the base should result in a valid absolute URL.
-    return new URL(cacheOption[0], self.location).toString();
-  });
-
   // This check limits this fetch handler so that it only intercepts traffic for one
   // of the URLs we're explicitly pre-caching. It opens the door for other fetch
   // handlers (such as those registered via importScripts()) to handle other network traffic.
-  // (Using case-sensitive string comparisons of the absolute URLs isn't ideal, though.)
-  if (prefetchedUrls.indexOf(event.request.url) != -1) {
+  var isRequestForPrecachedUrl = PrecacheConfig.some(function(cacheOption) {
+    // The URLs in PrecacheConfig are all relative to the project root. Constructing a new URL()
+    // and using the service worker's location as the base should result in a valid absolute URL.
+    // (Using case-sensitive string comparisons of the absolute URLs isn't ideal, though.)
+    return new URL(cacheOption[0], self.location).toString() == event.request.url;
+  });
+
+  if (isRequestForPrecachedUrl) {
+    console.log('handling fetch');
     event.respondWith(
       caches.match(event.request).then(function(response) {
         return response || fetch(event.request);
