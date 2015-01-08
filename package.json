@@ -2,7 +2,15 @@
   "name": "sw-precache",
   "version": "1.0.0",
   "description": "Generate service worker code that will precache specific resources.",
-  "keywords": ["service-worker", "offline", "caching", "serviceworker"],
+  "author": "Jeff Posnick <jeffy@google.com>",
+  "main": "sw-precache.js",
+  "keywords": [
+    "caching",
+    "offline",
+    "precaching",
+    "service-worker",
+    "serviceworker"
+  ],
   "private": true,
   "engines": {
     "node": ">=0.10.0"
@@ -20,5 +28,13 @@
     "glob": "^4.3.2",
     "gulp-util": "^3.0.1",
     "lodash": "^2.4.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeffposnick/sw-precache"
+  },
+  "bugs": {
+    "url": "https://github.com/jeffposnick/sw-precache/issues"
+  },
+  "license": "Apache-2.0"
 }
