@@ -62,7 +62,7 @@ module.exports = function(params) {
           fileAndSizeAndHash.size, 'bytes');
         cumulativeSize += fileAndSizeAndHash.size;
       } else {
-        console.log('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
+        console.error('  Skipped', fileAndSizeAndHash.file, '-', fileAndSizeAndHash.size, 'bytes');
       }
     });
   });
