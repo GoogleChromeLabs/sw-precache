@@ -44,7 +44,7 @@ module.exports = function(params) {
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
-    templateFilePath: './service-worker-helpers/service-worker.tmpl'
+    templateFilePath: './service-worker.tmpl'
   });
 
   var relativeUrlToHash = {};

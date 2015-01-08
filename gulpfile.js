@@ -6,13 +6,12 @@ var swPrecache = require('./sw-precache.js');
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
-var SERVICE_WORKER_HELPERS_DEV_DIR = DEV_DIR + '/service-worker-helpers';
 
-function runExpress(port, staticDir) {
+function runExpress(port, rootDir) {
   var app = $.express();
 
-  app.use($.express.static(staticDir));
-  app.set('views', staticDir + '/views');
+  app.use($.express.static(rootDir));
+  app.set('views', rootDir + '/views');
   app.set('view engine', 'jade');
 
   app.get('/dynamic/:page', function (req, res) {
@@ -26,17 +25,34 @@ function runExpress(port, staticDir) {
   });
 }
 
+function generateServiceWorkerFileContents(rootDir, handleFetch) {
+  return swPrecache({
+    dynamicUrlToDependencies: {
+      'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],
+      'dynamic/page2': [rootDir + '/views/layout.jade', rootDir + '/views/page2.jade']
+    },
+    handleFetch: handleFetch,
+    staticFileGlobs: [
+      rootDir + '/css/**.css',
+      rootDir + '/**.html',
+      rootDir + '/images/**.*',
+      rootDir + '/js/**.js'
+    ],
+    stripPrefix: rootDir + '/'
+  });
+}
+
 gulp.task('default', ['serve-dist']);
 
 gulp.task('build', function() {
-  $.runSequence('copy-service-worker-files', 'copy-dev-to-dist', 'generate-service-worker-js');
+  $.runSequence('copy-dev-to-dist', 'generate-service-worker-dist');
 });
 
 gulp.task('clean', function() {
-  $.del([DIST_DIR, SERVICE_WORKER_HELPERS_DEV_DIR]);
+  $.del([DIST_DIR]);
 });
 
-gulp.task('serve-dev', ['copy-service-worker-files'], function() {
+gulp.task('serve-dev', ['generate-service-worker-dev'], function() {
   runExpress(3001, DEV_DIR);
 });
 
@@ -44,20 +60,15 @@ gulp.task('serve-dist', ['build'], function() {
   runExpress(3000, DIST_DIR);
 });
 
-gulp.task('generate-service-worker-js', function() {
-  var serviceWorkerFileContents = swPrecache({
-    staticFileGlobs: [
-      DIST_DIR + '/css/**.css',
-      DIST_DIR + '/**.html',
-      DIST_DIR + '/images/**.*',
-      DIST_DIR + '/js/**.js'
-    ],
-    dynamicUrlToDependencies: {
-      'dynamic/page1': [DIST_DIR + '/views/layout.jade', DIST_DIR + '/views/page1.jade'],
-      'dynamic/page2': [DIST_DIR + '/views/layout.jade', DIST_DIR + '/views/page2.jade']
-    },
-    stripPrefix: DIST_DIR + '/'
-  });
+gulp.task('generate-service-worker-dev', function() {
+  var serviceWorkerFileContents = generateServiceWorkerFileContents(DEV_DIR, false);
+
+  return $.file('service-worker.js', serviceWorkerFileContents)
+    .pipe(gulp.dest(DEV_DIR));
+});
+
+gulp.task('generate-service-worker-dist', function() {
+  var serviceWorkerFileContents = generateServiceWorkerFileContents(DIST_DIR, true);
 
   return $.file('service-worker.js', serviceWorkerFileContents)
     .pipe(gulp.dest(DIST_DIR));
@@ -66,9 +77,4 @@ gulp.task('generate-service-worker-js', function() {
 gulp.task('copy-dev-to-dist', function() {
   return gulp.src(DEV_DIR + '/**')
     .pipe(gulp.dest(DIST_DIR));
-});
-
-gulp.task('copy-service-worker-files', function() {
-  return gulp.src('service-worker-helpers/*.js')
-    .pipe(gulp.dest(SERVICE_WORKER_HELPERS_DEV_DIR));
 });

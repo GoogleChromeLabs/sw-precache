@@ -7,15 +7,10 @@
   </head>
 
   <body>
-    <p>Ignore the boxes!</p>
+    <p>Check out <code>chrome://serviceworker-internals</code> for info on what's being cached.</p>
     <img src="images/one.png">
     <img src="images/two.png">
 
-    <!-- Build your site exactly like you normally would.
-         Include service-worker-registration.js to attempt registering the service worker to
-         handle precaching.
-         On browsers that do not support service workers, or when served from app/,
-         this will be a no-op. -->
-    <script src="service-worker-helpers/service-worker-registration.js"></script>
+    <script src="js/service-worker-registration.js"></script>
   </body>
 </html>
