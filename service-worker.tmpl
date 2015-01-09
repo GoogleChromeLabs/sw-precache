@@ -27,7 +27,7 @@ self.addEventListener('install', function(event) {
           });
         })
       )
-    })
+    }).then(self.skipWaiting) // Force the SW to transition from installing -> active state
   );
 });
 
