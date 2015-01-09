@@ -28,6 +28,7 @@ function runExpress(port, rootDir) {
 function generateServiceWorkerFileContents(rootDir, handleFetch) {
   return swPrecache({
     dynamicUrlToDependencies: {
+      './': [rootDir + '/index.html'],
       'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],
       'dynamic/page2': [rootDir + '/views/layout.jade', rootDir + '/views/page2.jade']
     },
