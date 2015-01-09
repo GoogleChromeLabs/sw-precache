@@ -2,7 +2,7 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')({pattern: '*'});
-var swPrecache = require('./sw-precache.js');
+var swPrecache = require('../sw-precache.js');
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
