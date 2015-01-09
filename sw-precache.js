@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
+var util = require('util');
 var _ = require('lodash');
 
 function getFileAndSizeAndHashForFile(file) {
@@ -54,6 +55,7 @@ module.exports = function(params) {
     handleFetch: true,
     importScripts: [],
     includeCachePolyfill: true,
+    logger: console.log,
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
@@ -73,12 +75,13 @@ module.exports = function(params) {
         var relativeUrl = fileAndSizeAndHash.file.replace(params.stripPrefix, '');
         relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
 
-        console.log('  Added static URL', fileAndSizeAndHash.file, '-',
-          formatBytesAsString(fileAndSizeAndHash.size));
+        params.logger(util.format("Caching static resource '%s' (%s)", fileAndSizeAndHash.file,
+          formatBytesAsString(fileAndSizeAndHash.size)));
         cumulativeSize += fileAndSizeAndHash.size;
       } else {
-        console.log('  Skipped', fileAndSizeAndHash.file, '-',
-          formatBytesAsString(fileAndSizeAndHash.size));
+        params.logger(util.format("Skipping static resource '%s' (%s) - max size is %s",
+          fileAndSizeAndHash.file, formatBytesAsString(fileAndSizeAndHash.size),
+          formatBytesAsString(params.maximumFileSizeToCacheInBytes)));
       }
     });
   });
@@ -97,8 +100,8 @@ module.exports = function(params) {
     });
 
     relativeUrlToHash[dynamicUrl] = getHash(concatenatedHashes);
-    console.log('  Added dynamic URL', dynamicUrl, 'with dependencies on',
-      params.dynamicUrlToDependencies[dynamicUrl]);
+    params.logger(util.format("Caching dynamic URL '%s' with dependencies on %j",
+      dynamicUrl, params.dynamicUrlToDependencies[dynamicUrl]));
   });
 
   // It's very important that running this operation multiple times with the same input files
@@ -113,8 +116,8 @@ module.exports = function(params) {
     return [relativeUrl, relativeUrlToHash[relativeUrl]];
   });
 
-  console.log('  Total precache size is about', formatBytesAsString(cumulativeSize),
-    'for', relativeUrls.length, 'resources.');
+  params.logger(util.format('Total precache size is about %s for %d resources.',
+    formatBytesAsString(cumulativeSize), relativeUrls.length));
 
   var templateBuffer = fs.readFileSync(params.templateFilePath);
   return _.template(templateBuffer, {

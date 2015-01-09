@@ -33,6 +33,7 @@ function generateServiceWorkerFileContents(rootDir, handleFetch) {
       'dynamic/page2': [rootDir + '/views/layout.jade', rootDir + '/views/page2.jade']
     },
     handleFetch: handleFetch,
+    logger: $.util.log,
     staticFileGlobs: [
       rootDir + '/css/**.css',
       rootDir + '/**.html',
