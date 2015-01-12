@@ -5,10 +5,10 @@ importScripts(<%= importScripts %>);
 <% } %>
 
 var PrecacheConfig = <%= precacheConfig %>;
-var CACHE_NAME_PREFIX = 'sw-precache-';
+var CacheNamePrefix = 'sw-precache-' + (self.registration ? self.registration.scope : self.scope) + '-';
 
 function getCacheNameFromCacheOption(cacheOption) {
-  return CACHE_NAME_PREFIX + cacheOption[0] + '-' + cacheOption[1];
+  return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
 }
 
 self.addEventListener('install', function(event) {
@@ -44,7 +44,7 @@ self.addEventListener('activate', function(event) {
       console.log('During the activate phase, the current cache names are:', allCacheNames);
       return Promise.all(
         allCacheNames.filter(function(cacheName) {
-          return cacheName.indexOf(CACHE_NAME_PREFIX) == 0 &&
+          return cacheName.indexOf(CacheNamePrefix) == 0 &&
                  currentCacheNames.indexOf(cacheName) == -1;
         }).map(function(cacheName) {
           console.log('About to delete the out-of-date cache named:', cacheName);
