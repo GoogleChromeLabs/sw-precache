@@ -27,7 +27,12 @@ self.addEventListener('install', function(event) {
           });
         })
       )
-    }).then(self.skipWaiting) // Force the SW to transition from installing -> active state
+    }).then(function() {
+      if (typeof self.skipWaiting == 'function') {
+        // Force the SW to transition from installing -> active state
+        self.skipWaiting();
+      }
+    })
   );
 });
 

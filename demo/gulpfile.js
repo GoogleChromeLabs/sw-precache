@@ -54,7 +54,7 @@ gulp.task('clean', function() {
   $.del([DIST_DIR]);
 });
 
-gulp.task('serve-dev', ['generate-service-worker-dev'], function() {
+gulp.task('serve-dev', function() {
   runExpress(3001, DEV_DIR);
 });
 
