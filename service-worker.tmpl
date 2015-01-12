@@ -14,43 +14,32 @@ function getCacheNameFromCacheOption(cacheOption) {
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.keys().then(function(allCacheNames) {
-      console.log('During the install phase, the current cache names are:', allCacheNames);
-      Promise.all(
-        PrecacheConfig.filter(function(cacheOption) {
-          var cacheName = getCacheNameFromCacheOption(cacheOption);
-          return allCacheNames.indexOf(cacheName) == -1;
-        }).map(function(cacheOption) {
-          var cacheName = getCacheNameFromCacheOption(cacheOption);
-          console.log('About to add %O to cache named %s', cacheOption[0], cacheName);
-          return caches.open(cacheName).then(function(cache) {
-            return cache.add(cacheOption[0]);
-          });
-        })
-      )
+      var addPromises = PrecacheConfig.filter(function(cacheOption) {
+        var cacheName = getCacheNameFromCacheOption(cacheOption);
+        return allCacheNames.indexOf(cacheName) == -1;
+      }).map(function(cacheOption) {
+        var cacheName = getCacheNameFromCacheOption(cacheOption);
+        console.log('About to add %O to cache named %s', cacheOption[0], cacheName);
+        return caches.open(cacheName).then(function(cache) {
+          return cache.add(cacheOption[0]);
+        });
+      });
+
+      var currentCacheNames = PrecacheConfig.map(getCacheNameFromCacheOption);
+      var deletePromises = allCacheNames.filter(function(cacheName) {
+        return cacheName.indexOf(CacheNamePrefix) == 0 &&
+               currentCacheNames.indexOf(cacheName) == -1;
+      }).map(function(cacheName) {
+        console.log('About to delete the out-of-date cache named:', cacheName);
+        return caches.delete(cacheName);
+      });
+
+      return Promise.all(addPromises.concat(deletePromises));
     }).then(function() {
       if (typeof self.skipWaiting == 'function') {
         // Force the SW to transition from installing -> active state
         self.skipWaiting();
       }
-    })
-  );
-});
-
-self.addEventListener('activate', function(event) {
-  var currentCacheNames = PrecacheConfig.map(getCacheNameFromCacheOption);
-
-  event.waitUntil(
-    caches.keys().then(function(allCacheNames) {
-      console.log('During the activate phase, the current cache names are:', allCacheNames);
-      return Promise.all(
-        allCacheNames.filter(function(cacheName) {
-          return cacheName.indexOf(CacheNamePrefix) == 0 &&
-                 currentCacheNames.indexOf(cacheName) == -1;
-        }).map(function(cacheName) {
-          console.log('About to delete the out-of-date cache named:', cacheName);
-          return caches.delete(cacheName);
-        })
-      );
     })
   );
 });
