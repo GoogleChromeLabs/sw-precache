@@ -54,7 +54,7 @@ gulp.task('clean', function() {
   $.del([DIST_DIR]);
 });
 
-gulp.task('serve-dev', function() {
+gulp.task('serve-dev', ['generate-service-worker-dev'], function() {
   runExpress(3001, DEV_DIR);
 });
 
@@ -65,14 +65,14 @@ gulp.task('serve-dist', ['build'], function() {
 gulp.task('generate-service-worker-dev', function() {
   var serviceWorkerFileContents = generateServiceWorkerFileContents(DEV_DIR, false);
 
-  return $.file('service-worker.js', serviceWorkerFileContents)
+  return $.file('service-worker.js', serviceWorkerFileContents, {src: true})
     .pipe(gulp.dest(DEV_DIR));
 });
 
 gulp.task('generate-service-worker-dist', function() {
   var serviceWorkerFileContents = generateServiceWorkerFileContents(DIST_DIR, true);
 
-  return $.file('service-worker.js', serviceWorkerFileContents)
+  return $.file('service-worker.js', serviceWorkerFileContents, {src: true})
     .pipe(gulp.dest(DIST_DIR));
 });
 
