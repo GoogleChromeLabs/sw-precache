@@ -8,7 +8,6 @@ var TEMP_FILE = 'test/data/temp.txt';
 
 function readStreamIntoString(stream, callback) {
   var string = '';
-  stream.setEncoding('utf8');
   stream.on('data', function(chunk) {
     string += chunk;
   });
