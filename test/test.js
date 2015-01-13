@@ -6,19 +6,31 @@ var swPrecache = require('../sw-precache.js');
 var NOOP = function() {};
 var TEMP_FILE = 'test/data/temp.txt';
 
+function readStreamIntoString(stream, callback) {
+  var string = '';
+  stream.setEncoding('utf8');
+  stream.on('data', function(chunk) {
+    string += chunk;
+  });
+  stream.on('end', function() {
+    callback(string);
+  });
+}
+
 describe('sw-precache core functionality', function() {
   before(function() {
     fs.writeFileSync(TEMP_FILE, 'initial data');
   });
   
-  it('should produce valid JavaScript.', function() {
-    var responseStream = swPrecache({logger: NOOP});
-    assert.doesNotThrow(function() {
-      new Function(responseStream);
+  it('should produce valid JavaScript', function() {
+    readStreamIntoString(swPrecache({logger: NOOP}), function(responseString) {
+      assert.doesNotThrow(function() {
+        new Function(responseString);
+      });
     });
   });
 
-  it('should produce the same output given the same input files.', function() {
+  it('should produce the same output given the same input files', function() {
     var config = {
       logger: NOOP,
       staticFileGlobs: ['test/data/one/**']
@@ -27,10 +39,13 @@ describe('sw-precache core functionality', function() {
     var responseStreamOne = swPrecache(config);
     var responseStreamOnePrime = swPrecache(config);
 
-    assert.strictEqual(responseStreamOne, responseStreamOnePrime);
+    streamEqual(responseStreamOne, responseStreamOnePrime, function(err, equal) {
+      assert.ifError(err);
+      assert(equal);
+    });
   });
 
-  it('should produce different output given different input files.', function() {
+  it('should produce different output given different input files', function() {
     var responseStreamOne = swPrecache({
       logger: NOOP,
       staticFileGlobs: ['test/data/one/**']
@@ -41,10 +56,13 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: ['test/data/two/**']
     });
 
-    assert.notStrictEqual(responseStreamOne, responseStreamTwo);
+    streamEqual(responseStreamOne, responseStreamTwo, function(err, equal) {
+      assert.ifError(err);
+      assert(!equal);
+    });
   });
 
-  it('should produce the same output regardless of which order the globs are in.', function() {
+  it('should produce the same output regardless of which order the globs are in', function() {
     var responseStream = swPrecache({
       logger: NOOP,
       staticFileGlobs: [
@@ -63,10 +81,13 @@ describe('sw-precache core functionality', function() {
       ]
     });
 
-    assert.strictEqual(responseStream, responseStreamPrime);
+    streamEqual(responseStream, responseStreamPrime, function(err, equal) {
+      assert.ifError(err);
+      assert(equal);
+    });
   });
 
-  it('should produce different output when the contents of an input file changes.', function() {
+  it('should produce different output when the contents of an input file changes', function() {
     var config = {
       logger: NOOP,
       staticFileGlobs: [TEMP_FILE]
@@ -76,7 +97,10 @@ describe('sw-precache core functionality', function() {
     fs.appendFileSync(TEMP_FILE, 'new data');
     var responseStreamPrime = swPrecache(config);
 
-    assert.notStrictEqual(responseStream, responseStreamPrime);
+    streamEqual(responseStream, responseStreamPrime, function(err, equal) {
+      assert.ifError(err);
+      assert(!equal);
+    });
   });
 
   after(function() {
@@ -85,7 +109,7 @@ describe('sw-precache core functionality', function() {
 });
 
 describe('sw-precache parameters', function() {
-  it('should exclude files larger than the maximum size.', function() {
+  it('should exclude files larger than the maximum size', function() {
     var file = 'test/data/one/a.txt';
     var size = fs.statSync(file).size;
     var config = {
@@ -97,6 +121,9 @@ describe('sw-precache parameters', function() {
     config.maximumFileSizeToCacheInBytes = size;
     var responseStreamLarger = swPrecache(config);
 
-    assert(responseStreamSmaller.length < responseStreamLarger.length);
+    streamEqual(responseStreamSmaller, responseStreamLarger, function(err, equal) {
+      assert.ifError(err);
+      assert(!equal);
+    });
   });
 });
