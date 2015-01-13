@@ -22,7 +22,9 @@
     "gulp-load-plugins": "^0.8.0",
     "gulp-util": "^3.0.1",
     "jade": "^1.8.2",
+    "mocha": "^2.1.0",
     "run-sequence": "^1.0.2",
+    "stream-equal": "^0.1.5",
     "vinyl-source-stream": "^1.0.0"
   },
   "dependencies": {
@@ -37,5 +39,8 @@
   "bugs": {
     "url": "https://github.com/jeffposnick/sw-precache/issues"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha"
+  }
 }
