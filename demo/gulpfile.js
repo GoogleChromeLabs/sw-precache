@@ -63,13 +63,13 @@ gulp.task('serve-dist', ['build'], function() {
 });
 
 gulp.task('generate-service-worker-dev', function() {
-  generateServiceWorkerFileContents(DEV_DIR, false)
+  return generateServiceWorkerFileContents(DEV_DIR, false)
     .pipe($.vinylSourceStream('service-worker.js'))
     .pipe(gulp.dest(DEV_DIR));
 });
 
 gulp.task('generate-service-worker-dist', function() {
-  generateServiceWorkerFileContents(DIST_DIR, true)
+  return generateServiceWorkerFileContents(DIST_DIR, true)
     .pipe($.vinylSourceStream('service-worker.js'))
     .pipe(gulp.dest(DIST_DIR));
 });
