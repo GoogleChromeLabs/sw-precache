@@ -63,16 +63,14 @@ gulp.task('serve-dist', ['build'], function() {
 });
 
 gulp.task('generate-service-worker-dev', function() {
-  var serviceWorkerFileContents = generateServiceWorkerFileContents(DEV_DIR, false);
-
-  return $.file('service-worker.js', serviceWorkerFileContents, {src: true})
+  generateServiceWorkerFileContents(DEV_DIR, false)
+    .pipe($.vinylSourceStream('service-worker.js'))
     .pipe(gulp.dest(DEV_DIR));
 });
 
 gulp.task('generate-service-worker-dist', function() {
-  var serviceWorkerFileContents = generateServiceWorkerFileContents(DIST_DIR, true);
-
-  return $.file('service-worker.js', serviceWorkerFileContents, {src: true})
+  generateServiceWorkerFileContents(DIST_DIR, true)
+    .pipe($.vinylSourceStream('service-worker.js'))
     .pipe(gulp.dest(DIST_DIR));
 });
 

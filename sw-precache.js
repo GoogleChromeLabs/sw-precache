@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
+var resumer = require('resumer');
 var util = require('util');
 var _ = require('lodash');
 
@@ -120,10 +121,12 @@ module.exports = function(params) {
     formatBytesAsString(cumulativeSize), relativeUrls.length));
 
   var templateBuffer = fs.readFileSync(params.templateFilePath);
-  return _.template(templateBuffer, {
+  var populatedTemplate = _.template(templateBuffer, {
     handleFetch: params.handleFetch,
     importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
     includeCachePolyfill: params.includeCachePolyfill,
     precacheConfig: JSON.stringify(precacheConfig)
   });
+
+  return resumer().queue(populatedTemplate);
 };

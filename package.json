@@ -19,15 +19,16 @@
     "del": "^1.1.1",
     "express": "^4.10.7",
     "gulp": "^3.8.10",
-    "gulp-file": "^0.2.0",
     "gulp-load-plugins": "^0.8.0",
     "jade": "^1.8.2",
-    "run-sequence": "^1.0.2"
+    "run-sequence": "^1.0.2",
+    "vinyl-source-stream": "^1.0.0"
   },
   "dependencies": {
     "glob": "^4.3.2",
     "gulp-util": "^3.0.1",
-    "lodash": "^2.4.1"
+    "lodash": "^2.4.1",
+    "resumer": "0.0.0"
   },
   "repository": {
     "type": "git",
