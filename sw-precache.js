@@ -4,7 +4,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
-var through = require('through2');
+var resumer = require('resumer');
 var util = require('util');
 var _ = require('lodash');
 
@@ -120,20 +120,13 @@ module.exports = function(params) {
   params.logger(util.format('Total precache size is about %s for %d resources.',
     formatBytesAsString(cumulativeSize), relativeUrls.length));
 
-  var templateData = {
+  var template = fs.readFileSync(params.templateFilePath, {encoding: 'utf8'});
+  var populatedTemplate = _.template(template, {
     handleFetch: params.handleFetch,
     importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
     includeCachePolyfill: params.includeCachePolyfill,
     precacheConfig: JSON.stringify(precacheConfig)
-  };
-  var readStream = fs.createReadStream(params.templateFilePath, {encoding: 'utf8'});
+  });
 
-  return readStream.pipe(through(function(chunk, enc, done) {
-    if (chunk.isBuffer) {
-      this.emit('error', new Error('Buffers are not supported.'));
-    }
-
-    this.push(_.template(chunk, templateData));
-    done();
-  }));
+  return resumer().queue(populatedTemplate).end();
 };
