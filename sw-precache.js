@@ -4,7 +4,6 @@ var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
-var resumer = require('resumer');
 var util = require('util');
 var _ = require('lodash');
 
