@@ -119,9 +119,10 @@ module.exports = function(params, callback) {
   params.logger(util.format('Total precache size is about %s for %d resources.',
     formatBytesAsString(cumulativeSize), relativeUrls.length));
 
-  fs.readFile(params.templateFilePath, {encoding: 'utf8'}, function(error, data) {
+  fs.readFile(params.templateFilePath, 'utf8', function(error, data) {
     if (error) {
-      throw error;
+      callback(error);
+      return;
     }
 
     var populatedTemplate = _.template(data, {
@@ -131,6 +132,6 @@ module.exports = function(params, callback) {
       precacheConfig: JSON.stringify(precacheConfig)
     });
 
-    callback(populatedTemplate);
+    callback(null, populatedTemplate);
   });
 };

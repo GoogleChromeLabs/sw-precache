@@ -11,7 +11,8 @@ describe('sw-precache core functionality', function() {
   });
   
   it('should produce valid JavaScript', function(done) {
-    swPrecache({logger: NOOP}, function(responseString) {
+    swPrecache({logger: NOOP}, function(error, responseString) {
+      assert.ifError(error);
       assert.doesNotThrow(function() {
         new Function(responseString);
         done();
@@ -25,8 +26,10 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: ['test/data/one/**']
     };
 
-    swPrecache(config, function(responseStringOne) {
-      swPrecache(config, function(responseStringTwo) {
+    swPrecache(config, function(error, responseStringOne) {
+      assert.ifError(error);
+      swPrecache(config, function(error, responseStringTwo) {
+        assert.ifError(error);
         assert.strictEqual(responseStringOne, responseStringTwo);
         done();
       });
@@ -44,8 +47,10 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: ['test/data/two/**']
     };
 
-    swPrecache(configOne, function(responseStringOne) {
-      swPrecache(configTwo, function(responseStringTwo) {
+    swPrecache(configOne, function(error, responseStringOne) {
+      assert.ifError(error);
+      swPrecache(configTwo, function(error, responseStringTwo) {
+        assert.ifError(error);
         assert.notStrictEqual(responseStringOne, responseStringTwo);
         done();
       });
@@ -71,8 +76,10 @@ describe('sw-precache core functionality', function() {
       ]
     };
 
-    swPrecache(config, function(reponseString) {
-      swPrecache(configPrime, function(responseStringPrime) {
+    swPrecache(config, function(error, reponseString) {
+      assert.ifError(error);
+      swPrecache(configPrime, function(error, responseStringPrime) {
+        assert.ifError(error);
         assert.strictEqual(reponseString, responseStringPrime);
         done();
       });
@@ -85,9 +92,11 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: [TEMP_FILE]
     };
 
-    swPrecache(config, function(responseString) {
+    swPrecache(config, function(error, responseString) {
+      assert.ifError(error);
       fs.appendFileSync(TEMP_FILE, 'new data');
-      swPrecache(config, function(responseStringPrime) {
+      swPrecache(config, function(error, responseStringPrime) {
+        assert.ifError(error);
         assert.notStrictEqual(responseString, responseStringPrime);
         done();
       });
@@ -109,9 +118,11 @@ describe('sw-precache parameters', function() {
       maximumFileSizeToCacheInBytes: size - 1
     };
 
-    swPrecache(config, function(responseStringSmaller) {
+    swPrecache(config, function(error, responseStringSmaller) {
+      assert.ifError(error);
       config.maximumFileSizeToCacheInBytes = size;
-      swPrecache(config, function(responseStringLarger) {
+      swPrecache(config, function(error, responseStringLarger) {
+        assert.ifError(error);
         assert(responseStringSmaller.length < responseStringLarger.length);
         done();
       });

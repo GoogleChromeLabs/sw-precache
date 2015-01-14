@@ -64,17 +64,25 @@ gulp.task('serve-dist', ['build'], function() {
   runExpress(3000, DIST_DIR);
 });
 
-gulp.task('generate-service-worker-dev', function() {
-  return generateServiceWorkerFileContents(DEV_DIR, false, function(serviceWorkerFileContents) {
-    return $.file('service-worker.js', serviceWorkerFileContents)
+gulp.task('generate-service-worker-dev', function(callback) {
+  generateServiceWorkerFileContents(DEV_DIR, false, function(error, serviceWorkerFileContents) {
+    if (error) {
+      return callback(error);
+    }
+    $.file('service-worker.js', serviceWorkerFileContents)
       .pipe(gulp.dest(DEV_DIR));
+    callback();
   });
 });
 
-gulp.task('generate-service-worker-dist', function() {
-  return generateServiceWorkerFileContents(DIST_DIR, true, function(serviceWorkerFileContents) {
-    return $.file('service-worker.js', serviceWorkerFileContents)
+gulp.task('generate-service-worker-dist', function(callback) {
+  generateServiceWorkerFileContents(DIST_DIR, true, function(error, serviceWorkerFileContents) {
+    if (error) {
+      return callback(error);
+    }
+    $.file('service-worker.js', serviceWorkerFileContents)
       .pipe(gulp.dest(DIST_DIR));
+    callback();
   });
 });
 
