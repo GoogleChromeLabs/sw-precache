@@ -1,104 +1,96 @@
 var assert = require('assert');
 var fs = require('fs');
-var streamEqual = require('stream-equal');
 var swPrecache = require('../sw-precache.js');
 
 var NOOP = function() {};
 var TEMP_FILE = 'test/data/temp.txt';
-
-function readStreamIntoString(stream, callback) {
-  var string = '';
-  stream.on('data', function(chunk) {
-    string += chunk;
-  });
-  stream.on('end', function() {
-    callback(string);
-  });
-}
 
 describe('sw-precache core functionality', function() {
   before(function() {
     fs.writeFileSync(TEMP_FILE, 'initial data');
   });
   
-  it('should produce valid JavaScript', function() {
-    readStreamIntoString(swPrecache({logger: NOOP}), function(responseString) {
+  it('should produce valid JavaScript', function(done) {
+    swPrecache({logger: NOOP}, function(responseString) {
       assert.doesNotThrow(function() {
         new Function(responseString);
+        done();
       });
     });
   });
 
-  it('should produce the same output given the same input files', function() {
+  it('should produce the same output given the same input files', function(done) {
     var config = {
       logger: NOOP,
       staticFileGlobs: ['test/data/one/**']
     };
 
-    var responseStreamOne = swPrecache(config);
-    var responseStreamOnePrime = swPrecache(config);
-
-    streamEqual(responseStreamOne, responseStreamOnePrime, function(err, equal) {
-      assert.ifError(err);
-      assert(equal);
+    swPrecache(config, function(responseStringOne) {
+      swPrecache(config, function(responseStringTwo) {
+        assert.strictEqual(responseStringOne, responseStringTwo);
+        done();
+      });
     });
   });
 
-  it('should produce different output given different input files', function() {
-    var responseStreamOne = swPrecache({
+  it('should produce different output given different input files', function(done) {
+    var configOne = {
       logger: NOOP,
       staticFileGlobs: ['test/data/one/**']
-    });
+    };
 
-    var responseStreamTwo = swPrecache({
+    var configTwo = {
       logger: NOOP,
       staticFileGlobs: ['test/data/two/**']
-    });
+    };
 
-    streamEqual(responseStreamOne, responseStreamTwo, function(err, equal) {
-      assert.ifError(err);
-      assert(!equal);
+    swPrecache(configOne, function(responseStringOne) {
+      swPrecache(configTwo, function(responseStringTwo) {
+        assert.notStrictEqual(responseStringOne, responseStringTwo);
+        done();
+      });
     });
   });
 
-  it('should produce the same output regardless of which order the globs are in', function() {
-    var responseStream = swPrecache({
+  it('should produce the same output regardless of which order the globs are in', function(done) {
+    var config = {
       logger: NOOP,
       staticFileGlobs: [
         'test/data/one/a.txt',
         'test/data/one/c.txt',
         'test/data/two/b.txt'
       ]
-    });
+    };
 
-    var responseStreamPrime = swPrecache({
+    var configPrime = {
       logger: NOOP,
       staticFileGlobs: [
         'test/data/one/c.txt',
         'test/data/two/b.txt',
         'test/data/one/a.txt'
       ]
-    });
+    };
 
-    streamEqual(responseStream, responseStreamPrime, function(err, equal) {
-      assert.ifError(err);
-      assert(equal);
+    swPrecache(config, function(reponseString) {
+      swPrecache(configPrime, function(responseStringPrime) {
+        assert.strictEqual(reponseString, responseStringPrime);
+        done();
+      });
     });
   });
 
-  it('should produce different output when the contents of an input file changes', function() {
+  it('should produce different output when the contents of an input file changes', function(done) {
     var config = {
       logger: NOOP,
       staticFileGlobs: [TEMP_FILE]
     };
 
-    var responseStream = swPrecache(config);
-    fs.appendFileSync(TEMP_FILE, 'new data');
-    var responseStreamPrime = swPrecache(config);
-
-    streamEqual(responseStream, responseStreamPrime, function(err, equal) {
-      assert.ifError(err);
-      assert(!equal);
+    swPrecache(config, function(responseString) {
+      fs.appendFileSync(TEMP_FILE, 'new data');
+      swPrecache(config, function(responseStringPrime) {
+        assert.notStrictEqual(responseString, responseStringPrime);
+        done();
+      });
     });
   });
 
@@ -108,7 +100,7 @@ describe('sw-precache core functionality', function() {
 });
 
 describe('sw-precache parameters', function() {
-  it('should exclude files larger than the maximum size', function() {
+  it('should exclude files larger than the maximum size', function(done) {
     var file = 'test/data/one/a.txt';
     var size = fs.statSync(file).size;
     var config = {
@@ -116,13 +108,13 @@ describe('sw-precache parameters', function() {
       staticFileGlobs: [file],
       maximumFileSizeToCacheInBytes: size - 1
     };
-    var responseStreamSmaller = swPrecache(config);
-    config.maximumFileSizeToCacheInBytes = size;
-    var responseStreamLarger = swPrecache(config);
 
-    streamEqual(responseStreamSmaller, responseStreamLarger, function(err, equal) {
-      assert.ifError(err);
-      assert(!equal);
+    swPrecache(config, function(responseStringSmaller) {
+      config.maximumFileSizeToCacheInBytes = size;
+      swPrecache(config, function(responseStringLarger) {
+        assert(responseStringSmaller.length < responseStringLarger.length);
+        done();
+      });
     });
   });
 });
