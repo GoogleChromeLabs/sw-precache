@@ -49,7 +49,7 @@ function formatBytesAsString(bytes) {
   return Math.round(bytes / (1024 * 1024)) + ' MB';
 }
 
-module.exports = function(params) {
+module.exports = function(params, callback) {
   _.defaults(params, {
     dynamicUrlToDependencies: {},
     handleFetch: true,
@@ -119,11 +119,19 @@ module.exports = function(params) {
   params.logger(util.format('Total precache size is about %s for %d resources.',
     formatBytesAsString(cumulativeSize), relativeUrls.length));
 
-  var templateBuffer = fs.readFileSync(params.templateFilePath);
-  return _.template(templateBuffer, {
-    handleFetch: params.handleFetch,
-    importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
-    includeCachePolyfill: params.includeCachePolyfill,
-    precacheConfig: JSON.stringify(precacheConfig)
+  fs.readFile(params.templateFilePath, 'utf8', function(error, data) {
+    if (error) {
+      callback(error);
+      return;
+    }
+
+    var populatedTemplate = _.template(data, {
+      handleFetch: params.handleFetch,
+      importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
+      includeCachePolyfill: params.includeCachePolyfill,
+      precacheConfig: JSON.stringify(precacheConfig)
+    });
+
+    callback(null, populatedTemplate);
   });
 };

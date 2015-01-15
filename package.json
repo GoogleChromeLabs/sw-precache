@@ -21,12 +21,13 @@
     "gulp": "^3.8.10",
     "gulp-file": "^0.2.0",
     "gulp-load-plugins": "^0.8.0",
+    "gulp-util": "^3.0.1",
     "jade": "^1.8.2",
+    "mocha": "^2.1.0",
     "run-sequence": "^1.0.2"
   },
   "dependencies": {
     "glob": "^4.3.2",
-    "gulp-util": "^3.0.1",
     "lodash": "^2.4.1"
   },
   "repository": {
@@ -36,5 +37,8 @@
   "bugs": {
     "url": "https://github.com/jeffposnick/sw-precache/issues"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "mocha"
+  }
 }

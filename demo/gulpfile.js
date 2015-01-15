@@ -25,8 +25,8 @@ function runExpress(port, rootDir) {
   });
 }
 
-function generateServiceWorkerFileContents(rootDir, handleFetch) {
-  return swPrecache({
+function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
+  var config = {
     dynamicUrlToDependencies: {
       './': [rootDir + '/index.html'],
       'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],
@@ -41,7 +41,9 @@ function generateServiceWorkerFileContents(rootDir, handleFetch) {
       rootDir + '/js/**.js'
     ],
     stripPrefix: rootDir + '/'
-  });
+  };
+
+  swPrecache(config, callback);
 }
 
 gulp.task('default', ['serve-dist']);
@@ -62,18 +64,26 @@ gulp.task('serve-dist', ['build'], function() {
   runExpress(3000, DIST_DIR);
 });
 
-gulp.task('generate-service-worker-dev', function() {
-  var serviceWorkerFileContents = generateServiceWorkerFileContents(DEV_DIR, false);
-
-  return $.file('service-worker.js', serviceWorkerFileContents, {src: true})
-    .pipe(gulp.dest(DEV_DIR));
+gulp.task('generate-service-worker-dev', function(callback) {
+  generateServiceWorkerFileContents(DEV_DIR, false, function(error, serviceWorkerFileContents) {
+    if (error) {
+      return callback(error);
+    }
+    $.file('service-worker.js', serviceWorkerFileContents)
+      .pipe(gulp.dest(DEV_DIR));
+    callback();
+  });
 });
 
-gulp.task('generate-service-worker-dist', function() {
-  var serviceWorkerFileContents = generateServiceWorkerFileContents(DIST_DIR, true);
-
-  return $.file('service-worker.js', serviceWorkerFileContents, {src: true})
-    .pipe(gulp.dest(DIST_DIR));
+gulp.task('generate-service-worker-dist', function(callback) {
+  generateServiceWorkerFileContents(DIST_DIR, true, function(error, serviceWorkerFileContents) {
+    if (error) {
+      return callback(error);
+    }
+    $.file('service-worker.js', serviceWorkerFileContents)
+      .pipe(gulp.dest(DIST_DIR));
+    callback();
+  });
 });
 
 gulp.task('copy-dev-to-dist', function() {
