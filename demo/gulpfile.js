@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')({pattern: '*'});
+var fs = require('fs');
 var swPrecache = require('../sw-precache.js');
 
 var DEV_DIR = 'app';
@@ -69,9 +70,12 @@ gulp.task('generate-service-worker-dev', function(callback) {
     if (error) {
       return callback(error);
     }
-    $.file('service-worker.js', serviceWorkerFileContents)
-      .pipe(gulp.dest(DEV_DIR));
-    callback();
+    fs.writeFile(DEV_DIR + '/service-worker.js', serviceWorkerFileContents, function(error) {
+      if (error) {
+        return callback(error);
+      }
+      callback();
+    });
   });
 });
 
@@ -80,9 +84,12 @@ gulp.task('generate-service-worker-dist', function(callback) {
     if (error) {
       return callback(error);
     }
-    $.file('service-worker.js', serviceWorkerFileContents)
-      .pipe(gulp.dest(DIST_DIR));
-    callback();
+    fs.writeFile(DIST_DIR + '/service-worker.js', serviceWorkerFileContents, function(error) {
+      if (error) {
+        return callback(error);
+      }
+      callback();
+    });
   });
 });
 
