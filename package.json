@@ -2,7 +2,12 @@
   "name": "sw-precache",
   "version": "1.0.0",
   "description": "Generate service worker code that will precache specific resources.",
-  "author": "Jeff Posnick <jeffy@google.com>",
+  "author": {
+    "name": "Jeff Posnick",
+    "email": "jeffy@google.com",
+    "url": "https://jeffy.info"
+  },
+  "homepage": "https://github.com/jeffposnick/sw-precache",
   "main": "sw-precache.js",
   "keywords": [
     "caching",
@@ -30,15 +35,14 @@
     "glob": "^4.3.2",
     "lodash": "^2.4.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/jeffposnick/sw-precache"
-  },
-  "bugs": {
-    "url": "https://github.com/jeffposnick/sw-precache/issues"
-  },
+  "repository": "jeffposnick/sw-precache",
+  "bugs": "https://github.com/jeffposnick/sw-precache/issues",
   "license": "Apache-2.0",
   "scripts": {
     "test": "mocha"
-  }
+  },
+  "files": [
+    "sw-precache.js",
+    "service-worker.tmpl"
+  ]
 }
