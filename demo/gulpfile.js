@@ -48,8 +48,8 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
 
 gulp.task('default', ['serve-dist']);
 
-gulp.task('build', function() {
-  $.runSequence('copy-dev-to-dist', 'generate-service-worker-dist');
+gulp.task('build', function(callback) {
+  $.runSequence('copy-dev-to-dist', 'generate-service-worker-dist', callback);
 });
 
 gulp.task('clean', function() {
