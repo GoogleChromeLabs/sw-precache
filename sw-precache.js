@@ -7,6 +7,9 @@ var path = require('path');
 var util = require('util');
 var _ = require('lodash');
 
+// This should only change if there are breaking changes in the cache format used by the SW.
+var VERSION = 'v1';
+
 function getFileAndSizeAndHashForFile(file) {
   var stat = fs.statSync(file);
 
@@ -129,7 +132,8 @@ module.exports = function(params, callback) {
       handleFetch: params.handleFetch,
       importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
       includeCachePolyfill: params.includeCachePolyfill,
-      precacheConfig: JSON.stringify(precacheConfig)
+      precacheConfig: JSON.stringify(precacheConfig),
+      version: VERSION
     });
 
     callback(null, populatedTemplate);

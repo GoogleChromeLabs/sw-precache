@@ -5,10 +5,20 @@ importScripts(<%= importScripts %>);
 <% } %>
 
 var PrecacheConfig = <%= precacheConfig %>;
-var CacheNamePrefix = 'sw-precache-' + (self.registration ? self.registration.scope : self.scope) + '-';
+var CacheNamePrefix = 'sw-precache-<%= version %>-' + (self.registration ? self.registration.scope : self.scope) + '-';
 
 function getCacheNameFromCacheOption(cacheOption) {
   return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
+}
+
+function deleteAllCaches() {
+  return caches.keys().then(function(cacheNames) {
+    return Promise.all(
+      cacheNames.map(function(cacheName) {
+        return caches.delete(cacheName);
+      })
+    );
+  });
 }
 
 self.addEventListener('install', function(event) {
@@ -46,7 +56,49 @@ self.addEventListener('install', function(event) {
   );
 });
 
+self.addEventListener('message', function(event) {
+  if (event.data.command == 'delete_all') {
+    console.log('About to delete all caches...');
+    deleteAllCaches().then(function() {
+      console.log('Caches deleted.');
+      event.ports[0].postMessage({
+        error: null
+      });
+    }).catch(function(error) {
+      console.log('Caches not deleted:', error);
+      event.ports[0].postMessage({
+        error: error
+      });
+    });
+  }
+});
+
 <% if (handleFetch) { %>
+function cachesMatchForPrefix(request, opts) {
+  return caches.keys().then(function(cacheNames) {
+    var match;
+
+    return cacheNames.reduce(function(chain, cacheName) {
+      return chain.then(function() {
+        if (match) {
+          return match;
+        }
+
+        if (cacheName.indexOf(CacheNamePrefix) != 0) {
+          return;
+        }
+
+        return caches.open(cacheName).then(function(cache) {
+          return cache.match(request, opts);
+        }).then(function(response) {
+          match = response;
+          return match;
+        });
+      });
+    }, Promise.resolve());
+  });
+}
+
 self.addEventListener('fetch', function(event) {
   if (event.request.method == 'GET') {
     // This check limits this fetch handler so that it only intercepts traffic for one
@@ -61,7 +113,7 @@ self.addEventListener('fetch', function(event) {
 
     if (isRequestForPrecachedUrl) {
       event.respondWith(
-        caches.match(event.request).then(function(response) {
+        cachesMatchForPrefix(event.request).then(function(response) {
           return response || fetch(event.request);
         })
       );
