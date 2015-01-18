@@ -32,7 +32,7 @@ self.addEventListener('install', function(event) {
           var cacheName = getCacheNameFromCacheOption(cacheOption);
           console.log('Adding relative URL "%s" to cache named "%s"', cacheOption[0], cacheName);
           return caches.open(cacheName).then(function(cache) {
-            return cache.add(cacheOption[0]);
+            return cache.add(new Request(cacheOption[0], {credentials: 'same-origin'}));
           });
         })
       ).then(function() {
