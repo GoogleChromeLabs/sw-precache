@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
+var prettyBytes = require('pretty-bytes');
 var util = require('util');
 var _ = require('lodash');
 
@@ -40,18 +41,6 @@ function getHash(data) {
   return md5.digest('hex');
 }
 
-function formatBytesAsString(bytes) {
-  if (bytes < 1024) {
-    return bytes + ' B';
-  }
-
-  if (bytes < (1024 * 1024)) {
-    return Math.round(bytes / 1024) + ' KB';
-  }
-
-  return Math.round(bytes / (1024 * 1024)) + ' MB';
-}
-
 module.exports = function(params, callback) {
   _.defaults(params, {
     dynamicUrlToDependencies: {},
@@ -81,12 +70,12 @@ module.exports = function(params, callback) {
         relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
 
         params.logger(util.format("Caching static resource '%s' (%s)", fileAndSizeAndHash.file,
-          formatBytesAsString(fileAndSizeAndHash.size)));
+          prettyBytes(fileAndSizeAndHash.size)));
         cumulativeSize += fileAndSizeAndHash.size;
       } else {
         params.logger(util.format("Skipping static resource '%s' (%s) - max size is %s",
-          fileAndSizeAndHash.file, formatBytesAsString(fileAndSizeAndHash.size),
-          formatBytesAsString(params.maximumFileSizeToCacheInBytes)));
+          fileAndSizeAndHash.file, prettyBytes(fileAndSizeAndHash.size),
+          prettyBytes(params.maximumFileSizeToCacheInBytes)));
       }
     });
   });
@@ -122,7 +111,7 @@ module.exports = function(params, callback) {
   });
 
   params.logger(util.format('Total precache size is about %s for %d resources.',
-    formatBytesAsString(cumulativeSize), relativeUrls.length));
+    prettyBytes(cumulativeSize), relativeUrls.length));
 
   fs.readFile(params.templateFilePath, 'utf8', function(error, data) {
     if (error) {
