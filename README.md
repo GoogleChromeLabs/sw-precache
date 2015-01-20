@@ -1,60 +1,124 @@
-# tl;dr
-This project is an exploration into integrating service worker-based caching patterns into  [`gulp`](http://gulpjs.com/) or [`grunt`](http://gruntjs.com/) build scripts. If you have a website, adding in offline-first support should be as easy as adding some additional logic to your build process.
+#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
 
-### What's all this, then?
-[Service workers](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html) give JavaScript developers almost complete control over a browser's network stack. There are a number of [patterns](http://jakearchibald.com/2014/offline-cookbook/) around offline use cases, and one of the most useful is [cache on install as a dependency](http://jakearchibald.com/2014/offline-cookbook/#on-install-as-a-dependency). The first time a user visits your page using a browser that supports service workers, all of the resources needed to use the page offline can be automatically cached locally, and each subsequent visit to any page on the site will be a) fast (since there's no network dependency) and b) work offline (for the same reason).
+> Generate service worker code that will precache specific resources.
+See the [background doc](background.md) for more information.
 
-### Great! As a developer, what do I have to do?
-Here's a code snippet from [@jakearchibald](https://github.com/jakearchibald)'s post describing [cache on install as a dependency](http://jakearchibald.com/2014/offline-cookbook/#on-install-as-a-dependency):
 
-    self.addEventListener('install', function(event) {
-      event.waitUntil(
-        caches.open('mysite-static-v3').then(function(cache) {
-          return cache.addAll([
-            '/css/whatever-v3.css',
-            '/css/imgs/sprites-v6.png',
-            '/css/fonts/whatever-v8.woff',
-            '/js/all-min-v4.js'
-            // etc
-          ]);
-        })
-      );
-    });
-    
-There are two difficulties here that someone implementing this pattern with a real site would face:
+## Install
 
-- `mysite-static-v3` represents the name of the [cache](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cache-objects) that will store and serve the resources, and in particular, `v3` represents the unique version that's "current" for your site. As a developer, how do you handle cache versioning—what if you forget to bump up the version number for each of your named caches, and existing users of your site never pick up the changes to the cached resources that you meant to deploy?
+```sh
+$ npm install --save-dev sw-precache
+```
 
-- There's a small list of resources, followed by an `// etc`. For a site of any significant size, that `// etc` contains multitudes. What if you forget to add in that additional image, or forgot to switch in the latest version of your minified JavaScript?
 
-### So what does this project aim to do?
-Versioning and generating lists of local files are both solved problems, and `gulp` in particular (which you're hopefully using already as part of your build tooling) is ideal for that purpose. What's missing is something to tie the things that `gulp` can do in with the service worker logic to ensure that your cache versioning is always correct, and your lists of resources for each cache are always up to date. This project is an exploration of one approach to automating that process.
+## Usage
 
-(**Update**: The code has recently been refactored to be a standalone node module, with the goal of making the output work equally well as part of a `gulp` or `grunt` build process.)
+`sw-precache` is meant to be incorporated into your site's build process. It exposes a standard
+callback-based interface and is compatibile with [`gulp`](http://gulpjs.com/),
+[`Grunt`](http://gruntjs.com/), or other node-based build tools.
 
-### How's it all work?
+The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/gulpfile.js)
+illustrates its usage in context; it will use `sw-precache` to generate valid JavaScript code and
+then write it to a local directory as `service-worker.js`.
 
-Inside the sample [`gulpfile.js`](https://github.com/jeffposnick/gulp-sw-precache/blob/master/demo/gulpfile.js), there's a list of [glob patterns](https://github.com/isaacs/node-glob) corresponding to static files, as well as a mapping of server-generated resource URLs to the component files that are used to generated that URL's output:
+**Important**: Generating the `service-worker.js` is only one step in implementing precaching. You
+**must** call
+[`navigator.serviceWorker.register()`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#navigator-service-worker-register)
+to register `service-worker.js` as the service worker that controls your pages; otherwise, it will
+never execute.
+You load a local copy of the
+[`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
+script within your pages to handle this for you; in practice, this means adding
 
-    dynamicUrlToDependencies: {
-      'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],
-      'dynamic/page2': [rootDir + '/views/layout.jade', rootDir + '/views/page2.jade']
-    },
-    staticFileGlobs: [
-      rootDir + '/css/**.css',
-      rootDir + '/**.html',
-      rootDir + '/images/**.*',
-      rootDir + '/js/**.js'
-    ],
+    <script src="path/to/service-worker-registration.js"></script>
 
-For each of those entries, there's code to expand the glob pattern and calculate the [MD5 hash](http://en.wikipedia.org/wiki/MD5) of the contents of each file. The MD5 hash along with the file's relative path is used to uniquely name the [cache](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#cache-objects) entry that will be used to store that resource. If the process runs again and an existing file's contents change, or a new file is added or an existing file is deleted, those changes will result in a different list of cache names being generated. Conversely, if the process runs agains and every file is exactly the same as last time, then the same MD5 hashes and names *should* be generated, and the service worker won't attempt to update anything.
+somewhere within your HTML. The demo
+[`index.html`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/index.html) file
+contains an example.
 
-Regardless of what files we're working with, most of the logic stays the same—there's an `install` handler that caches anything that isn't already present in the cache (using the `hash` to determine whether the exact version of each resource is present or not), and an `activate` handler that takes care of deleting old caches that we no longer need. There's also a `fetch` handler that attempst to serve each response from the cache, falling back to the network only if a given resource URL isn't present.
 
-### Try it out!
-Clone this repo, run `npm install`, and then `gulp serve-dist`. Take a look at the contents of the generated `dist` directory. Go to `http://localhost:3000` using Chrome 40 or newer (I prefer testing using [Chrome Canary](https://www.google.com/chrome/browser/canary.html)). Visit `chrome://serviceworker-internals` and check out the logged activity for the registered service worker, as well as the service worker cache inspector.
+## Options
 
-Try changing some files in `dist` and then running `gulp generate-service-worker-dist` to generate a new `dist/service-worker.js` file, then close and re-open `http://localhost:3000`. Examine the logging via `chrome://serviceworker-internals` and notice how the service worker cache inspector has updated to include the latest set named caches.
+### dynamicUrlToDependencies [`Object<String,Array<String>>`]
+Maps a dynamic URL string to an array of all the files that URL's contents depend on.
+E.g., if the contents of `/pages/home` are generated server-side via the templates `layout.jade` and
+`home.jade`, then specify `'/pages/home': ['layout.jade', 'home.jade']`. The MD5 hash used to
+determine whether `/pages/home` has changed will depend on the hashes of both
+`layout.jade` and `home.jade`.
+Default: `{}`
 
-### Feedback, please!
-There are a lot of `TODO`s in the code where I've hacked something together that seems to work, but given my rather limited experience working with node modules, may not be the right approach. I'd love to hear suggestions about improving that. And in general, let me know if this seems like something you'd find useful (or if you even do actually start using it)!
+### handleFetch [`boolean`]
+Determines whether the `fetch` event handler is included in the generated service worker code.
+It is useful to set this to `false` in development builds, to ensure that features like live reload
+still work (otherwise, the content would always be served from the service worker cache).
+Default: `true`
+
+### importScripts [`Array<String>`]
+If you'd like to include one or more external scripts as part of the generated service worker code,
+use this option. The scripts passed in will be passed directly to the
+[`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)
+method.
+Default: `[]`
+
+### includeCachePolyfill [`boolean`]
+Whether or not to include the
+[service worker cache polyfill](https://github.com/coonsta/cache-polyfill/blob/master/dist/serviceworker-cache-polyfill.js), which provides a JavaScript
+implementation of some functionality that is not yet found in Chrome 41.
+Unless you know that you're already including this elsewhere in your project, it's a good idea to
+leave as-is.
+Default: `true`
+
+### logger [`function`]
+A function used to report back on which resources are being precached and the overall size.
+Use `function() {}` if you'd prefer that nothing is logged.
+Within a `gulp` script, it's recommended that you use
+[`gulp-util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
+Default: `console.log`
+
+### maximumFileSizeToCacheInBytes [`Number`]
+Files larger than this size will not be added to the precache list.
+Default: `4194304` (2 megabytes)
+
+### stripPrefix [`String`]
+Useful when there's a discrepency between the relative path to a local file at build time and the
+relative URL that the resource will be served from.
+E.g. if all your local files are under `dist/app/` and your web root is also at `dist/app/`, you'd
+strip that prefix from the start of each local file's path in order to get the correct relative URL.
+Default: `''`
+
+### staticFileGlobs [`Array<String>`]
+An array of one or more string patterns that will be passed in to
+[`glob`](https://github.com/isaacs/node-glob).
+All files matching these globs will be automatically precached by the generated service worker.
+You'll almost always want to specify something for this.
+Default: `[]`
+
+### templateFilePath [`String`]
+The path to the file used as the ([lo-dash](https://lodash.com/docs#template)) template to generate
+`service-worker.js`.
+If you need to add in additional functionality to the generated service worker code, it's
+recommended that you use the `importScripts` option to include in extra JavaScript code rather than
+using a different template.
+But if you do need to change the basic generated service worker code, please make a copy of the
+[original template](https://github.com/jeffposnick/sw-precache/blob/master/service-worker.tmpl),
+modify it locally, and use this option to point to your template file.
+Default: `service-worker.tmpl` (in the directory that this module lives in)
+
+
+## Acknowledgements
+
+Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
+[Addy Osmani](https://github.com/addyosmani) for their advice and code reviews.
+
+
+## License
+
+Apache 2.0
+© 2015 Google Inc.
+
+[npm-url]: https://npmjs.org/package/sw-precache
+[npm-image]: https://badge.fury.io/js/sw-precache.svg
+[travis-url]: https://travis-ci.org/jeffposnick/sw-precache
+[travis-image]: https://travis-ci.org/jeffposnick/sw-precache.svg?branch=master
+[daviddm-url]: https://david-dm.org/jeffposnick/sw-precache.svg?theme=shields.io
+[daviddm-image]: https://david-dm.org/jeffposnick/sw-precache
