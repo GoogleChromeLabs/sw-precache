@@ -3,6 +3,7 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')({pattern: '*'});
 var fs = require('fs');
+var path = require('path');
 var swPrecache = require('../sw-precache.js');
 
 var DEV_DIR = 'app';
@@ -12,7 +13,7 @@ function runExpress(port, rootDir) {
   var app = $.express();
 
   app.use($.express.static(rootDir));
-  app.set('views', rootDir + '/views');
+  app.set('views', path.join(rootDir, 'views'));
   app.set('view engine', 'jade');
 
   app.get('/dynamic/:page', function (req, res) {
@@ -29,9 +30,15 @@ function runExpress(port, rootDir) {
 function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
   var config = {
     dynamicUrlToDependencies: {
-      './': [rootDir + '/index.html'],
-      'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],
-      'dynamic/page2': [rootDir + '/views/layout.jade', rootDir + '/views/page2.jade']
+      './': [path.join(rootDir, 'index.html')],
+      'dynamic/page1': [
+        path.join(rootDir, 'views', 'layout.jade'),
+        path.join(rootDir, 'views', 'page1.jade')
+      ],
+      'dynamic/page2': [
+        path.join(rootDir, 'views', 'layout.jade'),
+        path.join(rootDir, 'views', 'page2.jade')
+      ]
     },
     handleFetch: handleFetch,
     logger: $.util.log,
@@ -41,7 +48,7 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
       rootDir + '/images/**.*',
       rootDir + '/js/**.js'
     ],
-    stripPrefix: rootDir + '/'
+    stripPrefix: path.join(rootDir, path.sep)
   };
 
   swPrecache(config, callback);
@@ -70,7 +77,7 @@ gulp.task('generate-service-worker-dev', function(callback) {
     if (error) {
       return callback(error);
     }
-    fs.writeFile(DEV_DIR + '/service-worker.js', serviceWorkerFileContents, function(error) {
+    fs.writeFile(path.join(DEV_DIR, 'service-worker.js'), serviceWorkerFileContents, function(error) {
       if (error) {
         return callback(error);
       }
@@ -84,7 +91,7 @@ gulp.task('generate-service-worker-dist', function(callback) {
     if (error) {
       return callback(error);
     }
-    fs.writeFile(DIST_DIR + '/service-worker.js', serviceWorkerFileContents, function(error) {
+    fs.writeFile(path.join(DIST_DIR, 'service-worker.js'), serviceWorkerFileContents, function(error) {
       if (error) {
         return callback(error);
       }

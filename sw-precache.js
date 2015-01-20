@@ -26,7 +26,7 @@ function getFileAndSizeAndHashForFile(file) {
 }
 
 function getFilesAndSizesAndHashesForGlobPattern(globPattern) {
-  return glob.sync(globPattern).map(function(file) {
+  return glob.sync(globPattern.replace(path.sep, '/')).map(function(file) {
     return getFileAndSizeAndHashForFile(file);
   }).filter(function(fileAndSizeAndHash) {
     return fileAndSizeAndHash != null;
@@ -62,7 +62,7 @@ module.exports = function(params, callback) {
     maximumFileSizeToCacheInBytes: 2 * 1024 * 1024, // 2MB
     stripPrefix: '',
     staticFileGlobs: [],
-    templateFilePath: path.dirname(fs.realpathSync(__filename)) + '/service-worker.tmpl'
+    templateFilePath: path.join(path.dirname(fs.realpathSync(__filename)), 'service-worker.tmpl')
   });
 
   var relativeUrlToHash = {};
@@ -75,7 +75,9 @@ module.exports = function(params, callback) {
     filesAndSizesAndHashes.forEach(function(fileAndSizeAndHash) {
       if (fileAndSizeAndHash.size <= params.maximumFileSizeToCacheInBytes) {
         // Strip the prefix to turn this into a relative URL.
-        var relativeUrl = fileAndSizeAndHash.file.replace(params.stripPrefix, '');
+        var relativeUrl = fileAndSizeAndHash.file
+          .replace(params.stripPrefix, '')
+          .replace(path.sep, '/');
         relativeUrlToHash[relativeUrl] = fileAndSizeAndHash.hash;
 
         params.logger(util.format("Caching static resource '%s' (%s)", fileAndSizeAndHash.file,
