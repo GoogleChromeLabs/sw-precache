@@ -72,6 +72,11 @@ gulp.task('serve-dist', ['build'], function() {
   runExpress(3000, DIST_DIR);
 });
 
+gulp.task('gh-pages', ['build'], function () {
+  return gulp.src(DIST_DIR + '/**/*')
+    .pipe($.ghPages({remoteUrl: 'https://github.com/jeffposnick/sw-precache'}));
+});
+
 gulp.task('generate-service-worker-dev', function(callback) {
   generateServiceWorkerFileContents(DEV_DIR, false, function(error, serviceWorkerFileContents) {
     if (error) {
