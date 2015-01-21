@@ -13,28 +13,60 @@ $ npm install --save-dev sw-precache
 
 ## Usage
 
-`sw-precache` is meant to be incorporated into your site's build process. It exposes a standard
-callback-based interface and is compatibile with [`gulp`](http://gulpjs.com/),
-[`Grunt`](http://gruntjs.com/), or other node-based build tools.
+### Overview
+
+1. **Make sure your site is served using HTTPS!**
+Service worker functionality is only available on pages that are accessed via HTTPS.
+(`http://localhost` will also work, to facilitate testing.) The rationale for this restriction is
+outlined in the
+["Prefer Secure Origins For Powerful New Features" document](http://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features).
+
+2. **Incorporate `sw-precache` into your `node`-based build script.**
+It should work well with either `gulp` or `Grunt`, or other build scripts that run on `node`.
+As part of the build process, `sw-precache` generates fully functional JavaScript code that will
+take care of precaching and fetching all the resources your site needs to function offline.
+
+3. **Register the service worker JavaScript.**
+The JavaScript that's generated needs to be registered as the controlling service worker for your
+pages. This technically only needs to be done from within a top-level "entry" page for your site,
+since the registration includes a
+[`scope`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-registration-scope)
+which will apply to all pages underneath your top-level page.
+[`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
+is a sample script that illustrates the best practices for registering the generated service worker
+code and handling the various
+[lifecycle](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-state.1) events.
+
+### Example
 
 The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/gulpfile.js)
 illustrates its usage in context; it will use `sw-precache` to generate valid JavaScript code and
-then write it to a local directory as `service-worker.js`.
+then write it to a local directory as `service-worker.js`. Here's an excerpt:
 
-**Important**: Generating the `service-worker.js` is only one step in implementing precaching. You
-**must** call
-[`navigator.serviceWorker.register()`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#navigator-service-worker-register)
-to register `service-worker.js` as the service worker that controls your pages; otherwise, it will
-never execute.
-You load a local copy of the
-[`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
-script within your pages to handle this for you; in practice, this means adding
+    var config = {
+      dynamicUrlToDependencies: {
+        './': [path.join(rootDir, 'index.html')],
+        'dynamic/page1': [
+          path.join(rootDir, 'views', 'layout.jade'),
+          path.join(rootDir, 'views', 'page1.jade')
+        ],
+        'dynamic/page2': [
+          path.join(rootDir, 'views', 'layout.jade'),
+          path.join(rootDir, 'views', 'page2.jade')
+        ]
+      },
+      handleFetch: handleFetch,
+      logger: $.util.log,
+      staticFileGlobs: [
+        rootDir + '/css/**.css',
+        rootDir + '/**.html',
+        rootDir + '/images/**.*',
+        rootDir + '/js/**.js'
+      ],
+      stripPrefix: path.join(rootDir, path.sep)
+    };
 
-    <script src="path/to/service-worker-registration.js"></script>
-
-somewhere within your HTML. The demo
-[`index.html`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/index.html) file
-contains an example.
+    swPrecache(config, callback);
 
 
 ## Options
