@@ -6,7 +6,9 @@ if ('serviceWorker' in navigator) {
   }).then(function(registration) {
     // Check to see if there's an updated version of service-worker.js with new files to cache:
     // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-registration-update-method
-    registration.update();
+    if (typeof registration.update == 'function') {
+      registration.update();
+    }
 
     // updatefound is fired if service-worker.js changes.
     registration.onupdatefound = function() {
