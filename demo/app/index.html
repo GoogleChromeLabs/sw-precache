@@ -8,6 +8,13 @@
 
   <body>
     <p>Check out <code>chrome://serviceworker-internals</code> for info on what's being cached.</p>
+    <p>
+      Try disabling your network connection (or stopping the local web server,
+      if you're accessing this from <code>localhost</code>) and
+      visit <a href="dynamic/page1">page1</a> or <a href="dynamic/page2">page2</a>.
+      Since they were precached, they should still be available.
+    </p>
+    <p>Here are some precached images:</p>
     <img src="images/one.png">
     <img src="images/two.png">
     <div>
