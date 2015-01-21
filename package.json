@@ -23,6 +23,7 @@
     "del": "^1.1.1",
     "express": "^4.10.7",
     "gulp": "^3.8.10",
+    "gulp-gh-pages": "^0.4.0",
     "gulp-load-plugins": "^0.8.0",
     "gulp-util": "^3.0.1",
     "jade": "^1.8.2",
