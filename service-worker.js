@@ -2,7 +2,7 @@
 
 
 
-var PrecacheConfig = [["./","9c054a09acc5e7e87357f1c95864306e"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","a296f770cc29401929029661383897a3"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","47c64e5064c930a6eb34d6fa1696bb95"]];
+var PrecacheConfig = [["./","62165058af7d3d8122733393e04672fe"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","65b5d57747701995e714f03fcac92392"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","47c64e5064c930a6eb34d6fa1696bb95"]];
 var CacheNamePrefix = 'sw-precache-v1-' + (self.registration ? self.registration.scope : '') + '-';
 
 function getCacheNameFromCacheOption(cacheOption) {
