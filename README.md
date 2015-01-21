@@ -154,9 +154,7 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 ## License
 
-Apache 2.0
-
-© 2015 Google Inc.
+[Apache 2.0](https://github.com/jeffposnick/sw-precache/blob/master/LICENSE) © 2015 Google Inc.
 
 [npm-url]: https://npmjs.org/package/sw-precache
 [npm-image]: https://badge.fury.io/js/sw-precache.svg
