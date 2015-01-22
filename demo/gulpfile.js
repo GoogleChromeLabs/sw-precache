@@ -3,6 +3,7 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')({pattern: '*'});
 var fs = require('fs');
+var packageJson = require('../package.json');
 var path = require('path');
 var swPrecache = require('../sw-precache.js');
 
@@ -29,6 +30,7 @@ function runExpress(port, rootDir) {
 
 function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
   var config = {
+    cacheId: packageJson.name,
     dynamicUrlToDependencies: {
       './': [path.join(rootDir, 'index.html')],
       'dynamic/page1': [

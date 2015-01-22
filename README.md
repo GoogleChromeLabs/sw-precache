@@ -44,6 +44,7 @@ illustrates its usage in context; it will use `sw-precache` to generate valid Ja
 then write it to a local directory as `service-worker.js`. Here's an excerpt:
 
     var config = {
+      cacheId: packageJson.name,
       dynamicUrlToDependencies: {
         './': [path.join(rootDir, 'index.html')],
         'dynamic/page1': [
@@ -96,9 +97,10 @@ using the `importScripts` option.
 A string used to distinguish the caches created by different web applications that are served off
 of the same origin and path. While serving completely different sites from the same URL is not
 likely to be an issue in a production environment, it avoids cache-conflicts when testing various
-projects all served off of `http://localhost`
+projects all served off of `http://localhost`. You may want to set it to, e.g., the `name`
+property from your `package.json`.
 
-Default: The `name` property from your local `package.json`; otherwise, `''`
+Default: `''`
 
 ### dynamicUrlToDependencies [`Object<String,Array<String>>`]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.

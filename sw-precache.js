@@ -44,7 +44,7 @@ function getHash(data) {
 
 module.exports = function(params, callback) {
   _.defaults(params, {
-    cacheId: (packageJson && packageJson.name) ? packageJson.name : '',
+    cacheId: '',
     dynamicUrlToDependencies: {},
     handleFetch: true,
     importScripts: [],
