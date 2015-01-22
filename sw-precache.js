@@ -3,6 +3,7 @@
 var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
+var packageJson = require('./package.json');
 var path = require('path');
 var prettyBytes = require('pretty-bytes');
 var util = require('util');
@@ -43,6 +44,7 @@ function getHash(data) {
 
 module.exports = function(params, callback) {
   _.defaults(params, {
+    cacheId: (packageJson && packageJson.name) ? packageJson.name : '',
     dynamicUrlToDependencies: {},
     handleFetch: true,
     importScripts: [],
@@ -120,6 +122,7 @@ module.exports = function(params, callback) {
     }
 
     var populatedTemplate = _.template(data, {
+      cacheId: params.cacheId,
       handleFetch: params.handleFetch,
       importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
       includeCachePolyfill: params.includeCachePolyfill,

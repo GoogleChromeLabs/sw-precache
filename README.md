@@ -92,6 +92,14 @@ using the `importScripts` option.
 
 ## Options
 
+### cacheId [`String`]
+A string used to distinguish the caches created by different web applications that are served off
+of the same origin and path. While serving completely different sites from the same URL is not
+likely to be an issue in a production environment, it avoids cache-conflicts when testing various
+projects all served off of `http://localhost`
+
+Default: The `name` property from your local `package.json`; otherwise, ''
+
 ### dynamicUrlToDependencies [`Object<String,Array<String>>`]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.
 E.g., if the contents of `/pages/home` are generated server-side via the templates `layout.jade` and

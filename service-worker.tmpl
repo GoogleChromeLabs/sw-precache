@@ -5,7 +5,7 @@ importScripts(<%= importScripts %>);
 <% } %>
 
 var PrecacheConfig = <%= precacheConfig %>;
-var CacheNamePrefix = 'sw-precache-<%= version %>-' + (self.registration ? self.registration.scope : '') + '-';
+var CacheNamePrefix = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '') + '-';
 
 function getCacheNameFromCacheOption(cacheOption) {
   return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
