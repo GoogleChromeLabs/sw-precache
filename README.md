@@ -69,6 +69,27 @@ then write it to a local directory as `service-worker.js`. Here's an excerpt:
     swPrecache(config, callback);
 
 
+## Considerations
+
+- Service worker caching should be considered a progressive enhancement. If you follow the model of
+conditionally registering a service worker only if it's supported (determined by
+`if('serviceWorker' in navigator)`), you'll get offline support on browsers with service workers and
+on browsers that don't support service workers, the offline-specific code will never be called.
+There's no overhead/breakage for older browsers if you add `sw-precache` to your build.
+
+- **All** resources that are precached will be fetched by a service worker running in a separate
+thread as soon as the service worker is installed. You should be judicious in what you list in the
+`dynamicUrlToDependencies` and `staticFileGlobs` options, since listing files that are non-essential
+(large images that are not shown on every page, for instance) will result in browsers downloading
+more data then is strictly necessary, as soon as they visit your site.
+
+- Precaching doesn't make sense for all types of resources (see previous point). Other caching
+strategies, like those outlined in the [offline cookbook](http://jakearchibald.com/2014/offline-cookbook/),
+can be used in conjunction with `sw-precache` to provide the best experience for your users. If you
+do implement additional caching logic, put the code in a separate JavaScript file and include it
+using the `importScripts` option.
+
+
 ## Options
 
 ### dynamicUrlToDependencies [`Object<String,Array<String>>`]
