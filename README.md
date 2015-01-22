@@ -98,7 +98,7 @@ of the same origin and path. While serving completely different sites from the s
 likely to be an issue in a production environment, it avoids cache-conflicts when testing various
 projects all served off of `http://localhost`
 
-Default: The `name` property from your local `package.json`; otherwise, ''
+Default: The `name` property from your local `package.json`; otherwise, `''`
 
 ### dynamicUrlToDependencies [`Object<String,Array<String>>`]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.
