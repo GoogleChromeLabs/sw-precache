@@ -150,6 +150,7 @@ Default: `service-worker.tmpl` (in the directory that this module lives in)
 
 Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 [Addy Osmani](https://github.com/addyosmani) for their advice and code reviews.
+[Jake Archibald](https://github.com/jakearchibald) was kind enough to review the service worker logic.
 
 
 ## License
