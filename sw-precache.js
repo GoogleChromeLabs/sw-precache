@@ -3,7 +3,6 @@
 var crypto = require('crypto');
 var fs = require('fs');
 var glob = require('glob');
-var packageJson = require('./package.json');
 var path = require('path');
 var prettyBytes = require('pretty-bytes');
 var util = require('util');
