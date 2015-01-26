@@ -26,6 +26,7 @@
     "gulp": "^3.8.10",
     "gulp-gh-pages": "^0.4.0",
     "gulp-load-plugins": "^0.8.0",
+    "gulp-mocha": "^2.0.0",
     "gulp-util": "^3.0.1",
     "jade": "^1.8.2",
     "mocha": "^2.1.0",
@@ -40,9 +41,7 @@
   "bugs": "https://github.com/jeffposnick/sw-precache/issues",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "mocha",
-    "prepublish": "mocha",
-    "postpublish": "cd demo && gulp gh-pages"
+    "test": "mocha"
   },
   "files": [
     "sw-precache.js",
