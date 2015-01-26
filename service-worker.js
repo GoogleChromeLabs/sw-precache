@@ -100,7 +100,7 @@ function cachesMatchForPrefix(request, opts) {
   });
 }
 
-function stripIgnoredUrlParameters(originalUrl) {
+function stripIgnoredUrlParameters(originalUrl, ignoreUrlParametersMatching) {
   var url = new URL(originalUrl);
 
   url.search = url.search.slice(1) // Exclude initial '?'
@@ -109,7 +109,7 @@ function stripIgnoredUrlParameters(originalUrl) {
       return kv.split('='); // Split each 'key=value' string into a [key, value] array
     })
     .filter(function(kv) {
-      return IgnoreUrlParametersMatching.every(function(ignoredRegex) {
+      return ignoreUrlParametersMatching.every(function(ignoredRegex) {
         return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
       });
     })
@@ -123,7 +123,8 @@ function stripIgnoredUrlParameters(originalUrl) {
 
 self.addEventListener('fetch', function(event) {
   if (event.request.method == 'GET') {
-    var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url);
+    var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url,
+      IgnoreUrlParametersMatching);
 
     // This check limits this fetch handler so that it only intercepts traffic for one
     // of the URLs we're explicitly pre-caching. It opens the door for other fetch
