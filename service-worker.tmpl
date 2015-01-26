@@ -6,6 +6,9 @@ importScripts(<%= importScripts %>);
 
 var PrecacheConfig = <%= precacheConfig %>;
 var CacheNamePrefix = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '') + '-';
+<% if (handleFetch) { %>
+var IgnoreUrlParametersMatching = [<%= ignoreUrlParametersMatching %>];
+<% } %>
 
 function getCacheNameFromCacheOption(cacheOption) {
   return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
@@ -99,8 +102,31 @@ function cachesMatchForPrefix(request, opts) {
   });
 }
 
+function stripIgnoredUrlParameters(originalUrl) {
+  var url = new URL(originalUrl);
+
+  url.search = url.search.slice(1) // Exclude initial '?'
+    .split('&') // Split into an array of 'key=value' strings
+    .map(function(kv) {
+      return kv.split('='); // Split each 'key=value' string into a [key, value] array
+    })
+    .filter(function(kv) {
+      return IgnoreUrlParametersMatching.every(function(ignoredRegex) {
+        return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
+      });
+    })
+    .map(function(kv) {
+      return kv.join('='); // Join each [key, value] array into a 'key=value' string
+    })
+    .join('&'); // Join the array of 'key=value' strings into a string with '&' in between each
+
+  return url.toString();
+}
+
 self.addEventListener('fetch', function(event) {
   if (event.request.method == 'GET') {
+    var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url);
+
     // This check limits this fetch handler so that it only intercepts traffic for one
     // of the URLs we're explicitly pre-caching. It opens the door for other fetch
     // handlers (such as those registered via importScripts()) to handle other network traffic.
@@ -108,12 +134,12 @@ self.addEventListener('fetch', function(event) {
       // The URLs in PrecacheConfig are all relative to the project root. Constructing a new URL()
       // and using the service worker's location as the base should result in a valid absolute URL.
       // (Using case-sensitive string comparisons of the absolute URLs isn't ideal, though.)
-      return new URL(cacheOption[0], self.location).toString() == event.request.url;
+      return new URL(cacheOption[0], self.location).toString() == urlWithoutIgnoredParameters;
     });
 
     if (isRequestForPrecachedUrl) {
       event.respondWith(
-        cachesMatchForPrefix(event.request).then(function(response) {
+        cachesMatchForPrefix(urlWithoutIgnoredParameters).then(function(response) {
           return response || fetch(event.request);
         })
       );

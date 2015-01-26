@@ -46,6 +46,7 @@ module.exports = function(params, callback) {
     cacheId: '',
     dynamicUrlToDependencies: {},
     handleFetch: true,
+    ignoreUrlParametersMatching: [/^utm_/],
     importScripts: [],
     includeCachePolyfill: true,
     logger: console.log,
@@ -54,6 +55,10 @@ module.exports = function(params, callback) {
     staticFileGlobs: [],
     templateFilePath: path.join(path.dirname(fs.realpathSync(__filename)), 'service-worker.tmpl')
   });
+
+  if (!Array.isArray(params.ignoreUrlParametersMatching)) {
+    params.ignoreUrlParametersMatching = [params.ignoreUrlParametersMatching];
+  }
 
   var relativeUrlToHash = {};
   var cumulativeSize = 0;
@@ -123,6 +128,7 @@ module.exports = function(params, callback) {
     var populatedTemplate = _.template(data, {
       cacheId: params.cacheId,
       handleFetch: params.handleFetch,
+      ignoreUrlParametersMatching: params.ignoreUrlParametersMatching,
       importScripts: params.importScripts ? params.importScripts.map(JSON.stringify).join(',') : null,
       includeCachePolyfill: params.includeCachePolyfill,
       precacheConfig: JSON.stringify(precacheConfig),

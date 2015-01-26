@@ -118,6 +118,17 @@ still work (otherwise, the content would always be served from the service worke
 
 Default: `true`
 
+### ignoreUrlParametersMatching [`Array<Regex>`]
+`sw-precache` finds matching cache entries by doing a comparison with the full request URL. It's
+common for sites to support URL query parameters that don't affect the site's content and should
+be effectively ignored for the purposes of cache matching—one example is the
+[`utm_`-prefixed](https://support.google.com/analytics/answer/1033867) parameters used for tracking
+campaign performance. By default, `sw-precache` will ignore `key=value` when `key` matches _any_ of
+the regular expressions provided in this option.
+To ignore all parameters, use `[/./]`. To take all parameters into account when matching, use `[]`.
+
+Default: `[/^utm_/]`
+
 ### importScripts [`Array<String>`]
 If you'd like to include one or more external scripts as part of the generated service worker code,
 use this option. The scripts passed in will be passed directly to the

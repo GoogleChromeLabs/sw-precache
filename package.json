@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Generate service worker code that will precache specific resources.",
   "author": {
     "name": "Jeff Posnick",
@@ -39,7 +39,8 @@
   "bugs": "https://github.com/jeffposnick/sw-precache/issues",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "prepublish": "mocha"
   },
   "files": [
     "sw-precache.js",
