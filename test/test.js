@@ -1,6 +1,7 @@
 var assert = require('assert');
 var fs = require('fs');
 var swPrecache = require('../sw-precache.js');
+var URL = require('dom-urls');
 
 var NOOP = function() {};
 var TEMP_FILE = 'test/data/temp.txt';
@@ -109,7 +110,7 @@ describe('sw-precache core functionality', function() {
 });
 
 describe('sw-precache parameters', function() {
-  it('should exclude files larger than the maximum size', function(done) {
+  it('should exclude files larger than maximumFileSizeToCacheInBytes', function(done) {
     var file = 'test/data/one/a.txt';
     var size = fs.statSync(file).size;
     var config = {
@@ -127,5 +128,63 @@ describe('sw-precache parameters', function() {
         done();
       });
     });
+  });
+});
+
+describe('stripIgnoredUrlParameters', function() {
+  var testUrl = 'http://example.com/index.html?one=1&two=2&three=3&four&five=5';
+  var localStripIgnoredUrlParameters;
+  // This is very, very ugly. But, I wanted to write tests?
+  before(function(done) {
+    swPrecache({logger: NOOP}, function(error, responseString) {
+      assert.ifError(error);
+      var matches = responseString.match(/^function stripIgnoredUrlParameters[^]+?^\}/m);
+      assert.notEqual(matches, null, 'Unable to parse function using regex.');
+      eval(matches[0]);
+      localStripIgnoredUrlParameters = stripIgnoredUrlParameters;
+      done();
+    });
+  });
+
+  it('should strip out all parameters when [/./] is used', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/./]);
+    assert.strictEqual(strippedUrl, 'http://example.com/index.html');
+    done();
+  });
+
+  it('should not do anything when [] is used', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl, []);
+    assert.strictEqual(strippedUrl, testUrl);
+    done();
+  });
+
+  it('should not do anything when a non-matching regex is used', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/dummy/]);
+    assert.strictEqual(strippedUrl, testUrl);
+    done();
+  });
+
+  it('should work when a key without a value is matched', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/four/]);
+    assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1&two=2&three=3&five=5');
+    done();
+  });
+
+  it('should work when a single regex matches multiple keys', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/^t/]);
+    assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1&four&five=5');
+    done();
+  });
+
+  it('should work when a multiples regexes each match multiple keys', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/^t/, /^f/]);
+    assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1');
+    done();
+  });
+
+  it('should work when there\'s a hash fragment', function(done) {
+    var strippedUrl = localStripIgnoredUrlParameters(testUrl + '#hash', [/^t/, /^f/]);
+    assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1#hash');
+    done();
   });
 });

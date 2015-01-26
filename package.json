@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "del": "^1.1.1",
+    "dom-urls": "^0.1.1",
     "express": "^4.10.7",
     "gulp": "^3.8.10",
     "gulp-gh-pages": "^0.4.0",
