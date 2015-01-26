@@ -146,6 +146,13 @@ describe('stripIgnoredUrlParameters', function() {
     });
   });
 
+  it('should return the same URL when the URL doesn\'t have a query string', function(done) {
+    var querylessUrl = 'http://example.com/index.html';
+    var strippedUrl = localStripIgnoredUrlParameters(querylessUrl, [/./]);
+    assert.strictEqual(strippedUrl, querylessUrl);
+    done();
+  });
+
   it('should strip out all parameters when [/./] is used', function(done) {
     var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/./]);
     assert.strictEqual(strippedUrl, 'http://example.com/index.html');
