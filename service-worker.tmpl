@@ -122,7 +122,9 @@ self.addEventListener('fetch', function(event) {
       event.respondWith(
         caches.open(cacheName).then(function(cache) {
           return cache.match(urlWithoutIgnoredParameters).then(function(response) {
-            return response || fetch(event.request);
+            return response || fetch(event.request).catch(function(e) {
+              console.error('Fetch for "%s" failed: %O', urlWithoutIgnoredParameters, e);
+            });
           });
         }).catch(function(e) {
           console.error('Couldn\'t serve response for "%s" from cache: %O', urlWithoutIgnoredParameters, e);
