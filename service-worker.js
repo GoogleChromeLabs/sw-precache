@@ -2,8 +2,11 @@
 
 
 
-var PrecacheConfig = [["./","62165058af7d3d8122733393e04672fe"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","65b5d57747701995e714f03fcac92392"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","1a467042e81e8f1e0b402f031a953660"]];
-var CacheNamePrefix = 'sw-precache-v1-' + (self.registration ? self.registration.scope : '') + '-';
+var PrecacheConfig = [["./","1ce2bf017dea092b4739c8bb25a522e9"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","871f68dd27ed9049a7db80bb02b2689a"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","ba1f2388a0fa13d141c1d96d49d47590"]];
+var CacheNamePrefix = 'sw-precache-v1-sw-precache-' + (self.registration ? self.registration.scope : '') + '-';
+
+var IgnoreUrlParametersMatching = [/^utm_/];
+
 
 function getCacheNameFromCacheOption(cacheOption) {
   return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
@@ -97,8 +100,31 @@ function cachesMatchForPrefix(request, opts) {
   });
 }
 
+function stripIgnoredUrlParameters(originalUrl) {
+  var url = new URL(originalUrl);
+
+  url.search = url.search.slice(1) // Exclude initial '?'
+    .split('&') // Split into an array of 'key=value' strings
+    .map(function(kv) {
+      return kv.split('='); // Split each 'key=value' string into a [key, value] array
+    })
+    .filter(function(kv) {
+      return IgnoreUrlParametersMatching.every(function(ignoredRegex) {
+        return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
+      });
+    })
+    .map(function(kv) {
+      return kv.join('='); // Join each [key, value] array into a 'key=value' string
+    })
+    .join('&'); // Join the array of 'key=value' strings into a string with '&' in between each
+
+  return url.toString();
+}
+
 self.addEventListener('fetch', function(event) {
   if (event.request.method == 'GET') {
+    var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url);
+
     // This check limits this fetch handler so that it only intercepts traffic for one
     // of the URLs we're explicitly pre-caching. It opens the door for other fetch
     // handlers (such as those registered via importScripts()) to handle other network traffic.
@@ -106,12 +132,12 @@ self.addEventListener('fetch', function(event) {
       // The URLs in PrecacheConfig are all relative to the project root. Constructing a new URL()
       // and using the service worker's location as the base should result in a valid absolute URL.
       // (Using case-sensitive string comparisons of the absolute URLs isn't ideal, though.)
-      return new URL(cacheOption[0], self.location).toString() == event.request.url;
+      return new URL(cacheOption[0], self.location).toString() == urlWithoutIgnoredParameters;
     });
 
     if (isRequestForPrecachedUrl) {
       event.respondWith(
-        cachesMatchForPrefix(event.request).then(function(response) {
+        cachesMatchForPrefix(urlWithoutIgnoredParameters).then(function(response) {
           return response || fetch(event.request);
         })
       );
