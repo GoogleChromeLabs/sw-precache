@@ -1,19 +1,22 @@
 'use strict';
 
 var gulp = require('gulp');
-var $ = require('gulp-load-plugins')({pattern: '*'});
+var $ = require('gulp-load-plugins')();
+var del = require('del');
+var express = require('express');
 var fs = require('fs');
 var packageJson = require('../package.json');
 var path = require('path');
+var runSequence = require('run-sequence');
 var swPrecache = require('../sw-precache.js');
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
 
 function runExpress(port, rootDir) {
-  var app = $.express();
+  var app = express();
 
-  app.use($.express.static(rootDir));
+  app.use(express.static(rootDir));
   app.set('views', path.join(rootDir, 'views'));
   app.set('view engine', 'jade');
 
@@ -59,11 +62,11 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
 gulp.task('default', ['serve-dist']);
 
 gulp.task('build', function(callback) {
-  $.runSequence('copy-dev-to-dist', 'generate-service-worker-dist', callback);
+  runSequence('copy-dev-to-dist', 'generate-service-worker-dist', callback);
 });
 
 gulp.task('clean', function() {
-  $.del([DIST_DIR]);
+  del([DIST_DIR]);
 });
 
 gulp.task('serve-dev', ['generate-service-worker-dev'], function() {
