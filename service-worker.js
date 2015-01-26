@@ -4,12 +4,28 @@
 
 var PrecacheConfig = [["./","1ce2bf017dea092b4739c8bb25a522e9"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","871f68dd27ed9049a7db80bb02b2689a"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","ba1f2388a0fa13d141c1d96d49d47590"]];
 var CacheNamePrefix = 'sw-precache-v1-sw-precache-' + (self.registration ? self.registration.scope : '') + '-';
+var AbsoluteUrlToCacheName;
+var CurrentCacheNamesToAbsoluteUrl;
+populateCurrentCacheNames(PrecacheConfig, CacheNamePrefix);
+
 
 var IgnoreUrlParametersMatching = [/^utm_/];
 
 
 function getCacheNameFromCacheOption(cacheOption) {
   return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
+}
+
+function populateCurrentCacheNames(precacheConfig, cacheNamePrefix) {
+  AbsoluteUrlToCacheName = {};
+  CurrentCacheNamesToAbsoluteUrl = {};
+
+  precacheConfig.forEach(function(cacheOption) {
+    var absoluteUrl = new URL(cacheOption[0], self.location).toString();
+    var cacheName = CacheNamePrefix + absoluteUrl + '-' + cacheOption[1];
+    CurrentCacheNamesToAbsoluteUrl[cacheName] = absoluteUrl;
+    AbsoluteUrlToCacheName[absoluteUrl] = cacheName;
+  });
 }
 
 function deleteAllCaches() {
@@ -26,22 +42,20 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.keys().then(function(allCacheNames) {
       return Promise.all(
-        PrecacheConfig.filter(function(cacheOption) {
-          var cacheName = getCacheNameFromCacheOption(cacheOption);
+        Object.keys(CurrentCacheNamesToAbsoluteUrl).filter(function(cacheName) {
           return allCacheNames.indexOf(cacheName) == -1;
-        }).map(function(cacheOption) {
-          var cacheName = getCacheNameFromCacheOption(cacheOption);
-          console.log('Adding relative URL "%s" to cache named "%s"', cacheOption[0], cacheName);
+        }).map(function(cacheName) {
+          var url = CurrentCacheNamesToAbsoluteUrl[cacheName];
+          console.log('Adding URL "%s" to cache named "%s"', url, cacheName);
           return caches.open(cacheName).then(function(cache) {
-            return cache.add(new Request(cacheOption[0], {credentials: 'same-origin'}));
+            return cache.add(new Request(url, {credentials: 'same-origin'}));
           });
         })
       ).then(function() {
-        var currentCacheNames = PrecacheConfig.map(getCacheNameFromCacheOption);
         return Promise.all(
           allCacheNames.filter(function(cacheName) {
             return cacheName.indexOf(CacheNamePrefix) == 0 &&
-                   currentCacheNames.indexOf(cacheName) == -1;
+                   !(cacheName in CurrentCacheNamesToAbsoluteUrl);
           }).map(function(cacheName) {
             console.log('Deleting out-of-date cache "%s"', cacheName);
             return caches.delete(cacheName);
@@ -75,31 +89,6 @@ self.addEventListener('message', function(event) {
 });
 
 
-function cachesMatchForPrefix(request, opts) {
-  return caches.keys().then(function(cacheNames) {
-    var match;
-
-    return cacheNames.reduce(function(chain, cacheName) {
-      return chain.then(function() {
-        if (match) {
-          return match;
-        }
-
-        if (cacheName.indexOf(CacheNamePrefix) != 0) {
-          return;
-        }
-
-        return caches.open(cacheName).then(function(cache) {
-          return cache.match(request, opts);
-        }).then(function(response) {
-          match = response;
-          return match;
-        });
-      });
-    }, Promise.resolve());
-  });
-}
-
 function stripIgnoredUrlParameters(originalUrl, ignoreUrlParametersMatching) {
   var url = new URL(originalUrl);
 
@@ -126,20 +115,18 @@ self.addEventListener('fetch', function(event) {
     var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url,
       IgnoreUrlParametersMatching);
 
-    // This check limits this fetch handler so that it only intercepts traffic for one
-    // of the URLs we're explicitly pre-caching. It opens the door for other fetch
-    // handlers (such as those registered via importScripts()) to handle other network traffic.
-    var isRequestForPrecachedUrl = PrecacheConfig.some(function(cacheOption) {
-      // The URLs in PrecacheConfig are all relative to the project root. Constructing a new URL()
-      // and using the service worker's location as the base should result in a valid absolute URL.
-      // (Using case-sensitive string comparisons of the absolute URLs isn't ideal, though.)
-      return new URL(cacheOption[0], self.location).toString() == urlWithoutIgnoredParameters;
-    });
-
-    if (isRequestForPrecachedUrl) {
+    var cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
+    if (cacheName) {
       event.respondWith(
-        cachesMatchForPrefix(urlWithoutIgnoredParameters).then(function(response) {
-          return response || fetch(event.request);
+        caches.open(cacheName).then(function(cache) {
+          return cache.match(urlWithoutIgnoredParameters).then(function(response) {
+            return response || fetch(event.request).catch(function(e) {
+              console.error('Fetch for "%s" failed: %O', urlWithoutIgnoredParameters, e);
+            });
+          });
+        }).catch(function(e) {
+          console.error('Couldn\'t serve response for "%s" from cache: %O', urlWithoutIgnoredParameters, e);
+          return fetch(event.request);
         })
       );
     }
