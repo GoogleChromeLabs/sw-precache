@@ -1,12 +1,13 @@
 'use strict';
 
 var crypto = require('crypto');
+var defaults = require('lodash.defaults');
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
 var prettyBytes = require('pretty-bytes');
+var template = require('lodash.template');
 var util = require('util');
-var _ = require('lodash');
 
 // This should only change if there are breaking changes in the cache format used by the SW.
 var VERSION = 'v1';
@@ -42,7 +43,7 @@ function getHash(data) {
 }
 
 module.exports = function(params, callback) {
-  _.defaults(params, {
+  defaults(params, {
     cacheId: '',
     dynamicUrlToDependencies: {},
     handleFetch: true,
@@ -125,7 +126,7 @@ module.exports = function(params, callback) {
       return;
     }
 
-    var populatedTemplate = _.template(data, {
+    var populatedTemplate = template(data)({
       cacheId: params.cacheId,
       handleFetch: params.handleFetch,
       ignoreUrlParametersMatching: params.ignoreUrlParametersMatching,
