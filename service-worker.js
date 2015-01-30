@@ -2,31 +2,56 @@
 
 
 
-var PrecacheConfig = [["./","1ce2bf017dea092b4739c8bb25a522e9"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","871f68dd27ed9049a7db80bb02b2689a"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","ba1f2388a0fa13d141c1d96d49d47590"]];
+var PrecacheConfig = [["./","1ce2bf017dea092b4739c8bb25a522e9"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","871f68dd27ed9049a7db80bb02b2689a"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","8d6280dd325830d04c13a1a1e7dc845f"]];
 var CacheNamePrefix = 'sw-precache-v1-sw-precache-' + (self.registration ? self.registration.scope : '') + '-';
-var AbsoluteUrlToCacheName;
-var CurrentCacheNamesToAbsoluteUrl;
-populateCurrentCacheNames(PrecacheConfig, CacheNamePrefix);
 
 
 var IgnoreUrlParametersMatching = [/^utm_/];
 
 
-function getCacheNameFromCacheOption(cacheOption) {
-  return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
-}
 
-function populateCurrentCacheNames(precacheConfig, cacheNamePrefix) {
-  AbsoluteUrlToCacheName = {};
-  CurrentCacheNamesToAbsoluteUrl = {};
+var populateCurrentCacheNames = function (precacheConfig, cacheNamePrefix, baseUrl) {
+    var absoluteUrlToCacheName = {};
+    var currentCacheNamesToAbsoluteUrl = {};
 
-  precacheConfig.forEach(function(cacheOption) {
-    var absoluteUrl = new URL(cacheOption[0], self.location).toString();
-    var cacheName = CacheNamePrefix + absoluteUrl + '-' + cacheOption[1];
-    CurrentCacheNamesToAbsoluteUrl[cacheName] = absoluteUrl;
-    AbsoluteUrlToCacheName[absoluteUrl] = cacheName;
-  });
-}
+    precacheConfig.forEach(function(cacheOption) {
+      var absoluteUrl = new URL(cacheOption[0], baseUrl).toString();
+      var cacheName = cacheNamePrefix + absoluteUrl + '-' + cacheOption[1];
+      currentCacheNamesToAbsoluteUrl[cacheName] = absoluteUrl;
+      absoluteUrlToCacheName[absoluteUrl] = cacheName;
+    });
+
+    return {
+      absoluteUrlToCacheName: absoluteUrlToCacheName,
+      currentCacheNamesToAbsoluteUrl: currentCacheNamesToAbsoluteUrl
+    };
+  };
+
+var stripIgnoredUrlParameters = function (originalUrl, ignoreUrlParametersMatching) {
+    var url = new URL(originalUrl);
+
+    url.search = url.search.slice(1) // Exclude initial '?'
+      .split('&') // Split into an array of 'key=value' strings
+      .map(function(kv) {
+        return kv.split('='); // Split each 'key=value' string into a [key, value] array
+      })
+      .filter(function(kv) {
+        return ignoreUrlParametersMatching.every(function(ignoredRegex) {
+          return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
+        });
+      })
+      .map(function(kv) {
+        return kv.join('='); // Join each [key, value] array into a 'key=value' string
+      })
+      .join('&'); // Join the array of 'key=value' strings into a string with '&' in between each
+
+    return url.toString();
+  };
+
+
+var mappings = populateCurrentCacheNames(PrecacheConfig, CacheNamePrefix, self.location);
+var AbsoluteUrlToCacheName = mappings.absoluteUrlToCacheName;
+var CurrentCacheNamesToAbsoluteUrl = mappings.currentCacheNamesToAbsoluteUrl;
 
 function deleteAllCaches() {
   return caches.keys().then(function(cacheNames) {
@@ -88,27 +113,6 @@ self.addEventListener('message', function(event) {
   }
 });
 
-
-function stripIgnoredUrlParameters(originalUrl, ignoreUrlParametersMatching) {
-  var url = new URL(originalUrl);
-
-  url.search = url.search.slice(1) // Exclude initial '?'
-    .split('&') // Split into an array of 'key=value' strings
-    .map(function(kv) {
-      return kv.split('='); // Split each 'key=value' string into a [key, value] array
-    })
-    .filter(function(kv) {
-      return ignoreUrlParametersMatching.every(function(ignoredRegex) {
-        return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
-      });
-    })
-    .map(function(kv) {
-      return kv.join('='); // Join each [key, value] array into a 'key=value' string
-    })
-    .join('&'); // Join the array of 'key=value' strings into a string with '&' in between each
-
-  return url.toString();
-}
 
 self.addEventListener('fetch', function(event) {
   if (event.request.method == 'GET') {
