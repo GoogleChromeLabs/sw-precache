@@ -1,6 +1,10 @@
 'use strict';
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator &&
+    // See http://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features
+    (window.location.protocol === 'https:' ||
+     window.location.hostname === 'localhost' ||
+     window.location.hostname.indexOf('127.') === 0)) {
   navigator.serviceWorker.register('service-worker.js', {
     scope: './'
   }).then(function(registration) {

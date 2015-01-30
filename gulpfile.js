@@ -10,7 +10,10 @@ gulp.task('default', ['test']);
 gulp.task('test', function() {
   return gulp.src('test/*.js', {read: false})
     .pipe($.mocha())
-    .on('error', process.exit);
+    .on('error', function(error) {
+      console.error(error);
+      process.exit()
+    });
 });
 
 gulp.task('publish', ['test'], function(callback) {
