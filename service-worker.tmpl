@@ -6,29 +6,18 @@ importScripts(<%= importScripts %>);
 
 var PrecacheConfig = <%= precacheConfig %>;
 var CacheNamePrefix = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '') + '-';
-var AbsoluteUrlToCacheName;
-var CurrentCacheNamesToAbsoluteUrl;
-populateCurrentCacheNames(PrecacheConfig, CacheNamePrefix);
 
 <% if (handleFetch) { %>
 var IgnoreUrlParametersMatching = [<%= ignoreUrlParametersMatching %>];
 <% } %>
 
-function getCacheNameFromCacheOption(cacheOption) {
-  return CacheNamePrefix + cacheOption[0] + '-' + cacheOption[1];
-}
+<% Object.keys(externalFunctions).sort().forEach(function(functionName) {%>
+var <%- functionName %> = <%= externalFunctions[functionName] %>;
+<% }); %>
 
-function populateCurrentCacheNames(precacheConfig, cacheNamePrefix) {
-  AbsoluteUrlToCacheName = {};
-  CurrentCacheNamesToAbsoluteUrl = {};
-
-  precacheConfig.forEach(function(cacheOption) {
-    var absoluteUrl = new URL(cacheOption[0], self.location).toString();
-    var cacheName = CacheNamePrefix + absoluteUrl + '-' + cacheOption[1];
-    CurrentCacheNamesToAbsoluteUrl[cacheName] = absoluteUrl;
-    AbsoluteUrlToCacheName[absoluteUrl] = cacheName;
-  });
-}
+var mappings = populateCurrentCacheNames(PrecacheConfig, CacheNamePrefix, self.location);
+var AbsoluteUrlToCacheName = mappings.absoluteUrlToCacheName;
+var CurrentCacheNamesToAbsoluteUrl = mappings.currentCacheNamesToAbsoluteUrl;
 
 function deleteAllCaches() {
   return caches.keys().then(function(cacheNames) {
@@ -91,27 +80,6 @@ self.addEventListener('message', function(event) {
 });
 
 <% if (handleFetch) { %>
-function stripIgnoredUrlParameters(originalUrl, ignoreUrlParametersMatching) {
-  var url = new URL(originalUrl);
-
-  url.search = url.search.slice(1) // Exclude initial '?'
-    .split('&') // Split into an array of 'key=value' strings
-    .map(function(kv) {
-      return kv.split('='); // Split each 'key=value' string into a [key, value] array
-    })
-    .filter(function(kv) {
-      return ignoreUrlParametersMatching.every(function(ignoredRegex) {
-        return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
-      });
-    })
-    .map(function(kv) {
-      return kv.join('='); // Join each [key, value] array into a 'key=value' string
-    })
-    .join('&'); // Join the array of 'key=value' strings into a string with '&' in between each
-
-  return url.toString();
-}
-
 self.addEventListener('fetch', function(event) {
   if (event.request.method == 'GET') {
     var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url,

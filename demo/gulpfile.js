@@ -8,7 +8,7 @@ var fs = require('fs');
 var packageJson = require('../package.json');
 var path = require('path');
 var runSequence = require('run-sequence');
-var swPrecache = require('../sw-precache.js');
+var swPrecache = require('../lib/sw-precache.js');
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';

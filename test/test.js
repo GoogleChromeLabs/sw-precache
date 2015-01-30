@@ -1,6 +1,7 @@
 var assert = require('assert');
+var externalFunctions = require('../lib/functions.js');
 var fs = require('fs');
-var swPrecache = require('../sw-precache.js');
+var swPrecache = require('../lib/sw-precache.js');
 var URL = require('dom-urls');
 
 var NOOP = function() {};
@@ -133,65 +134,80 @@ describe('sw-precache parameters', function() {
 
 describe('stripIgnoredUrlParameters', function() {
   var testUrl = 'http://example.com/index.html?one=1&two=2&three=3&four&five=5';
-  var localStripIgnoredUrlParameters;
-  // This is very, very ugly. But, I wanted to write tests?
-  before(function(done) {
-    swPrecache({logger: NOOP}, function(error, responseString) {
-      assert.ifError(error);
-      var matches = responseString.match(/^function stripIgnoredUrlParameters[^]+?^\}/m);
-      assert.notEqual(matches, null, 'Unable to parse function using regex.');
-      eval(matches[0]);
-      localStripIgnoredUrlParameters = stripIgnoredUrlParameters;
-      done();
-    });
-  });
 
   it('should return the same URL when the URL doesn\'t have a query string', function(done) {
     var querylessUrl = 'http://example.com/index.html';
-    var strippedUrl = localStripIgnoredUrlParameters(querylessUrl, [/./]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(querylessUrl, [/./]);
     assert.strictEqual(strippedUrl, querylessUrl);
     done();
   });
 
   it('should strip out all parameters when [/./] is used', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/./]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl, [/./]);
     assert.strictEqual(strippedUrl, 'http://example.com/index.html');
     done();
   });
 
   it('should not do anything when [] is used', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl, []);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl, []);
     assert.strictEqual(strippedUrl, testUrl);
     done();
   });
 
   it('should not do anything when a non-matching regex is used', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/dummy/]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl, [/dummy/]);
     assert.strictEqual(strippedUrl, testUrl);
     done();
   });
 
   it('should work when a key without a value is matched', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/four/]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl, [/four/]);
     assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1&two=2&three=3&five=5');
     done();
   });
 
   it('should work when a single regex matches multiple keys', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/^t/]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl, [/^t/]);
     assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1&four&five=5');
     done();
   });
 
   it('should work when a multiples regexes each match multiple keys', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl, [/^t/, /^f/]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl, [/^t/, /^f/]);
     assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1');
     done();
   });
 
   it('should work when there\'s a hash fragment', function(done) {
-    var strippedUrl = localStripIgnoredUrlParameters(testUrl + '#hash', [/^t/, /^f/]);
+    var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl + '#hash', [/^t/, /^f/]);
     assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1#hash');
     done();
   });
 });
+
+describe('populateCurrentCacheNames', function() {
+  var precacheConfig = [
+    ['./', '123'],
+    ['css/main.css', 'abc']
+  ];
+  var cacheNamePrefix = 'test-prefix-';
+  var baseUrl = 'http://example.com/';
+
+  it('should return valid mappings', function(done) {
+    var expectedMappings = {
+      absoluteUrlToCacheName: {
+        'http://example.com/': 'test-prefix-http://example.com/-123',
+        'http://example.com/css/main.css': 'test-prefix-http://example.com/css/main.css-abc'
+      },
+      currentCacheNamesToAbsoluteUrl: {
+        'test-prefix-http://example.com/css/main.css-abc': 'http://example.com/css/main.css',
+        'test-prefix-http://example.com/-123': 'http://example.com/'
+      }
+    };
+    var mappings = externalFunctions.populateCurrentCacheNames(precacheConfig, cacheNamePrefix,
+      baseUrl);
+    assert.deepEqual(mappings, expectedMappings);
+    done();
+  });
+});
+
