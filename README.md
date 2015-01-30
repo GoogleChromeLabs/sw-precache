@@ -93,7 +93,7 @@ using the `importScripts` option.
 
 ## Options
 
-### cacheId [`String`]
+### cacheId [String]
 A string used to distinguish the caches created by different web applications that are served off
 of the same origin and path. While serving completely different sites from the same URL is not
 likely to be an issue in a production environment, it avoids cache-conflicts when testing various
@@ -102,7 +102,7 @@ property from your `package.json`.
 
 Default: `''`
 
-### dynamicUrlToDependencies [`Object<String,Array<String>>`]
+### dynamicUrlToDependencies [Object&lt;String,Array&lt;String&gt;&gt;]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.
 E.g., if the contents of `/pages/home` are generated server-side via the templates `layout.jade` and
 `home.jade`, then specify `'/pages/home': ['layout.jade', 'home.jade']`. The MD5 hash used to
@@ -111,14 +111,14 @@ determine whether `/pages/home` has changed will depend on the hashes of both
 
 Default: `{}`
 
-### handleFetch [`boolean`]
+### handleFetch [boolean]
 Determines whether the `fetch` event handler is included in the generated service worker code.
 It is useful to set this to `false` in development builds, to ensure that features like live reload
 still work (otherwise, the content would always be served from the service worker cache).
 
 Default: `true`
 
-### ignoreUrlParametersMatching [`Array<Regex>`]
+### ignoreUrlParametersMatching [Array&lt;Regex&gt;]
 `sw-precache` finds matching cache entries by doing a comparison with the full request URL. It's
 common for sites to support URL query parameters that don't affect the site's content and should
 be effectively ignored for the purposes of cache matching—one example is the
@@ -129,7 +129,7 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 
 Default: `[/^utm_/]`
 
-### importScripts [`Array<String>`]
+### importScripts [Array&lt;String&gt;]
 If you'd like to include one or more external scripts as part of the generated service worker code,
 use this option. The scripts passed in will be passed directly to the
 [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)
@@ -137,7 +137,7 @@ method.
 
 Default: `[]`
 
-### includeCachePolyfill [`boolean`]
+### includeCachePolyfill [boolean]
 Whether or not to include the
 [service worker cache polyfill](https://github.com/coonsta/cache-polyfill/blob/master/dist/serviceworker-cache-polyfill.js), which provides a JavaScript
 implementation of some functionality that is not yet found in Chrome 41.
@@ -146,7 +146,7 @@ leave as-is.
 
 Default: `true`
 
-### logger [`function`]
+### logger [function]
 A function used to report back on which resources are being precached and the overall size.
 Use `function() {}` if you'd prefer that nothing is logged.
 Within a `gulp` script, it's recommended that you use
@@ -154,12 +154,12 @@ Within a `gulp` script, it's recommended that you use
 
 Default: `console.log`
 
-### maximumFileSizeToCacheInBytes [`Number`]
+### maximumFileSizeToCacheInBytes [Number]
 Files larger than this size will not be added to the precache list.
 
 Default: `4194304` (2 megabytes)
 
-### stripPrefix [`String`]
+### stripPrefix [String]
 Useful when there's a discrepency between the relative path to a local file at build time and the
 relative URL that the resource will be served from.
 E.g. if all your local files are under `dist/app/` and your web root is also at `dist/app/`, you'd
@@ -167,7 +167,7 @@ strip that prefix from the start of each local file's path in order to get the c
 
 Default: `''`
 
-### staticFileGlobs [`Array<String>`]
+### staticFileGlobs [Array&lt;String&gt;]
 An array of one or more string patterns that will be passed in to
 [`glob`](https://github.com/isaacs/node-glob).
 All files matching these globs will be automatically precached by the generated service worker.
@@ -175,7 +175,7 @@ You'll almost always want to specify something for this.
 
 Default: `[]`
 
-### templateFilePath [`String`]
+### templateFilePath [String]
 The path to the file used as the ([lo-dash](https://lodash.com/docs#template)) template to generate
 `service-worker.js`.
 If you need to add in additional functionality to the generated service worker code, it's
