@@ -41,33 +41,7 @@ code and handling the various
 
 The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/gulpfile.js)
 illustrates its usage in context; it will use `sw-precache` to generate valid JavaScript code and
-then write it to a local directory as `service-worker.js`. Here's an excerpt:
-
-    var config = {
-      cacheId: packageJson.name,
-      dynamicUrlToDependencies: {
-        './': [path.join(rootDir, 'index.html')],
-        'dynamic/page1': [
-          path.join(rootDir, 'views', 'layout.jade'),
-          path.join(rootDir, 'views', 'page1.jade')
-        ],
-        'dynamic/page2': [
-          path.join(rootDir, 'views', 'layout.jade'),
-          path.join(rootDir, 'views', 'page2.jade')
-        ]
-      },
-      handleFetch: handleFetch,
-      logger: $.util.log,
-      staticFileGlobs: [
-        rootDir + '/css/**.css',
-        rootDir + '/**.html',
-        rootDir + '/images/**.*',
-        rootDir + '/js/**.js'
-      ],
-      stripPrefix: path.join(rootDir, path.sep)
-    };
-
-    swPrecache(config, callback);
+then write it to a local directory as `service-worker.js`. 
 
 
 ## Considerations
@@ -102,7 +76,7 @@ property from your `package.json`.
 
 Default: `''`
 
-### dynamicUrlToDependencies [Object&lt;String,Array&lt;String&gt;&gt;]
+### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.
 E.g., if the contents of `/pages/home` are generated server-side via the templates `layout.jade` and
 `home.jade`, then specify `'/pages/home': ['layout.jade', 'home.jade']`. The MD5 hash used to
@@ -118,7 +92,7 @@ still work (otherwise, the content would always be served from the service worke
 
 Default: `true`
 
-### ignoreUrlParametersMatching [Array&lt;Regex&gt;]
+### ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]
 `sw-precache` finds matching cache entries by doing a comparison with the full request URL. It's
 common for sites to support URL query parameters that don't affect the site's content and should
 be effectively ignored for the purposes of cache matching—one example is the
@@ -129,7 +103,7 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 
 Default: `[/^utm_/]`
 
-### importScripts [Array&lt;String&gt;]
+### importScripts [Array&#x27e8;String&#x27e9;]
 If you'd like to include one or more external scripts as part of the generated service worker code,
 use this option. The scripts passed in will be passed directly to the
 [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)
@@ -167,7 +141,7 @@ strip that prefix from the start of each local file's path in order to get the c
 
 Default: `''`
 
-### staticFileGlobs [Array&lt;String&gt;]
+### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to
 [`glob`](https://github.com/isaacs/node-glob).
 All files matching these globs will be automatically precached by the generated service worker.
