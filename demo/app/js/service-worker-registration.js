@@ -5,6 +5,10 @@ if ('serviceWorker' in navigator &&
     (window.location.protocol === 'https:' ||
      window.location.hostname === 'localhost' ||
      window.location.hostname.indexOf('127.') === 0)) {
+  // Your service-worker.js *must* be located at the top-level directory relative to your site.
+  // It won't be able to control pages unless it's located at the same level or higher than them.
+  // *Don't* register service worker file in, e.g., a scripts/ sub-directory!
+  // See https://github.com/slightlyoff/ServiceWorker/issues/468
   navigator.serviceWorker.register('service-worker.js', {
     scope: './'
   }).then(function(registration) {
