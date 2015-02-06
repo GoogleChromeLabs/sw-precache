@@ -1,8 +1,30 @@
+/**
+ * Copyright 2015 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// This generated service worker JavaScript will precache your site's resources.
+// The code needs to be saved in a .js file at the top-level of your site, and registered
+// from your pages in order to be used. See
+// https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js
+// for an example of how you can register this script and handle various service worker events.
+
 'use strict';
 
 
 
-var PrecacheConfig = [["./","4cb9ea5d619ceff5032e634f9e98bb88"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","c6c654500de5d4d120df03af93c37113"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","23ff649c1f7ca9b2c91e1486e86066a1"]];
+var PrecacheConfig = [["./","4cb9ea5d619ceff5032e634f9e98bb88"],["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","c6c654500de5d4d120df03af93c37113"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","a3859c235652df5cb8dd551726beea3e"]];
 var CacheNamePrefix = 'sw-precache-v1-sw-precache-' + (self.registration ? self.registration.scope : '') + '-';
 
 
