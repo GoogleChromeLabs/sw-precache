@@ -52,16 +52,25 @@ function deleteAllCaches() {
 }
 
 self.addEventListener('install', function(event) {
+  var now = Date.now();
+
   event.waitUntil(
     caches.keys().then(function(allCacheNames) {
       return Promise.all(
         Object.keys(CurrentCacheNamesToAbsoluteUrl).filter(function(cacheName) {
           return allCacheNames.indexOf(cacheName) == -1;
         }).map(function(cacheName) {
-          var url = CurrentCacheNamesToAbsoluteUrl[cacheName];
-          console.log('Adding URL "%s" to cache named "%s"', url, cacheName);
+          var url = new URL(CurrentCacheNamesToAbsoluteUrl[cacheName]);
+          // Put in a cache-busting parameter to ensure we're caching a fresh response.
+          if (url.search) {
+            url.search += '&';
+          }
+          url.search += 'sw-precache=' + now;
+          var urlWithCacheBusting = url.toString();
+
+          console.log('Adding URL "%s" to cache named "%s"', urlWithCacheBusting, cacheName);
           return caches.open(cacheName).then(function(cache) {
-            return cache.add(new Request(url, {credentials: 'same-origin'}));
+            return cache.add(new Request(urlWithCacheBusting, {credentials: 'same-origin'}));
           });
         })
       ).then(function() {
@@ -110,10 +119,15 @@ self.addEventListener('fetch', function(event) {
     var cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
     if (cacheName) {
       event.respondWith(
+        // We can't call cache.match(event.request) since the entry in the cache will contain the
+        // cache-busting parameter. Instead, rely on the fact that each cache should only have one
+        // entry, and return that.
         caches.open(cacheName).then(function(cache) {
-          return cache.match(urlWithoutIgnoredParameters).then(function(response) {
-            return response || fetch(event.request).catch(function(e) {
-              console.error('Fetch for "%s" failed: %O', urlWithoutIgnoredParameters, e);
+          return cache.keys().then(function(keys) {
+            return cache.match(keys[0]).then(function(response) {
+              return response || fetch(event.request).catch(function(e) {
+                console.error('Fetch for "%s" failed: %O', urlWithoutIgnoredParameters, e);
+              });
             });
           });
         }).catch(function(e) {
