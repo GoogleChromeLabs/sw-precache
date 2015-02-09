@@ -111,15 +111,6 @@ method.
 
 Default: `[]`
 
-### includeCachePolyfill [boolean]
-Whether or not to include the
-[service worker cache polyfill](https://github.com/coonsta/cache-polyfill/blob/master/dist/serviceworker-cache-polyfill.js), which provides a JavaScript
-implementation of some functionality that is not yet found in Chrome 41.
-Unless you know that you're already including this elsewhere in your project, it's a good idea to
-leave as-is.
-
-Default: `true`
-
 ### logger [function]
 A function used to report back on which resources are being precached and the overall size.
 Use `function() {}` if you'd prefer that nothing is logged.

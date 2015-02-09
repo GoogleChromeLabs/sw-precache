@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Generate service worker code that will precache specific resources.",
   "author": {
     "name": "Jeff Posnick",
