@@ -40,8 +40,33 @@ code and handling the various
 ### Example
 
 The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/gulpfile.js)
-illustrates its usage in context; it will use `sw-precache` to generate valid JavaScript code and
-then write it to a local directory as `service-worker.js`. 
+illustrates its full usage in context; `sw-precache` generates valid JavaScript code and
+then writes it to a local directory as `service-worker.js`.
+
+Here's a simpler example for a basic use case. It assumes your site's resources are located under
+`app` and that you'd like to cache *all* your JavaScript, HTML, CSS, and image files.
+
+    gulp.task('generate-service-worker', function(callback) {
+      var fs = require('fs');
+      var swPrecache = require('sw-precache');
+      var rootDir = 'app';
+
+      swPrecache({
+        staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
+        stripPrefix: rootDir
+      }, function(error, serviceWorkerFileContents) {
+        if (error) {
+          return callback(error);
+        }
+        fs.writeFile(path.join(rootDir, 'service-worker.js'), serviceWorkerFileContents, callback);
+      });
+    });
+
+This tasks will create `app/service-worker.js`, which you'll need to
+[register](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#navigator-service-worker-register)
+before it can take control of your site's pages.
+[`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
+is a ready-to-use script to handle registration.
 
 
 ## Considerations
