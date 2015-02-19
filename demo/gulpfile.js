@@ -5,6 +5,7 @@ var $ = require('gulp-load-plugins')();
 var del = require('del');
 var express = require('express');
 var fs = require('fs');
+var ghPages = require('gh-pages');
 var packageJson = require('../package.json');
 var path = require('path');
 var runSequence = require('run-sequence');
@@ -77,9 +78,8 @@ gulp.task('serve-dist', ['build'], function() {
   runExpress(3000, DIST_DIR);
 });
 
-gulp.task('gh-pages', ['build'], function () {
-  return gulp.src(DIST_DIR + '/**/*')
-    .pipe($.ghPages({remoteUrl: 'https://github.com/jeffposnick/sw-precache'}));
+gulp.task('gh-pages', ['build'], function(callback) {
+  ghPages.publish(path.join(__dirname, DIST_DIR), callback);
 });
 
 gulp.task('generate-service-worker-dev', function(callback) {
