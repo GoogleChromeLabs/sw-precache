@@ -86,16 +86,35 @@ function deleteAllCaches() {
 }
 
 self.addEventListener('install', function(event) {
+  var now = Date.now();
+
   event.waitUntil(
     caches.keys().then(function(allCacheNames) {
       return Promise.all(
         Object.keys(CurrentCacheNamesToAbsoluteUrl).filter(function(cacheName) {
           return allCacheNames.indexOf(cacheName) == -1;
         }).map(function(cacheName) {
-          var url = CurrentCacheNamesToAbsoluteUrl[cacheName];
-          console.log('Adding URL "%s" to cache named "%s"', url, cacheName);
+          var url = new URL(CurrentCacheNamesToAbsoluteUrl[cacheName]);
+          // Put in a cache-busting parameter to ensure we're caching a fresh response.
+          if (url.search) {
+            url.search += '&';
+          }
+          url.search += 'sw-precache=' + now;
+          var urlWithCacheBusting = url.toString();
+
+          console.log('Adding URL "%s" to cache named "%s"', urlWithCacheBusting, cacheName);
           return caches.open(cacheName).then(function(cache) {
-            return cache.add(new Request(url, {credentials: 'same-origin'}));
+            var request = new Request(urlWithCacheBusting, {credentials: 'same-origin'});
+            return fetch(request.clone()).then(function(response) {
+              if (response.status == 200) {
+                return cache.put(request, response);
+              } else {
+                console.error('Request for %s returned a response with status %d, so not attempting to cache it.',
+                  urlWithCacheBusting, response.status);
+                // Get rid of the empty cache if we can't add a successful response to it.
+                return caches.delete(cacheName);
+              }
+            });
           });
         })
       ).then(function() {
@@ -144,10 +163,15 @@ self.addEventListener('fetch', function(event) {
     var cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
     if (cacheName) {
       event.respondWith(
+        // We can't call cache.match(event.request) since the entry in the cache will contain the
+        // cache-busting parameter. Instead, rely on the fact that each cache should only have one
+        // entry, and return that.
         caches.open(cacheName).then(function(cache) {
-          return cache.match(urlWithoutIgnoredParameters).then(function(response) {
-            return response || fetch(event.request).catch(function(e) {
-              console.error('Fetch for "%s" failed: %O', urlWithoutIgnoredParameters, e);
+          return cache.keys().then(function(keys) {
+            return cache.match(keys[0]).then(function(response) {
+              return response || fetch(event.request).catch(function(e) {
+                console.error('Fetch for "%s" failed: %O', urlWithoutIgnoredParameters, e);
+              });
             });
           });
         }).catch(function(e) {
@@ -158,92 +182,4 @@ self.addEventListener('fetch', function(event) {
     }
   }
 });
-
-
-
-// From https://github.com/coonsta/cache-polyfill/blob/master/dist/serviceworker-cache-polyfill.js
-
-if (!Cache.prototype.add) {
-  Cache.prototype.add = function add(request) {
-    return this.addAll([request]);
-  };
-}
-
-if (!Cache.prototype.addAll) {
-  Cache.prototype.addAll = function addAll(requests) {
-    var cache = this;
-
-    // Since DOMExceptions are not constructable:
-    function NetworkError(message) {
-      this.name = 'NetworkError';
-      this.code = 19;
-      this.message = message;
-    }
-    NetworkError.prototype = Object.create(Error.prototype);
-
-    return Promise.resolve().then(function() {
-      if (arguments.length < 1) throw new TypeError();
-
-      // Simulate sequence<(Request or USVString)> binding:
-      var sequence = [];
-
-      requests = requests.map(function(request) {
-        if (request instanceof Request) {
-          return request;
-        }
-        else {
-          return String(request); // may throw TypeError
-        }
-      });
-
-      return Promise.all(
-          requests.map(function(request) {
-            if (typeof request === 'string') {
-              request = new Request(request);
-            }
-
-            var scheme = new URL(request.url).protocol;
-
-            if (scheme !== 'http:' && scheme !== 'https:') {
-              throw new NetworkError("Invalid scheme");
-            }
-
-            return fetch(request.clone());
-          })
-      );
-    }).then(function(responses) {
-      // TODO: check that requests don't overwrite one another
-      // (don't think this is possible to polyfill due to opaque responses)
-      return Promise.all(
-          responses.map(function(response, i) {
-            return cache.put(requests[i], response);
-          })
-      );
-    }).then(function() {
-      return undefined;
-    });
-  };
-}
-
-if (!CacheStorage.prototype.match) {
-  // This is probably vulnerable to race conditions (removing caches etc)
-  CacheStorage.prototype.match = function match(request, opts) {
-    var caches = this;
-
-    return this.keys().then(function(cacheNames) {
-      var match;
-
-      return cacheNames.reduce(function(chain, cacheName) {
-        return chain.then(function() {
-          return match || caches.open(cacheName).then(function(cache) {
-                return cache.match(request, opts);
-              }).then(function(response) {
-                match = response;
-                return match;
-              });
-        });
-      }, Promise.resolve());
-    });
-  };
-}
 
