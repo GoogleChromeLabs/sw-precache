@@ -62,7 +62,7 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
       });
     });
 
-This tasks will create `app/service-worker.js`, which you'll need to
+This task will create `app/service-worker.js`, which you'll need to
 [register](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#navigator-service-worker-register)
 before it can take control of your site's pages.
 [`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
