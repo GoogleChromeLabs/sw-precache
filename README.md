@@ -54,11 +54,11 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
       swPrecache({
         staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
         stripPrefix: rootDir
-      }, function(error, serviceWorkerFileContents) {
+      }, function(error, swFileContents) {
         if (error) {
           return callback(error);
         }
-        fs.writeFile(path.join(rootDir, 'service-worker.js'), serviceWorkerFileContents, callback);
+        fs.writeFile(path.join(rootDir, 'service-worker.js'), swFileContents, callback);
       });
     });
 
