@@ -12,7 +12,7 @@ gulp.task('test', function() {
     .pipe($.mocha())
     .on('error', function(error) {
       console.error(error);
-      process.exit()
+      process.exit(1);
     });
 });
 

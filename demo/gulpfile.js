@@ -46,6 +46,10 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
         path.join(rootDir, 'views', 'page2.jade')
       ]
     },
+    // If handleFetch is false (i.e. because this is called from generate-service-worker-dev), then
+    // the service worker will precache resources but won't actually serve them.
+    // This allows you to test precaching behavior without worry about the cache preventing your
+    // local changes from being picked up during the development cycle.
     handleFetch: handleFetch,
     logger: $.util.log,
     staticFileGlobs: [
@@ -67,7 +71,7 @@ gulp.task('build', function(callback) {
 });
 
 gulp.task('clean', function() {
-  del([DIST_DIR]);
+  del.sync([DIST_DIR]);
 });
 
 gulp.task('serve-dev', ['generate-service-worker-dev'], function() {
@@ -87,12 +91,7 @@ gulp.task('generate-service-worker-dev', function(callback) {
     if (error) {
       return callback(error);
     }
-    fs.writeFile(path.join(DEV_DIR, 'service-worker.js'), serviceWorkerFileContents, function(error) {
-      if (error) {
-        return callback(error);
-      }
-      callback();
-    });
+    fs.writeFile(path.join(DEV_DIR, 'service-worker.js'), serviceWorkerFileContents, callback);
   });
 });
 
@@ -101,12 +100,7 @@ gulp.task('generate-service-worker-dist', function(callback) {
     if (error) {
       return callback(error);
     }
-    fs.writeFile(path.join(DIST_DIR, 'service-worker.js'), serviceWorkerFileContents, function(error) {
-      if (error) {
-        return callback(error);
-      }
-      callback();
-    });
+    fs.writeFile(path.join(DIST_DIR, 'service-worker.js'), serviceWorkerFileContents, callback);
   });
 });
 
