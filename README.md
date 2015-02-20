@@ -43,6 +43,9 @@ The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/
 illustrates its full usage in context; `sw-precache` generates valid JavaScript code and
 then writes it to a local directory as `service-worker.js`.
 
+There is also a [basic `Gruntfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/Gruntfile.js)
+provided as a sample.
+
 Here's a simpler example for a basic use case. It assumes your site's resources are located under
 `app` and that you'd like to cache *all* your JavaScript, HTML, CSS, and image files.
 
