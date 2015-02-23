@@ -41,7 +41,7 @@ code and handling the various
 
 The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/gulpfile.js)
 illustrates its full usage in context. You can run the sample by cloning this repo,
-using `[npm](https://docs.npmjs.com/) install` to pull in the dependencies, changing to the
+using [`npm install`](https://docs.npmjs.com/) to pull in the dependencies, changing to the
 `demo` directory, running `gulp serve-dist`, and then visiting http://localhost:3000
 
 There is also a [basic `Gruntfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/Gruntfile.js)
