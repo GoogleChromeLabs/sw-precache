@@ -52,6 +52,7 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
 
     gulp.task('generate-service-worker', function(callback) {
       var fs = require('fs');
+      var path = require('path');
       var swPrecache = require('sw-precache');
       var rootDir = 'app';
 
