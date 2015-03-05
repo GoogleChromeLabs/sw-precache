@@ -23,6 +23,7 @@
     "del": "^1.1.1",
     "express": "^4.10.7",
     "gh-pages": "^0.2.0",
+    "grunt": "^0.4.5",
     "gulp": "^3.8.10",
     "gulp-load-plugins": "^0.8.0",
     "gulp-mocha": "^2.0.0",
