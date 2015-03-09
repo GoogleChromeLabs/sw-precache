@@ -137,6 +137,12 @@ self.addEventListener('install', function(event) {
   );
 });
 
+if (self.clients && (typeof self.clients.claim == 'function')) {
+  self.addEventListener('activate', function(event) {
+    event.waitUntil(self.clients.claim());
+  });
+}
+
 self.addEventListener('message', function(event) {
   if (event.data.command == 'delete_all') {
     console.log('About to delete all caches...');
