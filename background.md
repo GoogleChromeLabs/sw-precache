@@ -34,7 +34,7 @@ Versioning and generating lists of local files are both solved problems, and `gu
 
 ### How's it all work?
 
-Inside the sample [`gulpfile.js`](https://github.com/jeffposnick/gulp-sw-precache/blob/master/demo/gulpfile.js), there's a list of [glob patterns](https://github.com/isaacs/node-glob) corresponding to static files, as well as a mapping of server-generated resource URLs to the component files that are used to generated that URL's output:
+Inside the sample [`gulpfile.js`](https://github.com/googlechrome/gulp-sw-precache/blob/master/demo/gulpfile.js), there's a list of [glob patterns](https://github.com/isaacs/node-glob) corresponding to static files, as well as a mapping of server-generated resource URLs to the component files that are used to generated that URL's output:
 
     dynamicUrlToDependencies: {
       'dynamic/page1': [rootDir + '/views/layout.jade', rootDir + '/views/page1.jade'],

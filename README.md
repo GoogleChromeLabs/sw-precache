@@ -32,19 +32,19 @@ pages. This technically only needs to be done from within a top-level "entry" pa
 since the registration includes a
 [`scope`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-registration-scope)
 which will apply to all pages underneath your top-level page.
-[`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
+[`service-worker-registration.js`](https://github.com/googlechrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
 is a sample script that illustrates the best practices for registering the generated service worker
 code and handling the various
 [lifecycle](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-state.1) events.
 
 ### Example
 
-The project's [sample `gulpfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/gulpfile.js)
+The project's [sample `gulpfile.js`](https://github.com/googlechrome/sw-precache/blob/master/demo/gulpfile.js)
 illustrates its full usage in context. You can run the sample by cloning this repo,
 using [`npm install`](https://docs.npmjs.com/) to pull in the dependencies, changing to the
 `demo` directory, running `gulp serve-dist`, and then visiting http://localhost:3000
 
-There is also a [basic `Gruntfile.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/Gruntfile.js)
+There is also a [basic `Gruntfile.js`](https://github.com/googlechrome/sw-precache/blob/master/demo/Gruntfile.js)
 provided as a sample.
 
 Here's a simpler example for a basic use case. It assumes your site's resources are located under
@@ -70,7 +70,7 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
 This task will create `app/service-worker.js`, which you'll need to
 [register](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#navigator-service-worker-register)
 before it can take control of your site's pages.
-[`service-worker-registration.js`](https://github.com/jeffposnick/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
+[`service-worker-registration.js`](https://github.com/googlechrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js)
 is a ready-to-use script to handle registration.
 
 
@@ -177,7 +177,7 @@ If you need to add in additional functionality to the generated service worker c
 recommended that you use the `importScripts` option to include in extra JavaScript code rather than
 using a different template.
 But if you do need to change the basic generated service worker code, please make a copy of the
-[original template](https://github.com/jeffposnick/sw-precache/blob/master/service-worker.tmpl),
+[original template](https://github.com/googlechrome/sw-precache/blob/master/service-worker.tmpl),
 modify it locally, and use this option to point to your template file.
 
 Default: `service-worker.tmpl` (in the directory that this module lives in)
@@ -192,11 +192,11 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 ## License
 
-[Apache 2.0](https://github.com/jeffposnick/sw-precache/blob/master/LICENSE) © 2015 Google Inc.
+[Apache 2.0](https://github.com/googlechrome/sw-precache/blob/master/LICENSE) © 2015 Google Inc.
 
 [npm-url]: https://npmjs.org/package/sw-precache
 [npm-image]: https://badge.fury.io/js/sw-precache.svg
-[travis-url]: https://travis-ci.org/jeffposnick/sw-precache
-[travis-image]: https://travis-ci.org/jeffposnick/sw-precache.svg?branch=master
-[daviddm-url]: https://david-dm.org/jeffposnick/sw-precache.svg?theme=shields.io
-[daviddm-image]: https://david-dm.org/jeffposnick/sw-precache
+[travis-url]: https://travis-ci.org/googlechrome/sw-precache
+[travis-image]: https://travis-ci.org/googlechrome/sw-precache.svg?branch=master
+[daviddm-url]: https://david-dm.org/googlechrome/sw-precache.svg?theme=shields.io
+[daviddm-image]: https://david-dm.org/googlechrome/sw-precache
