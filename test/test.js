@@ -211,3 +211,34 @@ describe('populateCurrentCacheNames', function() {
   });
 });
 
+describe('addDirectoryIndex', function() {
+  var directoryIndex = 'index.html';
+
+  it('should append the directory index when the URL ends with /', function(done) {
+    var url = 'http://example.com/';
+    var urlWithIndex = externalFunctions.addDirectoryIndex(url, directoryIndex);
+    assert.strictEqual(urlWithIndex, 'http://example.com/index.html');
+    done();
+  });
+
+  it('should append the directory index when the URL has an implicit /', function(done) {
+    var url = 'http://example.com';
+    var urlWithIndex = externalFunctions.addDirectoryIndex(url, directoryIndex);
+    assert.strictEqual(urlWithIndex, 'http://example.com/index.html');
+    done();
+  });
+
+  it('should not do anything when the URL does not end in /', function(done) {
+    var url = 'http://example.com/path/file.txt';
+    var urlWithIndex = externalFunctions.addDirectoryIndex(url, directoryIndex);
+    assert.strictEqual(urlWithIndex, url);
+    done();
+  });
+
+  it('should append the directory index without modifying URL parameters', function(done) {
+    var url = 'http://example.com?test=param';
+    var urlWithIndex = externalFunctions.addDirectoryIndex(url, directoryIndex);
+    assert.strictEqual(urlWithIndex, 'http://example.com/index.html?test=param');
+    done();
+  });
+});

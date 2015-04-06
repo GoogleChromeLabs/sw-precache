@@ -134,8 +134,9 @@ self.addEventListener('fetch', function(event) {
 
     var cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
     var directoryIndex = '<%= directoryIndex %>';
-    if (!cacheName && directoryIndex && urlWithoutIgnoredParameters.slice(-1) === '/') {
-      cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters + directoryIndex];
+    if (!cacheName && directoryIndex) {
+      urlWithoutIgnoredParameters = addDirectoryIndex(urlWithoutIgnoredParameters, directoryIndex);
+      cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
     }
 
     if (cacheName) {
