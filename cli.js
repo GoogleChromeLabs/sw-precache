@@ -44,7 +44,9 @@ function setDefaults(cli) {
   return cli.flags;
 }
 
-var cli = meow();
+var cli = meow({
+  help: 'Options from https://github.com/GoogleChrome/sw-precache#options are accepted as flags.'
+});
 var options = setDefaults(cli);
 
 swPrecache(options, function(error, swFileContents) {
