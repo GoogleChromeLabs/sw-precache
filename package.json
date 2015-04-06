@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Generate service worker code that will precache specific resources.",
   "author": {
     "name": "Jeff Posnick",
@@ -37,6 +37,7 @@
     "glob": "^4.3.2",
     "lodash.defaults": "^3.0.0",
     "lodash.template": "^3.0.0",
+    "meow": "^3.1.0",
     "pretty-bytes": "^1.0.2"
   },
   "repository": "googlechrome/sw-precache",
@@ -46,7 +47,11 @@
     "test": "mocha"
   },
   "files": [
+    "cli.js",
     "lib",
     "service-worker.tmpl"
-  ]
+  ],
+  "bin": {
+    "sw-precache": "cli.js"
+  }
 }
