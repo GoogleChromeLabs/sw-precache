@@ -196,7 +196,7 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 [npm-url]: https://npmjs.org/package/sw-precache
 [npm-image]: https://badge.fury.io/js/sw-precache.svg
-[travis-url]: https://travis-ci.org/googlechrome/sw-precache
-[travis-image]: https://travis-ci.org/googlechrome/sw-precache.svg?branch=master
+[travis-url]: https://travis-ci.org/GoogleChrome/sw-precache
+[travis-image]: https://travis-ci.org/GoogleChrome/sw-precache.svg?branch=master
 [daviddm-url]: https://david-dm.org/googlechrome/sw-precache.svg?theme=shields.io
 [daviddm-image]: https://david-dm.org/googlechrome/sw-precache
