@@ -106,6 +106,17 @@ property from your `package.json`.
 
 Default: `''`
 
+### directoryIndex [String]
+Many web servers automatically treat a URL corresponding to a directory (i.e. ending in `'/'`) as
+if it were a request for a specific index file in that directory, traditionally `'index.html'`.
+`sw-precache` will take that translation into account and serve the contents a relative
+`directoryIndex` file when there's no other match for a URL ending in `'/'`.
+To turn off this behavior, set `directoryIndex` to `false` or `null`.
+To override this behavior for one or more URLs, use the `dynamicUrlToDependencies` option to
+explicitly set up mappings between a directory URL and the corresponding file to use.
+
+Default: `'index.html'`
+
 ### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.
 E.g., if the contents of `/pages/home` are generated server-side via the templates `layout.jade` and
@@ -196,7 +207,7 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 [npm-url]: https://npmjs.org/package/sw-precache
 [npm-image]: https://badge.fury.io/js/sw-precache.svg
-[travis-url]: https://travis-ci.org/googlechrome/sw-precache
-[travis-image]: https://travis-ci.org/googlechrome/sw-precache.svg?branch=master
+[travis-url]: https://travis-ci.org/GoogleChrome/sw-precache
+[travis-image]: https://travis-ci.org/GoogleChrome/sw-precache.svg?branch=master
 [daviddm-url]: https://david-dm.org/googlechrome/sw-precache.svg?theme=shields.io
 [daviddm-image]: https://david-dm.org/googlechrome/sw-precache

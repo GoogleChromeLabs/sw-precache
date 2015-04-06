@@ -133,6 +133,12 @@ self.addEventListener('fetch', function(event) {
       IgnoreUrlParametersMatching);
 
     var cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
+    var directoryIndex = '<%= directoryIndex %>';
+    if (!cacheName && directoryIndex) {
+      urlWithoutIgnoredParameters = addDirectoryIndex(urlWithoutIgnoredParameters, directoryIndex);
+      cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
+    }
+
     if (cacheName) {
       event.respondWith(
         // We can't call cache.match(event.request) since the entry in the cache will contain the

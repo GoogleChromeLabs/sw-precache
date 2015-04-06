@@ -36,7 +36,6 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
   var config = {
     cacheId: packageJson.name,
     dynamicUrlToDependencies: {
-      './': [path.join(rootDir, 'index.html')],
       'dynamic/page1': [
         path.join(rootDir, 'views', 'layout.jade'),
         path.join(rootDir, 'views', 'page1.jade')
