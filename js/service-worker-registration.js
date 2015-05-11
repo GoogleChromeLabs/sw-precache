@@ -60,7 +60,8 @@ if ('serviceWorker' in navigator &&
           break;
 
           case 'redundant':
-            throw 'The installing service worker became redundant.';
+            console.error('The installing service worker became redundant.');
+          break;
         }
       };
     };
