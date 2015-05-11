@@ -153,7 +153,8 @@ method.
 Default: `[]`
 
 ### logger [function]
-A function used to report back on which resources are being precached and the overall size.
+A function used to report back on which resources are being precached (if `verbose` is `true`)
+and the overall precache size.
 Use `function() {}` if you'd prefer that nothing is logged.
 Within a `gulp` script, it's recommended that you use
 [`gulp-util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
@@ -192,6 +193,13 @@ But if you do need to change the basic generated service worker code, please mak
 modify it locally, and use this option to point to your template file.
 
 Default: `service-worker.tmpl` (in the directory that this module lives in)
+
+### verbose [boolean]
+Determines whether there's log output for each individual static/dynamic resource that's precached.
+Even if this is set to false, there will be a final log entry indicating the total size of all
+precached resources.
+
+Default: `false`
 
 
 ## Acknowledgements
