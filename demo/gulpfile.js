@@ -57,7 +57,9 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
       rootDir + '/images/**.*',
       rootDir + '/js/**.js'
     ],
-    stripPrefix: path.join(rootDir, path.sep)
+    stripPrefix: path.join(rootDir, path.sep),
+    // verbose defaults to false, but for the purposes of this demo, log more.
+    verbose: true
   };
 
   swPrecache(config, callback);
