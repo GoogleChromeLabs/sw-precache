@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         rootDir + '/images/**.*',
         rootDir + '/js/**.js'
       ],
-      stripPrefix: path.join(rootDir, path.sep)
+      stripPrefix: rootDir + '/'
     };
 
     swPrecache(config, callback);
