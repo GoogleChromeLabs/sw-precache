@@ -1,19 +1,21 @@
+var URL = require('dom-urls');
 var assert = require('assert');
 var externalFunctions = require('../lib/functions.js');
 var fs = require('fs');
-var swPrecache = require('../lib/sw-precache.js');
-var URL = require('dom-urls');
+var generate = require('../lib/sw-precache.js').generate;
+var write = require('../lib/sw-precache.js').write;
 
 var NOOP = function() {};
-var TEMP_FILE = 'test/data/temp.txt';
 
 describe('sw-precache core functionality', function() {
+  var TEMP_FILE = 'test/data/temp.txt';
+
   before(function() {
     fs.writeFileSync(TEMP_FILE, 'initial data');
   });
   
   it('should produce valid JavaScript', function(done) {
-    swPrecache({logger: NOOP}, function(error, responseString) {
+    generate({logger: NOOP}, function(error, responseString) {
       assert.ifError(error);
       assert.doesNotThrow(function() {
         new Function(responseString);
@@ -28,9 +30,9 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: ['test/data/one/**']
     };
 
-    swPrecache(config, function(error, responseStringOne) {
+    generate(config, function(error, responseStringOne) {
       assert.ifError(error);
-      swPrecache(config, function(error, responseStringTwo) {
+      generate(config, function(error, responseStringTwo) {
         assert.ifError(error);
         assert.strictEqual(responseStringOne, responseStringTwo);
         done();
@@ -49,9 +51,9 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: ['test/data/two/**']
     };
 
-    swPrecache(configOne, function(error, responseStringOne) {
+    generate(configOne, function(error, responseStringOne) {
       assert.ifError(error);
-      swPrecache(configTwo, function(error, responseStringTwo) {
+      generate(configTwo, function(error, responseStringTwo) {
         assert.ifError(error);
         assert.notStrictEqual(responseStringOne, responseStringTwo);
         done();
@@ -78,9 +80,9 @@ describe('sw-precache core functionality', function() {
       ]
     };
 
-    swPrecache(config, function(error, reponseString) {
+    generate(config, function(error, reponseString) {
       assert.ifError(error);
-      swPrecache(configPrime, function(error, responseStringPrime) {
+      generate(configPrime, function(error, responseStringPrime) {
         assert.ifError(error);
         assert.strictEqual(reponseString, responseStringPrime);
         done();
@@ -94,10 +96,10 @@ describe('sw-precache core functionality', function() {
       staticFileGlobs: [TEMP_FILE]
     };
 
-    swPrecache(config, function(error, responseString) {
+    generate(config, function(error, responseString) {
       assert.ifError(error);
       fs.appendFileSync(TEMP_FILE, 'new data');
-      swPrecache(config, function(error, responseStringPrime) {
+      generate(config, function(error, responseStringPrime) {
         assert.ifError(error);
         assert.notStrictEqual(responseString, responseStringPrime);
         done();
@@ -107,6 +109,26 @@ describe('sw-precache core functionality', function() {
 
   after(function() {
     fs.unlinkSync(TEMP_FILE);
+  });
+});
+
+describe('sw-precache write functionality', function() {
+  var SW_FILE = 'test/data/generated_sw.js';
+
+  it('should write to disk', function(done) {
+    write(SW_FILE, {logger: NOOP}, function(error) {
+      assert.ifError(error);
+      fs.stat(SW_FILE, function(error, stats) {
+        assert.ifError(error);
+        assert(stats.isFile(), 'file exists');
+        assert(stats.size > 0, 'file contains data');
+        done();
+      });
+    });
+  });
+
+  after(function() {
+    fs.unlinkSync(SW_FILE);
   });
 });
 
@@ -120,10 +142,10 @@ describe('sw-precache parameters', function() {
       maximumFileSizeToCacheInBytes: size - 1
     };
 
-    swPrecache(config, function(error, responseStringSmaller) {
+    generate(config, function(error, responseStringSmaller) {
       assert.ifError(error);
       config.maximumFileSizeToCacheInBytes = size;
-      swPrecache(config, function(error, responseStringLarger) {
+      generate(config, function(error, responseStringLarger) {
         assert.ifError(error);
         assert(responseStringSmaller.length < responseStringLarger.length);
         done();

@@ -56,15 +56,10 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
       var swPrecache = require('sw-precache');
       var rootDir = 'app';
 
-      swPrecache({
+      swPrecache.write(path.join(rootDir, 'service-worker.js'), {
         staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
         stripPrefix: rootDir
-      }, function(error, swFileContents) {
-        if (error) {
-          return callback(error);
-        }
-        fs.writeFile(path.join(rootDir, 'service-worker.js'), swFileContents, callback);
-      });
+      }, callback);
     });
 
 This task will create `app/service-worker.js`, which you'll need to
@@ -94,8 +89,33 @@ can be used in conjunction with `sw-precache` to provide the best experience for
 do implement additional caching logic, put the code in a separate JavaScript file and include it
 using the `importScripts` option.
 
+- `sw-precache` uses a [cache-first](http://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network)
+strategy, which results in a copy of any cached content being returned without consulting the
+network. A useful pattern to adopt is to display a toast/alert to your users when there's new
+content available, and give them an opportunity to reload the page to pick up that new content
+(which the service worker will have  added to the cache, and will be available at the next page
+load). The sample service-worker-registration.js file
+[illustrates](https://github.com/GoogleChrome/sw-precache/blob/7688ee8ccdaddd9171af352384d04d16d712f9d3/demo/app/js/service-worker-registration.js#L51)
+the service worker lifecycle event you can listen for to trigger this message.
+
+
+## Methods
+
+The `sw-precache` module exposes two methods: `generate` and `write`.
+
+### generate(options, callback)
+`generate` takes in [options](#options), generates resulting service worker code as a string, and
+then invokes `callback(error, serviceWorkerString)`.
+In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
+
+### write(filePath, options, callback)
+`write` is a helper method that calls `generate` and takes the resulting string content and
+writes it to disk, at `filePath`. It then invokes `callback(error)`.
+
 
 ## Options
+
+Both the `generate()` and `write()` methods take the same options.
 
 ### cacheId [String]
 A string used to distinguish the caches created by different web applications that are served off

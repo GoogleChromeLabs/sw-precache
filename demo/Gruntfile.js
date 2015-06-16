@@ -17,11 +17,10 @@ module.exports = function(grunt) {
     }
   });
 
-  function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
+  function writeServiceWorkerFile(rootDir, handleFetch, callback) {
     var config = {
       cacheId: packageJson.name,
       dynamicUrlToDependencies: {
-        './': [path.join(rootDir, 'index.html')],
         'dynamic/page1': [
           path.join(rootDir, 'views', 'layout.jade'),
           path.join(rootDir, 'views', 'page1.jade')
@@ -43,10 +42,12 @@ module.exports = function(grunt) {
         rootDir + '/images/**.*',
         rootDir + '/js/**.js'
       ],
-      stripPrefix: rootDir + '/'
+      stripPrefix: rootDir + '/',
+      // verbose defaults to false, but for the purposes of this demo, log more.
+      verbose: true
     };
 
-    swPrecache(config, callback);
+    swPrecache.write(path.join(rootDir, 'service-worker.js'), config, callback);
   }
 
   grunt.registerMultiTask('swPrecache', function() {
@@ -54,16 +55,11 @@ module.exports = function(grunt) {
     var rootDir = this.data.rootDir;
     var handleFetch = this.data.handleFetch;
 
-    generateServiceWorkerFileContents(rootDir, handleFetch, function(error, serviceWorkerFileContents) {
+    writeServiceWorkerFile(rootDir, handleFetch, function(error) {
       if (error) {
         grunt.fail.warn(error);
       }
-      fs.writeFile(path.join(rootDir, 'service-worker.js'), serviceWorkerFileContents, function(error) {
-        if (error) {
-          grunt.fail.warn(error);
-        }
-        done();
-      });
+      done();
     });
   });
 };
