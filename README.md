@@ -51,7 +51,6 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
 `app` and that you'd like to cache *all* your JavaScript, HTML, CSS, and image files.
 
     gulp.task('generate-service-worker', function(callback) {
-      var fs = require('fs');
       var path = require('path');
       var swPrecache = require('sw-precache');
       var rootDir = 'app';
