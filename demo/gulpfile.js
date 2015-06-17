@@ -32,7 +32,7 @@ function runExpress(port, rootDir) {
   });
 }
 
-function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
+function writeServiceWorkerFile(rootDir, handleFetch, callback) {
   var config = {
     cacheId: packageJson.name,
     dynamicUrlToDependencies: {
@@ -62,7 +62,7 @@ function generateServiceWorkerFileContents(rootDir, handleFetch, callback) {
     verbose: true
   };
 
-  swPrecache(config, callback);
+  swPrecache.write(path.join(rootDir, 'service-worker.js'), config, callback);
 }
 
 gulp.task('default', ['serve-dist']);
@@ -88,21 +88,11 @@ gulp.task('gh-pages', ['build'], function(callback) {
 });
 
 gulp.task('generate-service-worker-dev', function(callback) {
-  generateServiceWorkerFileContents(DEV_DIR, false, function(error, serviceWorkerFileContents) {
-    if (error) {
-      return callback(error);
-    }
-    fs.writeFile(path.join(DEV_DIR, 'service-worker.js'), serviceWorkerFileContents, callback);
-  });
+  writeServiceWorkerFile(DEV_DIR, false, callback);
 });
 
 gulp.task('generate-service-worker-dist', function(callback) {
-  generateServiceWorkerFileContents(DIST_DIR, true, function(error, serviceWorkerFileContents) {
-    if (error) {
-      return callback(error);
-    }
-    fs.writeFile(path.join(DIST_DIR, 'service-worker.js'), serviceWorkerFileContents, callback);
-  });
+  writeServiceWorkerFile(DIST_DIR, true, callback);
 });
 
 gulp.task('copy-dev-to-dist', function() {
