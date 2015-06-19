@@ -183,7 +183,7 @@ Default: `console.log`
 ### maximumFileSizeToCacheInBytes [Number]
 Files larger than this size will not be added to the precache list.
 
-Default: `4194304` (2 megabytes)
+Default: `2097152` (2 megabytes)
 
 ### stripPrefix [String]
 Useful when there's a discrepency between the relative path to a local file at build time and the
