@@ -193,6 +193,14 @@ strip that prefix from the start of each local file's path in order to get the c
 
 Default: `''`
 
+### replacePrefix [String]
+Useful when you are using stripPrefix to remove some portion of the url, but instead of just removing it,
+need a replacement string to be used instead. Use this option if you are serving statics from a different directory.
+E.g. if all your local files are under `dist/app/` but your static asset root is at `/public/`, you'd
+strip 'dist/app/' and replace it with '/public/' in order to get the correct URL for the web.
+
+Default: `''`
+
 ### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to
 [`glob`](https://github.com/isaacs/node-glob).
