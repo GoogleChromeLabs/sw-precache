@@ -16,21 +16,15 @@
 
 'use strict';
 
-if ('serviceWorker' in navigator &&
-    // See http://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features
-    (window.location.protocol === 'https:' ||
-     window.location.hostname === 'localhost' ||
-     window.location.hostname.indexOf('127.') === 0)) {
+if ('serviceWorker' in navigator) {
   // Your service-worker.js *must* be located at the top-level directory relative to your site.
   // It won't be able to control pages unless it's located at the same level or higher than them.
   // *Don't* register service worker file in, e.g., a scripts/ sub-directory!
   // See https://github.com/slightlyoff/ServiceWorker/issues/468
-  navigator.serviceWorker.register('service-worker.js', {
-    scope: './'
-  }).then(function(registration) {
+  navigator.serviceWorker.register('service-worker.js').then(function(registration) {
     // Check to see if there's an updated version of service-worker.js with new files to cache:
     // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-registration-update-method
-    if (typeof registration.update == 'function') {
+    if (typeof registration.update === 'function') {
       registration.update();
     }
 
@@ -50,18 +44,15 @@ if ('serviceWorker' in navigator &&
               // message in the page's interface.
               console.log('New or updated content is available.');
             } else {
-              // At this point, everything has been precached, but the service worker is not
-              // controlling the page. The service worker will not take control until the next
-              // reload or navigation to a page under the registered scope.
+              // At this point, everything has been precached.
               // It's the perfect time to display a "Content is cached for offline use." message.
-              console.log('Content is cached, and will be available for offline use the ' +
-                          'next time the page is loaded.')
+              console.log('Content is now available offline!');
             }
-          break;
+            break;
 
           case 'redundant':
             console.error('The installing service worker became redundant.');
-          break;
+            break;
         }
       };
     };
