@@ -6,8 +6,14 @@ See the [background doc](background.md) for more information.
 
 ## Install
 
+Local build integration:
 ```sh
 $ npm install --save-dev sw-precache
+```
+
+Global command-line interface:
+```sh
+$ npm install --global sw-precache
 ```
 
 
