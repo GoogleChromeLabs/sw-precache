@@ -49,14 +49,10 @@ var cli = meow({
 });
 var options = setDefaults(cli);
 
-swPrecache(options, function(error, swFileContents) {
+swPrecache.write(options.swFilePath, options, function(error) {
   if (error) {
     throw error;
   }
-  fs.writeFile(options.swFilePath, swFileContents, function(error) {
-    if (error) {
-      throw error;
-    }
-    console.log(options.swFilePath, 'has been generated with the service worker contents.');
-  });
+
+  console.log(options.swFilePath, 'has been generated with the service worker contents.');
 });
