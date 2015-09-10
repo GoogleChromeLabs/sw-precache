@@ -37,6 +37,7 @@
     "glob": "^5.0.10",
     "lodash.defaults": "^3.1.1",
     "lodash.template": "^3.6.1",
+    "meow": "^3.3.0",
     "pretty-bytes": "^2.0.1"
   },
   "repository": "googlechrome/sw-precache",
@@ -46,7 +47,11 @@
     "test": "mocha"
   },
   "files": [
+    "cli.js",
     "lib",
     "service-worker.tmpl"
-  ]
+  ],
+  "bin": {
+    "sw-precache": "cli.js"
+  }
 }

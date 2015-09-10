@@ -24,7 +24,9 @@ outlined in the
 2. **Incorporate `sw-precache` into your `node`-based build script.**
 It should work well with either `gulp` or `Grunt`, or other build scripts that run on `node`.
 As part of the build process, `sw-precache` generates fully functional JavaScript code that will
-take care of precaching and fetching all the resources your site needs to function offline.
+take care of precaching and fetching all the resources your site needs to function offline. There
+is also a [command-line interface](#command-line-interface) available, for those using alternate
+build setups.
 
 3. **Register the service worker JavaScript.**
 The JavaScript that's generated needs to be registered as the controlling service worker for your
@@ -227,6 +229,26 @@ Even if this is set to false, there will be a final log entry indicating the tot
 precached resources.
 
 Default: `false`
+
+
+## Command-line interface
+
+For those who would prefer not to use `sw-precache` as part of a `gulp` or `Grunt` build, there's a
+[command-line interface](cli.js) which supports all the same options, provided via flags. Sensible
+defaults are assumed for options that are not provided.
+
+For example, if you are inside the top-level directory that contains your site's contents, and you'd
+like to generate a `service-worker.js` file that will automatically precache all of the local
+files, you can simply run
+
+    sw-precache
+
+Alternatively, if you'd like to only precache `.html` files that live within `dist/`, which is a
+subdirectory of the current directory, you could run
+
+    sw-precache --root=dist --static-file-globs='dist/**/*.html'
+    
+(Be sure to use quotes around parameter values, like `*`, that have special meanings to your shell.)
 
 
 ## Acknowledgements
