@@ -247,13 +247,17 @@ For example, if you are inside the top-level directory that contains your site's
 like to generate a `service-worker.js` file that will automatically precache all of the local
 files, you can simply run
 
-    sw-precache
+```sh
+$ sw-precache
+```
 
 Alternatively, if you'd like to only precache `.html` files that live within `dist/`, which is a
 subdirectory of the current directory, you could run
 
-    sw-precache --root=dist --static-file-globs='dist/**/*.html'
-    
+```sh
+$ sw-precache --root=dist --static-file-globs='dist/**/*.html'
+```
+ 
 (Be sure to use quotes around parameter values, like `*`, that have special meanings to your shell.)
 
 
