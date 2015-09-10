@@ -51,20 +51,14 @@ Here's a simpler example for a basic use case. It assumes your site's resources 
 `app` and that you'd like to cache *all* your JavaScript, HTML, CSS, and image files.
 
     gulp.task('generate-service-worker', function(callback) {
-      var fs = require('fs');
       var path = require('path');
       var swPrecache = require('sw-precache');
       var rootDir = 'app';
 
-      swPrecache({
+      swPrecache.write(path.join(rootDir, 'service-worker.js'), {
         staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
         stripPrefix: rootDir
-      }, function(error, swFileContents) {
-        if (error) {
-          return callback(error);
-        }
-        fs.writeFile(path.join(rootDir, 'service-worker.js'), swFileContents, callback);
-      });
+      }, callback);
     });
 
 This task will create `app/service-worker.js`, which you'll need to
@@ -94,8 +88,33 @@ can be used in conjunction with `sw-precache` to provide the best experience for
 do implement additional caching logic, put the code in a separate JavaScript file and include it
 using the `importScripts` option.
 
+- `sw-precache` uses a [cache-first](http://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network)
+strategy, which results in a copy of any cached content being returned without consulting the
+network. A useful pattern to adopt is to display a toast/alert to your users when there's new
+content available, and give them an opportunity to reload the page to pick up that new content
+(which the service worker will have  added to the cache, and will be available at the next page
+load). The sample service-worker-registration.js file
+[illustrates](https://github.com/GoogleChrome/sw-precache/blob/7688ee8ccdaddd9171af352384d04d16d712f9d3/demo/app/js/service-worker-registration.js#L51)
+the service worker lifecycle event you can listen for to trigger this message.
+
+
+## Methods
+
+The `sw-precache` module exposes two methods: `generate` and `write`.
+
+### generate(options, callback)
+`generate` takes in [options](#options), generates resulting service worker code as a string, and
+then invokes `callback(error, serviceWorkerString)`.
+In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
+
+### write(filePath, options, callback)
+`write` is a helper method that calls `generate` and takes the resulting string content and
+writes it to disk, at `filePath`. It then invokes `callback(error)`.
+
 
 ## Options
+
+Both the `generate()` and `write()` methods take the same options.
 
 ### cacheId [String]
 A string used to distinguish the caches created by different web applications that are served off
@@ -153,7 +172,8 @@ method.
 Default: `[]`
 
 ### logger [function]
-A function used to report back on which resources are being precached and the overall size.
+A function used to report back on which resources are being precached (if `verbose` is `true`)
+and the overall precache size.
 Use `function() {}` if you'd prefer that nothing is logged.
 Within a `gulp` script, it's recommended that you use
 [`gulp-util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
@@ -163,13 +183,21 @@ Default: `console.log`
 ### maximumFileSizeToCacheInBytes [Number]
 Files larger than this size will not be added to the precache list.
 
-Default: `4194304` (2 megabytes)
+Default: `2097152` (2 megabytes)
 
 ### stripPrefix [String]
 Useful when there's a discrepency between the relative path to a local file at build time and the
 relative URL that the resource will be served from.
 E.g. if all your local files are under `dist/app/` and your web root is also at `dist/app/`, you'd
 strip that prefix from the start of each local file's path in order to get the correct relative URL.
+
+Default: `''`
+
+### replacePrefix [String]
+Useful when you are using stripPrefix to remove some portion of the url, but instead of just removing it,
+need a replacement string to be used instead. Use this option if you are serving statics from a different directory.
+E.g. if all your local files are under `dist/app/` but your static asset root is at `/public/`, you'd
+strip 'dist/app/' and replace it with '/public/' in order to get the correct URL for the web.
 
 Default: `''`
 
@@ -192,6 +220,13 @@ But if you do need to change the basic generated service worker code, please mak
 modify it locally, and use this option to point to your template file.
 
 Default: `service-worker.tmpl` (in the directory that this module lives in)
+
+### verbose [boolean]
+Determines whether there's log output for each individual static/dynamic resource that's precached.
+Even if this is set to false, there will be a final log entry indicating the total size of all
+precached resources.
+
+Default: `false`
 
 
 ## Acknowledgements
