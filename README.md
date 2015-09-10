@@ -25,7 +25,7 @@ outlined in the
 It should work well with either `gulp` or `Grunt`, or other build scripts that run on `node`.
 As part of the build process, `sw-precache` generates fully functional JavaScript code that will
 take care of precaching and fetching all the resources your site needs to function offline. There
-is also a [command-line interface](command--line-interface) available, for those using alternate
+is also a [command-line interface](#command-line-interface) available, for those using alternate
 build setups.
 
 3. **Register the service worker JavaScript.**
