@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Generate service worker code that will precache specific resources.",
   "author": {
     "name": "Jeff Posnick",
@@ -21,10 +21,12 @@
   },
   "devDependencies": {
     "del": "^1.2.0",
+    "eslint-config-xo": "^0.6.0",
     "express": "^4.12.4",
     "gh-pages": "^0.3.1",
     "grunt": "^0.4.5",
     "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0",
     "gulp-load-plugins": "^0.10.0",
     "gulp-mocha": "^2.1.1",
     "gulp-util": "^3.0.5",
@@ -43,9 +45,6 @@
   "repository": "googlechrome/sw-precache",
   "bugs": "https://github.com/googlechrome/sw-precache/issues",
   "license": "Apache-2.0",
-  "scripts": {
-    "test": "mocha"
-  },
   "files": [
     "cli.js",
     "lib",

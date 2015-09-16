@@ -1,4 +1,25 @@
+/**
+ * Copyright 2015 Google Inc. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* eslint-env node, mocha */
+'use strict';
+
+/* eslint-disable no-unused-vars */
 var URL = require('dom-urls');
+/* eslint-enable no-unused-vars */
 var assert = require('assert');
 var externalFunctions = require('../lib/functions.js');
 var fs = require('fs');
@@ -13,12 +34,14 @@ describe('sw-precache core functionality', function() {
   before(function() {
     fs.writeFileSync(TEMP_FILE, 'initial data');
   });
-  
+
   it('should produce valid JavaScript', function(done) {
     generate({logger: NOOP}, function(error, responseString) {
       assert.ifError(error);
       assert.doesNotThrow(function() {
+        /* eslint-disable no-new, no-new-func */
         new Function(responseString);
+        /* eslint-enable no-new, no-new-func */
         done();
       });
     });

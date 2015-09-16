@@ -1,10 +1,11 @@
+/* eslint-env node */
+
 'use strict';
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var del = require('del');
 var express = require('express');
-var fs = require('fs');
 var ghPages = require('gh-pages');
 var packageJson = require('../package.json');
 var path = require('path');

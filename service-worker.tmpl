@@ -20,13 +20,17 @@
 // https://github.com/googlechrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js
 // for an example of how you can register this script and handle various service worker events.
 
+/* eslint-env worker, serviceworker */
+/* eslint-disable no-unused-vars, no-multiple-empty-lines, max-nested-callbacks */
 'use strict';
 
 <% if (importScripts) { %>
 importScripts(<%= importScripts %>);
 <% } %>
 
+/* eslint-disable quotes, comma-spacing */
 var PrecacheConfig = <%= precacheConfig %>;
+/* eslint-enable quotes, comma-spacing */
 var CacheNamePrefix = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '') + '-';
 
 <% if (handleFetch) { %>
@@ -58,7 +62,7 @@ self.addEventListener('install', function(event) {
     caches.keys().then(function(allCacheNames) {
       return Promise.all(
         Object.keys(CurrentCacheNamesToAbsoluteUrl).filter(function(cacheName) {
-          return allCacheNames.indexOf(cacheName) == -1;
+          return allCacheNames.indexOf(cacheName) === -1;
         }).map(function(cacheName) {
           var url = new URL(CurrentCacheNamesToAbsoluteUrl[cacheName]);
           // Put in a cache-busting parameter to ensure we're caching a fresh response.
@@ -72,30 +76,30 @@ self.addEventListener('install', function(event) {
           return caches.open(cacheName).then(function(cache) {
             var request = new Request(urlWithCacheBusting, {credentials: 'same-origin'});
             return fetch(request.clone()).then(function(response) {
-              if (response.status == 200) {
+              if (response.ok) {
                 return cache.put(request, response);
-              } else {
-                console.error('Request for %s returned a response with status %d, so not attempting to cache it.',
-                  urlWithCacheBusting, response.status);
-                // Get rid of the empty cache if we can't add a successful response to it.
-                return caches.delete(cacheName);
               }
+
+              console.error('Request for %s returned a response with status %d, so not attempting to cache it.',
+                urlWithCacheBusting, response.status);
+              // Get rid of the empty cache if we can't add a successful response to it.
+              return caches.delete(cacheName);
             });
           });
         })
       ).then(function() {
         return Promise.all(
           allCacheNames.filter(function(cacheName) {
-            return cacheName.indexOf(CacheNamePrefix) == 0 &&
+            return cacheName.indexOf(CacheNamePrefix) === 0 &&
                    !(cacheName in CurrentCacheNamesToAbsoluteUrl);
           }).map(function(cacheName) {
             console.log('Deleting out-of-date cache "%s"', cacheName);
             return caches.delete(cacheName);
           })
-        )
+        );
       });
     }).then(function() {
-      if (typeof self.skipWaiting == 'function') {
+      if (typeof self.skipWaiting === 'function') {
         // Force the SW to transition from installing -> active state
         self.skipWaiting();
       }
@@ -103,14 +107,14 @@ self.addEventListener('install', function(event) {
   );
 });
 
-if (self.clients && (typeof self.clients.claim == 'function')) {
+if (self.clients && (typeof self.clients.claim === 'function')) {
   self.addEventListener('activate', function(event) {
     event.waitUntil(self.clients.claim());
   });
 }
 
 self.addEventListener('message', function(event) {
-  if (event.data.command == 'delete_all') {
+  if (event.data.command === 'delete_all') {
     console.log('About to delete all caches...');
     deleteAllCaches().then(function() {
       console.log('Caches deleted.');
@@ -128,7 +132,7 @@ self.addEventListener('message', function(event) {
 
 <% if (handleFetch) { %>
 self.addEventListener('fetch', function(event) {
-  if (event.request.method == 'GET') {
+  if (event.request.method === 'GET') {
     var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url,
       IgnoreUrlParametersMatching);
 
