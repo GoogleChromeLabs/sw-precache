@@ -1,8 +1,10 @@
+/* eslint-env node */
 // This is a basic Gruntfile illustrating how to call the sw-precache library. It doesn't include
 // all of the functionality from  the sample gulpfile, such as running a web server, or managing
 // separate DEV and DIST directories.
 
-var fs = require('fs');
+'use strict';
+
 var packageJson = require('../package.json');
 var path = require('path');
 var swPrecache = require('../lib/sw-precache.js');

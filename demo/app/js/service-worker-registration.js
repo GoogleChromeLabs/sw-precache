@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+/* eslint-env browser */
 'use strict';
 
 if ('serviceWorker' in navigator) {

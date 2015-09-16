@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
+/* eslint-env node */
 'use strict';
 
-var fs = require('fs');
 var meow = require('meow');
 var path = require('path');
 var swPrecache = require('./');
