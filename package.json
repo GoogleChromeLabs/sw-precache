@@ -45,6 +45,9 @@
   "repository": "googlechrome/sw-precache",
   "bugs": "https://github.com/googlechrome/sw-precache/issues",
   "license": "Apache-2.0",
+  "scripts": {
+    "test": "gulp test lint"
+  },
   "files": [
     "cli.js",
     "lib",

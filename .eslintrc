@@ -5,6 +5,6 @@
     "indent": [2, 2, {"SwitchCase": 1}],
     "no-console": 0,
     "no-inline-comments": 0,
-    "space-before-function-paren": 0
+    "space-before-function-paren": [2, "never"]
   }
 }
