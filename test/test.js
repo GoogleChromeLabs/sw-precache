@@ -17,9 +17,6 @@
 /* eslint-env node, mocha */
 'use strict';
 
-/* eslint-disable no-unused-vars */
-var URL = require('dom-urls');
-/* eslint-enable no-unused-vars */
 var assert = require('assert');
 var externalFunctions = require('../lib/functions.js');
 var fs = require('fs');
