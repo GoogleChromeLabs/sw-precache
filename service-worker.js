@@ -20,11 +20,15 @@
 // https://github.com/googlechrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js
 // for an example of how you can register this script and handle various service worker events.
 
+/* eslint-env worker, serviceworker */
+/* eslint-disable no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren */
 'use strict';
 
 
 
-var PrecacheConfig = [["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","d378b5b669cd3e69fcf8397eba85b67d"],["js/a.js","abcb1c5b4c6752aed90979fb3b6cf77a"],["js/b.js","d8e5842f1710f6f4f8fe2fe322a73ade"],["js/service-worker-registration.js","b2b59f73a2a4c0fb10466f08a225a079"]];
+/* eslint-disable quotes, comma-spacing */
+var PrecacheConfig = [["css/main.css","3cb4f06fd9e705bea97eb1bece31fd6d"],["dynamic/page1","7ea130186a1087177c3f587e510709c3"],["dynamic/page2","cf458509f6e510a24c0e9f7245337cd4"],["images/one.png","c5a951f965e6810d7b65615ee0d15053"],["images/two.png","29d2cd301ed1e5497e12cafee35a0188"],["index.html","d378b5b669cd3e69fcf8397eba85b67d"],["js/a.js","18ecf599c02b50bf02b849d823ce81f0"],["js/b.js","c7a9d7171499d530709140778f1241cb"],["js/service-worker-registration.js","779bdcd1c21d30feb1e7f725e1f378cf"]];
+/* eslint-enable quotes, comma-spacing */
 var CacheNamePrefix = 'sw-precache-v1-sw-precache-' + (self.registration ? self.registration.scope : '') + '-';
 
 
@@ -100,7 +104,7 @@ self.addEventListener('install', function(event) {
     caches.keys().then(function(allCacheNames) {
       return Promise.all(
         Object.keys(CurrentCacheNamesToAbsoluteUrl).filter(function(cacheName) {
-          return allCacheNames.indexOf(cacheName) == -1;
+          return allCacheNames.indexOf(cacheName) === -1;
         }).map(function(cacheName) {
           var url = new URL(CurrentCacheNamesToAbsoluteUrl[cacheName]);
           // Put in a cache-busting parameter to ensure we're caching a fresh response.
@@ -114,30 +118,30 @@ self.addEventListener('install', function(event) {
           return caches.open(cacheName).then(function(cache) {
             var request = new Request(urlWithCacheBusting, {credentials: 'same-origin'});
             return fetch(request.clone()).then(function(response) {
-              if (response.status == 200) {
+              if (response.ok) {
                 return cache.put(request, response);
-              } else {
-                console.error('Request for %s returned a response with status %d, so not attempting to cache it.',
-                  urlWithCacheBusting, response.status);
-                // Get rid of the empty cache if we can't add a successful response to it.
-                return caches.delete(cacheName);
               }
+
+              console.error('Request for %s returned a response with status %d, so not attempting to cache it.',
+                urlWithCacheBusting, response.status);
+              // Get rid of the empty cache if we can't add a successful response to it.
+              return caches.delete(cacheName);
             });
           });
         })
       ).then(function() {
         return Promise.all(
           allCacheNames.filter(function(cacheName) {
-            return cacheName.indexOf(CacheNamePrefix) == 0 &&
+            return cacheName.indexOf(CacheNamePrefix) === 0 &&
                    !(cacheName in CurrentCacheNamesToAbsoluteUrl);
           }).map(function(cacheName) {
             console.log('Deleting out-of-date cache "%s"', cacheName);
             return caches.delete(cacheName);
           })
-        )
+        );
       });
     }).then(function() {
-      if (typeof self.skipWaiting == 'function') {
+      if (typeof self.skipWaiting === 'function') {
         // Force the SW to transition from installing -> active state
         self.skipWaiting();
       }
@@ -145,14 +149,14 @@ self.addEventListener('install', function(event) {
   );
 });
 
-if (self.clients && (typeof self.clients.claim == 'function')) {
+if (self.clients && (typeof self.clients.claim === 'function')) {
   self.addEventListener('activate', function(event) {
     event.waitUntil(self.clients.claim());
   });
 }
 
 self.addEventListener('message', function(event) {
-  if (event.data.command == 'delete_all') {
+  if (event.data.command === 'delete_all') {
     console.log('About to delete all caches...');
     deleteAllCaches().then(function() {
       console.log('Caches deleted.');
@@ -170,7 +174,7 @@ self.addEventListener('message', function(event) {
 
 
 self.addEventListener('fetch', function(event) {
-  if (event.request.method == 'GET') {
+  if (event.request.method === 'GET') {
     var urlWithoutIgnoredParameters = stripIgnoredUrlParameters(event.request.url,
       IgnoreUrlParametersMatching);
 
