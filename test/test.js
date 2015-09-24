@@ -135,7 +135,7 @@ describe('sw-precache core functionality', function() {
         'test/data/one/c.txt',
         'test/data/two/b.txt'
       ],
-      stripPrefix: ".",
+      stripPrefix: '.'
     };
 
     var configPrime = {
@@ -165,7 +165,7 @@ describe('sw-precache core functionality', function() {
         'test/data/one/c.txt',
         'test/data/two/b.txt'
       ],
-      stripPrefix: "test",
+      stripPrefix: 'test'
     };
 
     var configPrime = {
