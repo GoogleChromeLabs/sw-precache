@@ -127,6 +127,66 @@ describe('sw-precache core functionality', function() {
     });
   });
 
+  it('should produce the same output when stripPrefix doesn\'t match the file prefixes', function(done) {
+    var config = {
+      logger: NOOP,
+      staticFileGlobs: [
+        'test/data/one/a.txt',
+        'test/data/one/c.txt',
+        'test/data/two/b.txt'
+      ],
+      stripPrefix: ".",
+    };
+
+    var configPrime = {
+      logger: NOOP,
+      staticFileGlobs: [
+        'test/data/one/c.txt',
+        'test/data/two/b.txt',
+        'test/data/one/a.txt'
+      ]
+    };
+
+    generate(config, function(error, reponseString) {
+      assert.ifError(error);
+      generate(configPrime, function(error, responseStringPrime) {
+        assert.ifError(error);
+        assert.strictEqual(reponseString, responseStringPrime);
+        done();
+      });
+    });
+  });
+
+  it('should produce different output when stripPrefix matches the file prefixes', function(done) {
+    var config = {
+      logger: NOOP,
+      staticFileGlobs: [
+        'test/data/one/a.txt',
+        'test/data/one/c.txt',
+        'test/data/two/b.txt'
+      ],
+      stripPrefix: "test",
+    };
+
+    var configPrime = {
+      logger: NOOP,
+      staticFileGlobs: [
+        'test/data/one/c.txt',
+        'test/data/two/b.txt',
+        'test/data/one/a.txt'
+      ]
+    };
+
+    generate(config, function(error, reponseString) {
+      assert.ifError(error);
+      generate(configPrime, function(error, responseStringPrime) {
+        assert.ifError(error);
+        assert.notStrictEqual(reponseString, responseStringPrime);
+        done();
+      });
+    });
+  });
+
   after(function() {
     fs.unlinkSync(TEMP_FILE);
   });
