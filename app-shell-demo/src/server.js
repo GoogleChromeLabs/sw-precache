@@ -17,7 +17,7 @@ app.use((req, res) => {
   Router.create({
     routes: routes,
     location: req.url
-  }).run((Handler) => {
+  }).run(Handler => {
     res.render('index', {
       reactHtml: React.renderToString(React.createElement(Handler))
     });

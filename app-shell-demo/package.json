@@ -1,0 +1,33 @@
+{
+  "name": "app-shell-demo",
+  "version": "1.0.0",
+  "description": "A web app shell.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeff Posnick <jeffy@google.com> (https://jeffy.info)",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "express": "^4.13.3",
+    "express-handlebars": "^2.0.1",
+    "react": "^0.13.3",
+    "react-router": "^0.13.4"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.25",
+    "babelify": "^6.3.0",
+    "browserify": "^11.2.0",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-size": "^2.0.0",
+    "gulp-util": "^3.0.6",
+    "nodemon": "^1.7.1",
+    "run-sequence": "^1.1.4",
+    "sw-precache": "^2.2.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router'
+import {Link} from 'react-router';
 
 export default class Hello extends React.Component {
   render() {
