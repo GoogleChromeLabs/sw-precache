@@ -115,13 +115,13 @@ The `sw-precache` module exposes two methods: `generate` and `write`.
 then invokes `callback(error, serviceWorkerString)`.
 In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
 
-Since 2.2.0, `generate()` also returns an ES6 promise.
+Since 2.2.0, `generate()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 ### write(filePath, options, callback)
 `write` is a helper method that calls `generate` and takes the resulting string content and
 writes it to disk, at `filePath`. It then invokes `callback(error)`.
 
-Since 2.2.0, `write()` also returns an ES6 promise.
+Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 ## Options
 
