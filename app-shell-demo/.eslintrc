@@ -1,0 +1,13 @@
+{
+  "extends": "xo",
+  "plugins": [
+    "react"
+  ],
+  "ecmaFeatures": {
+    "jsx": true
+  },
+  "rules": {
+    "react/jsx-uses-vars": 1,
+    "indent": [2, 2]
+  }
+}
