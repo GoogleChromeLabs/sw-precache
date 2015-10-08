@@ -143,6 +143,17 @@ self.addEventListener('fetch', function(event) {
       cacheName = AbsoluteUrlToCacheName[urlWithoutIgnoredParameters];
     }
 
+    var navigateFallback = '<%= navigateFallback %>';
+    // Ideally, this would check for event.request.mode === 'navigate', but that is not widely
+    // supported yet:
+    // https://code.google.com/p/chromium/issues/detail?id=540967
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1209081
+    if (!cacheName && navigateFallback && event.request.headers.has('accept') &&
+        event.request.headers.get('accept').includes('text/html')) {
+      var navigateFallbackUrl = new URL(navigateFallback, self.location);
+      cacheName = AbsoluteUrlToCacheName[navigateFallbackUrl.toString()];
+    }
+
     if (cacheName) {
       event.respondWith(
         // We can't call cache.match(event.request) since the entry in the cache will contain the

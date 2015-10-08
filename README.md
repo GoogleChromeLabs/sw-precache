@@ -196,8 +196,29 @@ Files larger than this size will not be added to the precache list.
 
 Default: `2097152` (2 megabytes)
 
+### navigateFallback [String]
+If set, then a request for an HTML document whose URL doesn't otherwise match any cached entries
+will be treated as if it were a request for the `navigateFallback` value, relative to the URL that
+the service worker is served from. To be effective, this fallback URL should be already cached via
+`staticFileGlobs` or `dynamicUrlToDependencies`.
+
+This comes in handy when used with a web application that performs client-side URL routing
+using the [History API](https://developer.mozilla.org/en-US/docs/Web/API/History). It allows any
+arbitrary URL that the client generates to map to a fallback cached HTML entry. This fallback entry
+ideally should serve as an "application shell" that is able to load the appropriate resources
+client-side, based on the request URL.
+
+**Note**: The current implementation checks `event.request.headers.get('accept').includes('text/html')`
+to determine whether to trigger the fallback, which will be `true` for any request made for an
+HTML document, whether it's a navigation or not. Once it's more
+[widely](https://code.google.com/p/chromium/issues/detail?id=540967)
+[supported](https://bugzilla.mozilla.org/show_bug.cgi?id=1209081), the logic will be changed to
+check for `event.request.mode === 'navigate'`.
+
+Default: `''`
+
 ### stripPrefix [String]
-Useful when there's a discrepency between the relative path to a local file at build time and the
+Useful when there's a discrepancy between the relative path to a local file at build time and the
 relative URL that the resource will be served from.
 E.g. if all your local files are under `dist/app/` and your web root is also at `dist/app/`, you'd
 strip that prefix from the start of each local file's path in order to get the correct relative URL.
