@@ -194,9 +194,9 @@ Files larger than this size will not be added to the precache list.
 Default: `2097152` (2 megabytes)
 
 ### navigateFallback [String]
-If set, then a request for an HTML document whose URL doesn't otherwisematch any cached entries will
-be treated as if it were a request for the `navigateFallback` value, relative to the URL that the
-service worker is served from. To be effective, this fallback URL should be already cached via
+If set, then a request for an HTML document whose URL doesn't otherwise match any cached entries
+will be treated as if it were a request for the `navigateFallback` value, relative to the URL that
+the service worker is served from. To be effective, this fallback URL should be already cached via
 `staticFileGlobs` or `dynamicUrlToDependencies`.
 
 This comes in handy when used with a web application that performs client-side URL routing
