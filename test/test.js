@@ -44,6 +44,17 @@ describe('sw-precache core functionality', function() {
     });
   });
 
+  it('should return a promise that resolves with the same output', function(done) {
+    generate({logger: NOOP}).then(function(responseStringOne) {
+      generate({logger: NOOP}, function(error, responseStringTwo) {
+        assert.ifError(error);
+
+        assert.strictEqual(responseStringOne, responseStringTwo);
+        done();
+      });
+    }, assert.ifError);
+  });
+
   it('should produce the same output given the same input files', function(done) {
     var config = {
       logger: NOOP,
@@ -147,7 +158,18 @@ describe('sw-precache write functionality', function() {
     });
   });
 
-  after(function() {
+  it('should return a promise that resolves when the file has been written', function(done) {
+    write(SW_FILE, {logger: NOOP}).then(function() {
+      fs.stat(SW_FILE, function(error, stats) {
+        assert.ifError(error);
+        assert(stats.isFile(), 'file exists');
+        assert(stats.size > 0, 'file contains data');
+        done();
+      });
+    }, assert.ifError);
+  });
+
+  afterEach(function() {
     fs.unlinkSync(SW_FILE);
   });
 });
