@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+    <div id="content">{{{reactHtml}}}</div>
+    <script src="/js/third-party.js"></script>
+    <script src="/js/app.js"></script>
+    <script>
+      if ('serviceWorker' in navigator && !navigator.serviceWorker.controller) {
+        var iFrame = document.createElement('iframe');
+        iFrame.src = '/register-service-worker.html';
+        iFrame.style.display = 'none';
+        document.body.appendChild(iFrame);
+      }
+    </script>
+  </body>
+</html>
