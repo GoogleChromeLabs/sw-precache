@@ -1,9 +1,10 @@
 import React from 'react';
-import Router from 'react-router';
 import express from 'express';
 import expressHandlebars from 'express-handlebars';
 import path from 'path';
 import routes from './routes';
+import {RoutingContext, match} from 'react-router';
+import {createMemoryHistory} from 'history';
 
 const app = express();
 
@@ -14,12 +15,24 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use((req, res) => {
-  Router.create({
-    routes: routes,
-    location: req.url
-  }).run(Handler => {
+  const location = createMemoryHistory().createLocation(req.url);
+
+  match({routes, location}, (err, redirectLocation, renderProps) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).end('Internel Server Error');
+    }
+
+    if (!renderProps) {
+      return res.status(404).end('Not Found');
+    }
+
+    const InitialComponent = (
+      <RoutingContext {...renderProps}/>
+    );
+
     res.render('index', {
-      reactHtml: React.renderToString(React.createElement(Handler))
+      reactHtml: React.renderToString(InitialComponent)
     });
   });
 });

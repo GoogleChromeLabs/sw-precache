@@ -3,6 +3,12 @@ import {Link} from 'react-router';
 
 export default class Footer extends React.Component {
   render() {
-    return <Link to="/">Welcome</Link>;
+    return (
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/list">List</Link></li>
+        <li><Link to="/shell">Shell</Link></li>
+      </ul>
+    );
   }
 }

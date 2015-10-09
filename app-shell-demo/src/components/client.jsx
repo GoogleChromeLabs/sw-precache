@@ -1,8 +1,12 @@
 /* eslint-env browser */
 import React from 'react';
-import Router from 'react-router';
 import routes from '../routes';
+import {Router} from 'react-router';
+import {createHistory} from 'history';
 
-Router.run(routes, Router.HistoryLocation, Handler => {
-  React.render(<Handler/>, document.getElementById('content'));
-});
+const history = createHistory();
+
+React.render(
+  <Router children={routes} history={history}/>,
+  document.getElementById('content')
+);

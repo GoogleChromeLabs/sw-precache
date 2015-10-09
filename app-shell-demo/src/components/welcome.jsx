@@ -6,7 +6,6 @@ export default class Welcome extends React.Component {
     return (
       <div>
         <p>Welcome to the web app!</p>
-        <p>Let's <Link to="list">explore</Link>!</p>
       </div>
     );
   }

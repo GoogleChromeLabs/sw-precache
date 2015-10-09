@@ -12,8 +12,9 @@
     "babel": "^5.8.23",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
+    "history": "^1.12.3",
     "react": "^0.13.3",
-    "react-router": "^0.13.4"
+    "react-router": "^1.0.0-rc3"
   },
   "devDependencies": {
     "babel-core": "^5.8.25",
