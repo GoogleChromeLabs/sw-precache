@@ -5,6 +5,9 @@
   </head>
   <body>
     <div id="content">{{{reactHtml}}}</div>
+    <script>
+      window.__STATE__ = {{{state}}};
+    </script>
     <script src="/js/third-party.js"></script>
     <script src="/js/app.js"></script>
     <script>

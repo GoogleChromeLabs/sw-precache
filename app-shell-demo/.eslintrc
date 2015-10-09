@@ -8,6 +8,6 @@
   },
   "rules": {
     "react/jsx-uses-vars": 1,
-    "indent": [2, 2]
+    "indent": [2, 2, {"SwitchCase": 1}]
   }
 }
