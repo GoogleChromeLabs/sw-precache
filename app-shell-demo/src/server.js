@@ -1,4 +1,4 @@
-import * as reducers from './reducers';
+import reducer from './reducer';
 import React from 'react';
 import express from 'express';
 import expressHandlebars from 'express-handlebars';
@@ -8,7 +8,7 @@ import routes from './routes';
 import {Provider} from 'react-redux';
 import {RoutingContext, match} from 'react-router';
 import {createMemoryHistory} from 'history';
-import {applyMiddleware, createStore, combineReducers} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 
 let app = express();
 
@@ -20,7 +20,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use((req, res) => {
   let location = createMemoryHistory().createLocation(req.url);
-  let reducer = combineReducers(reducers);
   let createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
   let store = createStoreWithMiddleware(reducer);
 

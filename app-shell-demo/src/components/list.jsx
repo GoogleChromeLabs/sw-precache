@@ -4,26 +4,28 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-@connect(state => ({urls: state.urlReducer}))
+const GUIDE_URL = 'https://www.ifixit.com/api/2.0/guides/featured';
+
+@connect(state => ({guides: state.urlToResponse.get(GUIDE_URL)}))
 export default class List extends React.Component {
   static fetchData(dispatch) {
     var boundActions = bindActionCreators(Actions, dispatch);
-    return boundActions.loadUrl('https://www.ifixit.com/api/2.0/guides/featured');
+    return boundActions.loadUrl(GUIDE_URL);
   }
 
   componentDidMount() {
     console.log('componentDidMount', this.props);
-    if (this.props.urls.size === 0) {
+    if (this.props.guides === undefined) {
       this.constructor.fetchData(this.props.dispatch);
     }
   }
 
   render() {
-    const {urls, dispatch} = this.props;
+    const {guides, dispatch} = this.props;
 
     return (
       <div>
-        <Guides urls={urls} {...bindActionCreators(Actions, dispatch)}/>
+        <Guides guides={guides} {...bindActionCreators(Actions, dispatch)}/>
       </div>
     );
   }
