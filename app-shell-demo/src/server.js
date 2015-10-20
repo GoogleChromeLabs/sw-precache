@@ -35,7 +35,7 @@ app.use((req, res) => {
 
     let fetchDataPromises = renderProps.components
       .filter(component => component.fetchData)
-      .map(component => component.fetchData(store.dispatch));
+      .map(component => component.fetchData(store.dispatch, renderProps));
     Promise.all(fetchDataPromises).then(() => {
       let InitialComponent = (
         <Provider store={store}>

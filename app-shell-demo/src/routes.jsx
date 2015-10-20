@@ -13,7 +13,7 @@ export default (
     <IndexRoute component={Welcome}/>
     <Route path="shell" component={Shell}/>
     <Route path="guides" component={Guides}/>
-    <Route path="guide" component={Guide}/>
+    <Route path="guide/:guideId" component={Guide}/>
     <Route path="*" component={NotFound}/>
   </Route>
 );

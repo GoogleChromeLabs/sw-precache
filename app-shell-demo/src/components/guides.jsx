@@ -9,7 +9,7 @@ const GUIDE_URL = 'https://www.ifixit.com/api/2.0/guides/featured';
 @connect(state => ({guides: state.urlToResponse.get(GUIDE_URL)}))
 export default class Guides extends React.Component {
   static fetchData(dispatch) {
-    var boundActions = bindActionCreators(Actions, dispatch);
+    let boundActions = bindActionCreators(Actions, dispatch);
     return boundActions.loadUrl(GUIDE_URL);
   }
 
