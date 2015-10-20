@@ -6,7 +6,7 @@ export default class Footer extends React.Component {
     return (
       <ul>
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/list">List</Link></li>
+        <li><Link to="/guides">Guides</Link></li>
         <li><Link to="/shell">Shell</Link></li>
       </ul>
     );

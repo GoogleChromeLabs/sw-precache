@@ -1,23 +1,31 @@
+import * as Actions from '../actions';
+import GuidesWrapper from './guides-wrapper';
 import React from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
-class GuideItemWrapper extends React.Component {
-  render() {
-    return <li>{this.props.title}</li>;
-  }
-}
+const GUIDE_URL = 'https://www.ifixit.com/api/2.0/guides/featured';
 
+@connect(state => ({guides: state.urlToResponse.get(GUIDE_URL)}))
 export default class Guides extends React.Component {
+  static fetchData(dispatch) {
+    var boundActions = bindActionCreators(Actions, dispatch);
+    return boundActions.loadUrl(GUIDE_URL);
+  }
+
+  componentDidMount() {
+    if (this.props.guides === undefined) {
+      this.constructor.fetchData(this.props.dispatch);
+    }
+  }
+
   render() {
-    let guides = this.props.guides || [];
-    console.log('guides', guides);
+    let {guides, dispatch} = this.props;
 
     return (
-      <ul>
-        {guides.map(guide => {
-          console.log('guide', guide);
-          return <GuideItemWrapper key={guide.guideid} title={guide.title}/>;
-        })}
-      </ul>
+      <div>
+        <GuidesWrapper guides={guides} {...bindActionCreators(Actions, dispatch)}/>
+      </div>
     );
   }
 }
