@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Hello extends React.Component {
+export default class Shell extends React.Component {
   render() {
     return <span></span>;
   }
