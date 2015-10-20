@@ -51,6 +51,11 @@ gulp.task('copy-static', () => {
     .pipe(gulp.dest(BUILD_DIR));
 });
 
+gulp.task('copy-third-party', () => {
+  return gulp.src('node_modules/sw-toolbox/sw-toolbox.js')
+    .pipe(gulp.dest(`${BUILD_DIR}/js`));
+});
+
 gulp.task('generate-service-worker', () => {
   const serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
   return del(serviceWorkerFile).then(() => {
@@ -60,6 +65,7 @@ gulp.task('generate-service-worker', () => {
       dynamicUrlToDependencies: {
         '/shell': [`${SRC_DIR}/views/index.handlebars`]
       },
+      importScripts: ['sw-toolbox.js', 'sw-toolbox-config.js'].map(script => `js/${script}`),
       logger: gutil.log,
       navigateFallback: '/shell',
       staticFileGlobs: [`${BUILD_DIR}/**/*.js`],
@@ -71,7 +77,7 @@ gulp.task('generate-service-worker', () => {
 
 gulp.task('build', callback => {
   sequence(
-    ['bundle-app', 'bundle-third-party', 'copy-static'],
+    ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party'],
     'generate-service-worker',
     callback
   );
