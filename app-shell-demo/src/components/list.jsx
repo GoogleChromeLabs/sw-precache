@@ -14,9 +14,7 @@ export default class List extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount', this.props);
     if (this.props.guides === undefined) {
-      console.log('undefined, fetching');
       this.constructor.fetchData(this.props.dispatch);
     }
   }

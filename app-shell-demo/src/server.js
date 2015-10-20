@@ -47,7 +47,7 @@ app.use((req, res) => {
         reactHtml: React.renderToString(InitialComponent),
         state: JSON.stringify(store.getState())
       });
-    });
+    }).catch(error => console.error(error));
   });
 });
 
