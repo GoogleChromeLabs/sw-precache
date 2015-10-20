@@ -12,6 +12,7 @@ export default class GuidesWrapper extends React.Component {
         <h1>{guide.get('title')}</h1>
         <h3>By {guide.get('author').get('username')}</h3>
         <h4>Last updated on {new Date(guide.get('modified_date') * 1000).toDateString()}</h4>
+        <img src={guide.get('image').get('standard')}/>
       </div>
     );
   }
