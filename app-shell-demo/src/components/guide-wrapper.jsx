@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class GuidesWrapper extends React.Component {
+export default class GuideWrapper extends React.Component {
   render() {
     let guide = this.props.guide;
     if (!guide) {
