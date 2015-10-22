@@ -1,7 +1,35 @@
 <!doctype html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test</title>
+    <style>
+      body {
+        font-family: Roboto, sans-serif;
+      }
+
+      .card-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .card {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        height: 225px;
+        margin: 8px;
+        width: 300px;
+        position: relative;
+      }
+
+      .card > img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
   </head>
   <body>
     <div id="content">{{{reactHtml}}}</div>
