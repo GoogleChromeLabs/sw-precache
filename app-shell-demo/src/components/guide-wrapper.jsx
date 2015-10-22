@@ -26,11 +26,11 @@ export default class GuideWrapper extends React.Component {
         {optionalIntroduction}
         {guide.get('steps').map((step, stepCounter) => {
           return (
-            <div>
-              <h4>{step.get('title') || `Step ${stepCounter + 1}`}</h4>
-              <ul>
+            <div key={`div-${stepCounter}`}>
+              <h4 key={`h4-${stepCounter}`}>{step.get('title') || `Step ${stepCounter + 1}`}</h4>
+              <ul key={`ul-${stepCounter}`}>
                 {step.get('lines').map((line, lineCounter) => {
-                  return <li key={`${stepCounter}-${lineCounter}`}
+                  return <li key={`li-${lineCounter}`}
                              className={`level-${line.get('level')} bullet-${line.get('bullet')}`}
                              dangerouslySetInnerHTML={{__html: line.get('text_rendered')}}/>;
                 })}
