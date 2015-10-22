@@ -7,12 +7,23 @@ export default class GuidesWrapper extends React.Component {
       return <h3>Loading...</h3>;
     }
 
+    let optionalIntroduction = guide.get('introduction_rendered') ? (
+      <div>
+        <h4>Introduction</h4>
+        <div dangerouslySetInnerHTML={{__html: guide.get('introduction_rendered')}}/>
+      </div>) : '';
+
+    let optionalConclusion = guide.get('conclusion_rendered') ? (
+      <div>
+        <h4>Conclusion</h4>
+        <div dangerouslySetInnerHTML={{__html: guide.get('conclusion_rendered')}}/>
+      </div>) : '';
+
     return (
       <div>
         <h1>{guide.get('title')}</h1>
         <h3>By {guide.get('author').get('username')} • Difficulty: {guide.get('difficulty')}</h3>
-        <h4>Introduction</h4>
-        <div dangerouslySetInnerHTML={{__html: guide.get('introduction_rendered')}}/>
+        {optionalIntroduction}
         {guide.get('steps').map((step, stepCounter) => {
           return (
             <div>
@@ -27,6 +38,7 @@ export default class GuidesWrapper extends React.Component {
             </div>
           );
         })}
+        {optionalConclusion}
       </div>
     );
   }
