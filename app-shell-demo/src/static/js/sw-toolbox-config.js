@@ -1,3 +1,4 @@
+/* eslint-env worker,serviceworker */
 (global => {
   'use strict';
 
