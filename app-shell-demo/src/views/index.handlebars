@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
+    <title>iFixit Progressive Web App</title>
     <style>
       body {
         font-family: Roboto, sans-serif;
+        font-size: 16px;
       }
 
       .card-container {
@@ -18,18 +19,85 @@
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
         height: 225px;
         margin: 8px;
-        width: 300px;
         position: relative;
+        width: 300px;
+      }
+
+      .card:hover {
+        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
       }
 
       .card > img {
         position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      li.level-1 {
+        margin-left: 16px;
+      }
+
+      li.level-2 {
+        margin-left: 32px;
+      }
+
+      li.level-3 {
+        margin-left: 48px;
+      }
+
+      li:before {
+        content: "\2b24";
+        font-size: 14px;
+        margin-right: 8px;
+        vertical-align: text-top;
+      }
+
+      li.bullet-icon_note:before {
+        content: url(/images/ic_info_outline_black_18px.svg);
+        vertical-align: middle;
+      }
+
+      li.bullet-orange:before {
+        color: orange;
+      }
+
+      li.bullet-yellow:before {
+        color: yellow;
+      }
+
+      li.bullet-red:before {
+        color: red;
+      }
+
+      li.bullet-green:before {
+        color: green;
+      }
+
+      li.bullet-violet:before {
+        color: violet;
+      }
+
+      li.bullet-light_blue:before {
+        color: lightblue;
+      }
+
+      li.bullet-blue:before {
+        color: blue;
+      }
+
+      .videoBox, .youtube-player {
+        max-width: 100%;
       }
     </style>
+    <base target="_blank">
   </head>
   <body>
     <div id="content">{{{reactHtml}}}</div>
