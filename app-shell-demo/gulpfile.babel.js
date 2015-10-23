@@ -29,9 +29,12 @@ gulp.task('bundle-app', () => {
   THIRD_PARTY_MODULES.forEach(module => bundler.external(module));
 
   return bundler.bundle()
+    .on('error', function(error) {
+      gutil.log('Babelify error:', error.message);
+      this.emit('end');
+    })
     .pipe(source('app.js'))
     .pipe(buffer())
-    .on('error', gutil.log)
     .pipe(gulp.dest(`${BUILD_DIR}/js`));
 });
 
@@ -40,6 +43,10 @@ gulp.task('bundle-third-party', () => {
   THIRD_PARTY_MODULES.forEach(module => bundler.require(module));
 
   return bundler.bundle()
+    .on('error', function(error) {
+      gutil.log('Babelify error:', error.message);
+      this.emit('end');
+    })
     .pipe(source('third-party.js'))
     .pipe(buffer())
     .on('error', gutil.log)
@@ -91,6 +98,8 @@ gulp.task('serve', callback => {
     verbose: true
   }).on('start', () => {
     gutil.log('Server started.');
+  }).on('crash', () => {
+    gutil.log('Server crashed.');
   }).on('restart', files => {
     gutil.log('Restarted server. Changed files: ', files);
   }).on('quit', callback);
