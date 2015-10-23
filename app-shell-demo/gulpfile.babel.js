@@ -3,8 +3,10 @@ import browserify from 'browserify';
 import buffer from 'vinyl-buffer';
 import del from 'del';
 import eslint from 'gulp-eslint';
+import glob from 'glob';
 import gulp from 'gulp';
 import gutil from 'gulp-util';
+import merge from 'merge-stream';
 import nodemon from 'nodemon';
 import packageJson from './package.json';
 import path from 'path';
@@ -22,7 +24,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('bundle-app', () => {
-  const bundler = browserify({
+  let bundler = browserify({
     entries: path.join(SRC_DIR, 'components', 'client.jsx'),
     extensions: ['.jsx'],
     transform: [babelify]
@@ -40,7 +42,7 @@ gulp.task('bundle-app', () => {
 });
 
 gulp.task('bundle-third-party', () => {
-  const bundler = browserify();
+  let bundler = browserify();
   THIRD_PARTY_MODULES.forEach(module => bundler.require(module));
 
   return bundler.bundle()
@@ -59,21 +61,30 @@ gulp.task('copy-static', () => {
     .pipe(gulp.dest(BUILD_DIR));
 });
 
-gulp.task('copy-third-party', () => {
+gulp.task('copy-third-party-sw', () => {
   return gulp.src('node_modules/sw-toolbox/sw-toolbox.js')
-    .pipe(gulp.dest(`${BUILD_DIR}/js`));
+    .pipe(gulp.dest(`${BUILD_DIR}/sw`));
 });
 
 gulp.task('version-assets', () => {
-  return gulp.src(`${BUILD_DIR}/js/**/*`)
+  let jsStream = gulp.src(`${BUILD_DIR}/js/**/*`)
     .pipe(rev())
     .pipe(gulp.dest(`${BUILD_DIR}/js-rev`))
     .pipe(rev.manifest())
     .pipe(gulp.dest(BUILD_DIR));
+
+  let swStream = gulp.src(`${BUILD_DIR}/sw/**/*`)
+    .pipe(rev())
+    .pipe(gulp.dest(`${BUILD_DIR}/sw-rev`));
+
+  return merge(jsStream, swStream);
 });
 
 gulp.task('generate-service-worker', () => {
-  const serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
+  let serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
+  // TODO: This needs to be modified to always put sw-toolbox first, regardless of the other scripts.
+  let swScripts = glob.sync('sw-rev/**/*', {cwd: BUILD_DIR}).reverse();
+
   return del(serviceWorkerFile).then(() => {
     return swPrecache.write(serviceWorkerFile, {
       cacheId: packageJson.name,
@@ -81,7 +92,7 @@ gulp.task('generate-service-worker', () => {
       dynamicUrlToDependencies: {
         '/shell': [`${SRC_DIR}/views/index.handlebars`]
       },
-      importScripts: ['sw-toolbox.js', 'sw-toolbox-config.js'].map(script => `js/${script}`),
+      importScripts: swScripts,
       logger: gutil.log,
       navigateFallback: '/shell',
       staticFileGlobs: [`${BUILD_DIR}/js-rev/**/*.js`],
@@ -93,7 +104,7 @@ gulp.task('generate-service-worker', () => {
 
 gulp.task('build', callback => {
   sequence(
-    ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party'],
+    ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party-sw'],
     'version-assets',
     'generate-service-worker',
     callback
