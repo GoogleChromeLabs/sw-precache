@@ -18,6 +18,11 @@ app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
+function handleError(res, error) {
+  console.error(error);
+  return res.status(500).end(`Internal Server Error\n\n${error}`);
+}
+
 app.use((req, res) => {
   let location = createMemoryHistory().createLocation(req.url);
   let createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
@@ -25,8 +30,7 @@ app.use((req, res) => {
 
   match({routes, location}, (error, redirectLocation, renderProps) => {
     if (error) {
-      console.error(error);
-      return res.status(500).end('Internal Server Error');
+      return handleError(res, error);
     }
 
     if (!renderProps) {
@@ -47,7 +51,7 @@ app.use((req, res) => {
         reactHtml: React.renderToString(InitialComponent),
         state: JSON.stringify(store.getState())
       });
-    }).catch(error => console.error(error));
+    }).catch(error => handleError(res, error));
   });
 });
 
