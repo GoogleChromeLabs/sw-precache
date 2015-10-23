@@ -22,5 +22,5 @@ React.render(
   <Provider store={store}>
     {() => <Router children={routes} history={history}/>}
   </Provider>,
-  document.getElementById('content')
+  document.querySelector('main')
 );

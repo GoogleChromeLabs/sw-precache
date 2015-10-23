@@ -3,9 +3,9 @@ import React from 'react';
 export default class App extends React.Component {
   render() {
     return (
-      <main>
+      <article>
         {this.props.children}
-      </main>
+      </article>
     );
   }
 }
