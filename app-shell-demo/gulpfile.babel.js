@@ -117,5 +117,7 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', callback => {
-  sequence('clean', 'build', ['serve', 'watch'], callback);
+  sequence('clean', 'build', ['watch', 'serve'], callback);
 });
+
+process.on('SIGINT', process.exit);
