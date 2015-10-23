@@ -29,14 +29,16 @@ export default class GuideWrapper extends React.Component {
             <section key={`section-${stepCounter}`}>
               <header key={`header-${stepCounter}`}>{step.get('title') || `Step ${stepCounter + 1}`}</header>
               {step.get('media').get('data').map((image, imageCounter) => {
-                return (
-                  <a key={`a-${imageCounter}`}
-                     href={image.get('original')}>
-                    <img key={`img-${imageCounter}`}
-                         className="card"
-                         src={image.get('standard')}/>
-                  </a>
-                );
+                if (image && image.get && image.get('standard')) {
+                  return (
+                    <a key={`a-${imageCounter}`}
+                       href={image.get('original')}>
+                      <img key={`img-${imageCounter}`}
+                           className="card"
+                           src={image.get('standard')}/>
+                    </a>
+                  );
+                }
               })}
               <ul key={`ul-${stepCounter}`}>
                 {step.get('lines').map((line, lineCounter) => {
