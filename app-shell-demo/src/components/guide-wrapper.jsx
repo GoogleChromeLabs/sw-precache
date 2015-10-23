@@ -8,16 +8,16 @@ export default class GuideWrapper extends React.Component {
     }
 
     let optionalIntroduction = guide.get('introduction_rendered') ? (
-      <div>
-        <h3>Introduction</h3>
+      <section>
+        <header>Introduction</header>
         <div dangerouslySetInnerHTML={{__html: guide.get('introduction_rendered')}}/>
-      </div>) : '';
+      </section>) : '';
 
     let optionalConclusion = guide.get('conclusion_rendered') ? (
-      <div>
-        <h3>Conclusion</h3>
+      <section>
+        <header>Conclusion</header>
         <div dangerouslySetInnerHTML={{__html: guide.get('conclusion_rendered')}}/>
-      </div>) : '';
+      </section>) : '';
 
     return (
       <div>
@@ -26,8 +26,8 @@ export default class GuideWrapper extends React.Component {
         {optionalIntroduction}
         {guide.get('steps').map((step, stepCounter) => {
           return (
-            <div key={`div-${stepCounter}`}>
-              <h3 key={`h3-${stepCounter}`}>{step.get('title') || `Step ${stepCounter + 1}`}</h3>
+            <section key={`section-${stepCounter}`}>
+              <header key={`header-${stepCounter}`}>{step.get('title') || `Step ${stepCounter + 1}`}</header>
               {step.get('media').get('data').map((image, imageCounter) => {
                 return (
                   <a key={`a-${imageCounter}`}
@@ -45,7 +45,7 @@ export default class GuideWrapper extends React.Component {
                              dangerouslySetInnerHTML={{__html: line.get('text_rendered')}}/>;
                 })}
               </ul>
-            </div>
+            </section>
           );
         })}
         {optionalConclusion}
