@@ -8,8 +8,9 @@ import gutil from 'gulp-util';
 import nodemon from 'nodemon';
 import packageJson from './package.json';
 import path from 'path';
-import source from 'vinyl-source-stream';
+import rev from 'gulp-rev';
 import sequence from 'run-sequence';
+import source from 'vinyl-source-stream';
 import swPrecache from 'sw-precache';
 
 const SRC_DIR = 'src';
@@ -63,6 +64,14 @@ gulp.task('copy-third-party', () => {
     .pipe(gulp.dest(`${BUILD_DIR}/js`));
 });
 
+gulp.task('version-assets', () => {
+  return gulp.src(`${BUILD_DIR}/js/**/*`)
+    .pipe(rev())
+    .pipe(gulp.dest(`${BUILD_DIR}/js-rev`))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest(BUILD_DIR));
+});
+
 gulp.task('generate-service-worker', () => {
   const serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
   return del(serviceWorkerFile).then(() => {
@@ -75,7 +84,7 @@ gulp.task('generate-service-worker', () => {
       importScripts: ['sw-toolbox.js', 'sw-toolbox-config.js'].map(script => `js/${script}`),
       logger: gutil.log,
       navigateFallback: '/shell',
-      staticFileGlobs: [`${BUILD_DIR}/**/*.js`],
+      staticFileGlobs: [`${BUILD_DIR}/js-rev/**/*.js`],
       stripPrefix: 'build/',
       verbose: true
     });
@@ -85,6 +94,7 @@ gulp.task('generate-service-worker', () => {
 gulp.task('build', callback => {
   sequence(
     ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party'],
+    'version-assets',
     'generate-service-worker',
     callback
   );
@@ -93,9 +103,10 @@ gulp.task('build', callback => {
 gulp.task('serve', callback => {
   nodemon({
     script: 'index.js',
-    ext: 'js jsx html',
+    ext: 'js jsx html json',
     watch: [SRC_DIR, BUILD_DIR],
-    verbose: true
+    verbose: true,
+    delay: 3
   }).on('start', () => {
     gutil.log('Server started.');
   }).on('crash', () => {
@@ -112,7 +123,7 @@ gulp.task('lint', () => {
 });
 
 gulp.task('watch', () => {
-  gulp.watch(`${SRC_DIR}/**/*.{js,jsx}`, ['bundle-app', 'lint']);
+  gulp.watch(`${SRC_DIR}/**/*.{js,jsx}`, sequence('bundle-app', 'lint', 'version-assets'));
   gulp.watch(`${SRC_DIR}/static/**/*`, ['copy-static']);
 });
 

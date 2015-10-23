@@ -1,14 +1,15 @@
-import reducer from './reducer';
 import React from 'react';
 import express from 'express';
 import expressHandlebars from 'express-handlebars';
+import fs from 'fs';
 import path from 'path';
 import promiseMiddleware from 'redux-promise';
+import reducer from './reducer';
 import routes from './routes';
 import {Provider} from 'react-redux';
 import {RoutingContext, match} from 'react-router';
-import {createMemoryHistory} from 'history';
 import {applyMiddleware, createStore} from 'redux';
+import {createMemoryHistory} from 'history';
 
 let app = express();
 
@@ -17,6 +18,8 @@ app.use(express.static('build'));
 app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
+
+let revManifest = JSON.parse(fs.readFileSync(path.join('build', 'rev-manifest.json'), 'utf8'));
 
 function handleError(res, error) {
   console.error(error);
@@ -49,7 +52,8 @@ app.use((req, res) => {
 
       res.render('index', {
         reactHtml: React.renderToString(InitialComponent),
-        state: JSON.stringify(store.getState())
+        state: JSON.stringify(store.getState()),
+        revManifest
       });
     }).catch(error => handleError(res, error));
   });

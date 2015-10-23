@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "A web app shell.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Jeff Posnick <jeffy@google.com> (https://jeffy.info)",
   "license": "Apache-2.0",
   "dependencies": {
@@ -33,6 +30,7 @@
     "eslint-plugin-react": "^3.5.1",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.0.0",
+    "gulp-rev": "^6.0.1",
     "gulp-size": "^2.0.0",
     "gulp-util": "^3.0.6",
     "nodemon": "^1.7.1",
