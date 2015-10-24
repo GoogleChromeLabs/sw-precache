@@ -1,0 +1,13 @@
+{
+  "name": "iFixit Progressive Web App",
+  "short_name": "iFixit",
+  "icons": [{
+    "src": "/images/fist-enclosed-black.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }],
+  "start_url": "/?utm_source=homescreen",
+  "display": "standalone",
+  "background_color": "#f1f1f1",
+  "theme_color": "#f1f1f1"
+}
