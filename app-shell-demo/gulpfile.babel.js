@@ -82,8 +82,17 @@ gulp.task('version-assets', () => {
 
 gulp.task('generate-service-worker', () => {
   let serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
-  // TODO: This needs to be modified to always put sw-toolbox first, regardless of the other scripts.
-  let swScripts = glob.sync('sw-rev/**/*', {cwd: BUILD_DIR}).reverse();
+
+  let swScripts = [];
+  let swToolboxRegex = /sw-toolbox-[a-f0-9]{10}\.js$/;
+  glob.sync('sw-rev/**/*', {cwd: BUILD_DIR}).forEach(file => {
+    if (file.match(swToolboxRegex)) {
+      // The sw-toolbox.js script (with the hash in its filename) needs to be imported first.
+      swScripts.unshift(file);
+    } else {
+      swScripts.push(file);
+    }
+  });
 
   return del(serviceWorkerFile).then(() => {
     return swPrecache.write(serviceWorkerFile, {
