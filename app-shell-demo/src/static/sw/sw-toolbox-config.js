@@ -2,6 +2,8 @@
 (global => {
   'use strict';
 
+  global.toolbox.options.debug = true;
+
   // API responses are served from a base of https://www.ifixit.com/api/2.0/
   // Since they might change, but freshness isn't of the utmost importance,
   // the 'fastest' strategy can be used.
@@ -9,14 +11,20 @@
     origin: /^https:\/\/www.ifixit.com$/
   });
 
+  const MISSING_IMAGE = '/images/missing.png';
+  global.toolbox.precache(MISSING_IMAGE);
+
+  function imageHandler(request, values, options) {
+    return global.toolbox.cacheFirst(request, values, options).catch(() => {
+      return global.caches.match(MISSING_IMAGE);
+    });
+  }
+
   // Static images are served from a subdomain of cloudfront.net.
-  // Since they're unlikely to change, the 'cacheFirst' strategy can be used, along with a custom
-  // cache expiration to ensure our cache doesn't grow indefinitely.
-  global.toolbox.router.get('/(.*)', global.toolbox.cacheFirst, {
+  global.toolbox.router.get('/(.*)', imageHandler, {
     cache: {
       name: 'image-cache',
-      // Store up to 2 entries in that cache.
-      maxEntries: 2
+      maxEntries: 50
     },
     origin: /cloudfront.net$/
   });
