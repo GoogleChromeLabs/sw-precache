@@ -85,7 +85,7 @@ gulp.task('generate-service-worker', () => {
 
   let swScripts = [];
   let swToolboxRegex = /sw-toolbox-[a-f0-9]{10}\.js$/;
-  glob.sync('sw-rev/**/*', {cwd: BUILD_DIR}).forEach(file => {
+  glob.sync('sw-rev/**/*.js', {cwd: BUILD_DIR}).forEach(file => {
     if (file.match(swToolboxRegex)) {
       // The sw-toolbox.js script (with the hash in its filename) needs to be imported first.
       swScripts.unshift(file);
