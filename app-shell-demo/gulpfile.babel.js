@@ -6,6 +6,7 @@ import eslint from 'gulp-eslint';
 import glob from 'glob';
 import gulp from 'gulp';
 import gutil from 'gulp-util';
+import minifyCss from 'gulp-minify-css';
 import nodemon from 'nodemon';
 import packageJson from './package.json';
 import path from 'path';
@@ -69,6 +70,7 @@ gulp.task('copy-third-party-sw', () => {
 gulp.task('sass', () => {
   gulp.src(`${SRC_DIR}/static/sass/*.scss`)
     .pipe(sass().on('error', sass.logError))
+    .pipe(minifyCss())
     .pipe(gulp.dest(`${BUILD_DIR}/styles`));
 });
 

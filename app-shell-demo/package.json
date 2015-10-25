@@ -20,6 +20,7 @@
     "glob": "^5.0.15",
     "gulp": "^3.9.0",
     "gulp-eslint": "^1.0.0",
+    "gulp-minify-css": "^1.2.1",
     "gulp-rev": "^6.0.1",
     "gulp-sass": "^2.0.4",
     "gulp-size": "^2.0.0",
