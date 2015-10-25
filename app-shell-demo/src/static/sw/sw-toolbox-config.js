@@ -2,8 +2,6 @@
 (global => {
   'use strict';
 
-  global.toolbox.options.debug = true;
-
   // API responses are served from a base of https://www.ifixit.com/api/2.0/
   // Since they might change, but freshness isn't of the utmost importance,
   // the 'fastest' strategy can be used.
