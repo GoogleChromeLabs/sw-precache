@@ -99,7 +99,11 @@ gulp.task('generate-service-worker', () => {
       cacheId: packageJson.name,
       directoryIndex: null,
       dynamicUrlToDependencies: {
-        '/shell': [...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`), `${SRC_DIR}/views/index.handlebars`]
+        '/shell': [
+          ...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`),
+          ...glob.sync(`${BUILD_DIR}/rev/styles/all*.css`),
+          `${SRC_DIR}/views/index.handlebars`
+        ]
       },
       importScripts: swScripts,
       logger: gutil.log,
