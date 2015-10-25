@@ -6,11 +6,11 @@ import eslint from 'gulp-eslint';
 import glob from 'glob';
 import gulp from 'gulp';
 import gutil from 'gulp-util';
-import merge from 'merge-stream';
 import nodemon from 'nodemon';
 import packageJson from './package.json';
 import path from 'path';
 import rev from 'gulp-rev';
+import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
 import swPrecache from 'sw-precache';
@@ -66,18 +66,18 @@ gulp.task('copy-third-party-sw', () => {
     .pipe(gulp.dest(`${BUILD_DIR}/sw`));
 });
 
+gulp.task('sass', () => {
+  gulp.src(`${SRC_DIR}/static/sass/*.scss`)
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(`${BUILD_DIR}/styles`));
+});
+
 gulp.task('version-assets', () => {
-  let jsStream = gulp.src(`${BUILD_DIR}/js/**/*`)
+  return gulp.src(`${BUILD_DIR}/*/*`)
     .pipe(rev())
-    .pipe(gulp.dest(`${BUILD_DIR}/js-rev`))
+    .pipe(gulp.dest(`${BUILD_DIR}/rev`))
     .pipe(rev.manifest())
     .pipe(gulp.dest(BUILD_DIR));
-
-  let swStream = gulp.src(`${BUILD_DIR}/sw/**/*`)
-    .pipe(rev())
-    .pipe(gulp.dest(`${BUILD_DIR}/sw-rev`));
-
-  return merge(jsStream, swStream);
 });
 
 gulp.task('generate-service-worker', () => {
@@ -85,7 +85,7 @@ gulp.task('generate-service-worker', () => {
 
   let swScripts = [];
   let swToolboxRegex = /sw-toolbox-[a-f0-9]{10}\.js$/;
-  glob.sync('sw-rev/**/*.js', {cwd: BUILD_DIR}).forEach(file => {
+  glob.sync('rev/sw/**/*.js', {cwd: BUILD_DIR}).forEach(file => {
     if (file.match(swToolboxRegex)) {
       // The sw-toolbox.js script (with the hash in its filename) needs to be imported first.
       swScripts.unshift(file);
@@ -99,12 +99,12 @@ gulp.task('generate-service-worker', () => {
       cacheId: packageJson.name,
       directoryIndex: null,
       dynamicUrlToDependencies: {
-        '/shell': [...glob.sync(`${BUILD_DIR}/js-rev/**/*.js`), `${SRC_DIR}/views/index.handlebars`]
+        '/shell': [...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`), `${SRC_DIR}/views/index.handlebars`]
       },
       importScripts: swScripts,
       logger: gutil.log,
       navigateFallback: '/shell',
-      staticFileGlobs: [`${BUILD_DIR}/js-rev/**/*.js`],
+      staticFileGlobs: [`${BUILD_DIR}/rev/js/**/*.js`],
       stripPrefix: 'build/',
       verbose: true
     });
@@ -113,7 +113,7 @@ gulp.task('generate-service-worker', () => {
 
 gulp.task('build', callback => {
   sequence(
-    ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party-sw'],
+    ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party-sw', 'sass'],
     'version-assets',
     'generate-service-worker',
     callback

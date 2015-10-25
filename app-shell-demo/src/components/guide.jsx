@@ -14,6 +14,10 @@ export default class Guide extends React.Component {
     return boundActions.loadUrl(url);
   }
 
+  static needsStyles() {
+    return 'guide.css';
+  }
+
   componentDidMount() {
     let url = GUIDE_URL_PREFIX + this.props.params.guideId;
     if (this.props.urlToResponse.get(url) === undefined) {

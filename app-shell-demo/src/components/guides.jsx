@@ -13,6 +13,10 @@ export default class Guides extends React.Component {
     return boundActions.loadUrl(GUIDE_URL);
   }
 
+  static needsStyles() {
+    return 'guides.css';
+  }
+
   componentDidMount() {
     if (this.props.guides === undefined) {
       this.constructor.fetchData(this.props.dispatch);

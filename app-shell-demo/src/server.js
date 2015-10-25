@@ -20,6 +20,14 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
 let revManifest = JSON.parse(fs.readFileSync(path.join('build', 'rev-manifest.json'), 'utf8'));
+let styles = new Map(
+  Object.keys(revManifest).filter(originalFile => originalFile.endsWith('.css'))
+    .map(originalFile => {
+      let revFile = revManifest[originalFile];
+      let contents = fs.readFileSync(path.join('build', 'rev', revFile), 'utf8');
+      return [originalFile, contents];
+    })
+);
 
 function handleError(res, error) {
   console.error(error);
@@ -43,6 +51,14 @@ app.use((req, res) => {
     let fetchDataPromises = renderProps.components
       .filter(component => component.fetchData)
       .map(component => component.fetchData(store.dispatch, renderProps));
+
+    let inlineStyles = renderProps.components
+      .filter(component => component.needsStyles)
+      .map(component => 'styles/' + component.needsStyles())
+      .reduce((stylesSoFar, styleName) => {
+        return stylesSoFar + styles.get(styleName);
+      }, '');
+
     Promise.all(fetchDataPromises).then(() => {
       let InitialComponent = (
         <Provider store={store}>
@@ -53,7 +69,8 @@ app.use((req, res) => {
       res.render('index', {
         reactHtml: React.renderToString(InitialComponent),
         state: JSON.stringify(store.getState()),
-        revManifest
+        revManifest,
+        inlineStyles
       });
     }).catch(error => handleError(res, error));
   });
