@@ -108,7 +108,7 @@ gulp.task('generate-service-worker', () => {
       importScripts: swScripts,
       logger: gutil.log,
       navigateFallback: '/shell',
-      staticFileGlobs: [`${BUILD_DIR}/rev/js/**/*.js`],
+      staticFileGlobs: [`${BUILD_DIR}/rev/js/**/*.js`, `${BUILD_DIR}/rev/styles/all*.css`],
       stripPrefix: 'build/',
       verbose: true
     });
