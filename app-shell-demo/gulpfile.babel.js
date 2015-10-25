@@ -15,6 +15,7 @@ import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
 import swPrecache from 'sw-precache';
+import uglify from 'gulp-uglify';
 
 const SRC_DIR = 'src';
 const BUILD_DIR = 'build';
@@ -74,6 +75,12 @@ gulp.task('sass', () => {
     .pipe(gulp.dest(`${BUILD_DIR}/styles`));
 });
 
+gulp.task('uglify-js', () => {
+  return gulp.src(`${BUILD_DIR}/js/**/*`)
+    .pipe(uglify())
+    .pipe(gulp.dest(`${BUILD_DIR}/js`));
+});
+
 gulp.task('version-assets', () => {
   return gulp.src(`${BUILD_DIR}/*/*`)
     .pipe(rev())
@@ -120,6 +127,7 @@ gulp.task('generate-service-worker', () => {
 gulp.task('build', callback => {
   sequence(
     ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party-sw', 'sass'],
+    'uglify-js',
     'version-assets',
     'generate-service-worker',
     callback
