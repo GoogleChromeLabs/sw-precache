@@ -35,7 +35,6 @@
     "run-sequence": "^1.1.0"
   },
   "dependencies": {
-    "compression": "^1.6.0",
     "dom-urls": "^1.0.0",
     "es6-promise": "^3.0.2",
     "glob": "^5.0.10",
