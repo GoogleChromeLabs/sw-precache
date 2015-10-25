@@ -1,4 +1,5 @@
 import React from 'react';
+import compression from 'compression';
 import express from 'express';
 import expressHandlebars from 'express-handlebars';
 import fs from 'fs';
@@ -13,7 +14,24 @@ import {createMemoryHistory} from 'history';
 
 let app = express();
 
-app.use(express.static('build'));
+app.use(compression());
+
+function handleError(res, error) {
+  console.error(error);
+  return res.status(500).end(`Internal Server Error\n\n${error}`);
+}
+
+function setHeaders(res, file) {
+  if (file.includes(`${path.sep}rev${path.sep}`)) {
+    res.setHeader('Cache-Control', 'max-age=31536000');
+  } else if (file.endsWith('service-worker.js')) {
+    res.setHeader('Cache-Control', 'max-age=0, no-cache');
+  } else {
+    res.setHeader('Cache-Control', 'max-age=3600');
+  }
+}
+
+app.use(express.static('build', {setHeaders}));
 
 app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
@@ -28,11 +46,6 @@ let styles = new Map(
       return [originalFile, contents];
     })
 );
-
-function handleError(res, error) {
-  console.error(error);
-  return res.status(500).end(`Internal Server Error\n\n${error}`);
-}
 
 app.use((req, res) => {
   let location = createMemoryHistory().createLocation(req.url);
@@ -66,6 +79,7 @@ app.use((req, res) => {
         </Provider>
       );
 
+      res.setHeader('Cache-Control', 'max-age=0, no-cache');
       res.render('index', {
         reactHtml: React.renderToString(InitialComponent),
         state: JSON.stringify(store.getState()),
