@@ -16,13 +16,9 @@
     <script>
       window.__STATE__ = {{{state}}};
     </script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js');
-      }
-    </script>
     <link rel="stylesheet" href="/rev/{{revManifest.[styles/all.css]}}">
     <script src="/rev/{{revManifest.[js/third-party.js]}}"></script>
     <script src="/rev/{{revManifest.[js/app.js]}}"></script>
+    <script src="/rev/{{revManifest.[js/register-service-worker.js]}}"></script>
   </body>
 </html>
