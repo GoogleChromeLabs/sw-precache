@@ -17,11 +17,8 @@
       window.__STATE__ = {{{state}}};
     </script>
     <script>
-      if ('serviceWorker' in navigator && !navigator.serviceWorker.controller) {
-        var iFrame = document.createElement('iframe');
-        iFrame.src = '/register-service-worker.html';
-        iFrame.style.display = 'none';
-        document.body.appendChild(iFrame);
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
       }
     </script>
     <link rel="stylesheet" href="/rev/{{revManifest.[styles/all.css]}}">
