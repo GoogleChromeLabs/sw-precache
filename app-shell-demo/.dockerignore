@@ -1,0 +1,6 @@
+node_modules
+.dockerignore
+Dockerfile
+.git
+.hg
+.svn
