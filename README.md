@@ -1,6 +1,10 @@
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
 
-> Generate service worker code that will precache specific resources.
+# Service Worker Precache
+
+> Precache specific resources
+
+Service Worker Precache generates service worker code that precaches specific resources.
 See the [background doc](background.md) for more information.
 
 
@@ -76,7 +80,7 @@ before it can take control of your site's pages.
 is a ready-to-use script to handle registration.
 
 
-## Considerations
+### Considerations
 
 - Service worker caching should be considered a progressive enhancement. If you follow the model of
 conditionally registering a service worker only if it's supported (determined by
@@ -106,24 +110,32 @@ load). The sample service-worker-registration.js file
 the service worker lifecycle event you can listen for to trigger this message.
 
 
-## Methods
+### Using with Gulp and Grunt
 
-The `sw-precache` module exposes two methods: `generate` and `write`.
+For those who would prefer not to use `sw-precache` as part of a `gulp` or `Grunt` build, there's a
+[command-line interface](cli.js) which supports all the same options, provided via flags. Sensible
+defaults are assumed for options that are not provided.
 
-### generate(options, callback)
-`generate` takes in [options](#options), generates resulting service worker code as a string, and
-then invokes `callback(error, serviceWorkerString)`.
-In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
+For example, if you are inside the top-level directory that contains your site's contents, and you'd
+like to generate a `service-worker.js` file that will automatically precache all of the local
+files, you can simply run
 
-Since 2.2.0, `generate()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+```sh
+$ sw-precache
+```
 
-### write(filePath, options, callback)
-`write` is a helper method that calls `generate` and takes the resulting string content and
-writes it to disk, at `filePath`. It then invokes `callback(error)`.
+Alternatively, if you'd like to only precache `.html` files that live within `dist/`, which is a
+subdirectory of the current directory, you could run
 
-Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+```sh
+$ sw-precache --root=dist --static-file-globs='dist/**/*.html'
+```
+ 
+(Be sure to use quotes around parameter values, like `*`, that have special meanings to your shell.)
 
-## Options
+## API
+
+### Options
 
 Both the `generate()` and `write()` methods take the same options.
 
@@ -261,28 +273,22 @@ precached resources.
 Default: `false`
 
 
-## Command-line interface
+### Methods
 
-For those who would prefer not to use `sw-precache` as part of a `gulp` or `Grunt` build, there's a
-[command-line interface](cli.js) which supports all the same options, provided via flags. Sensible
-defaults are assumed for options that are not provided.
+The `sw-precache` module exposes two methods: `generate` and `write`.
 
-For example, if you are inside the top-level directory that contains your site's contents, and you'd
-like to generate a `service-worker.js` file that will automatically precache all of the local
-files, you can simply run
+#### generate(options, callback)
+`generate` takes in [options](#options), generates resulting service worker code as a string, and
+then invokes `callback(error, serviceWorkerString)`.
+In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
 
-```sh
-$ sw-precache
-```
+Since 2.2.0, `generate()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
-Alternatively, if you'd like to only precache `.html` files that live within `dist/`, which is a
-subdirectory of the current directory, you could run
+#### write(filePath, options, callback)
+`write` is a helper method that calls `generate` and takes the resulting string content and
+writes it to disk, at `filePath`. It then invokes `callback(error)`.
 
-```sh
-$ sw-precache --root=dist --static-file-globs='dist/**/*.html'
-```
- 
-(Be sure to use quotes around parameter values, like `*`, that have special meanings to your shell.)
+Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 
 ## Acknowledgements
@@ -295,6 +301,20 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 ## License
 
 [Apache 2.0](https://github.com/googlechrome/sw-precache/blob/master/LICENSE) © 2015 Google Inc.
+
+Copyright 2015 Google, Inc.
+
+Licensed under the [Apache License, Version 2.0[(https://github.com/googlechrome
+/sw-precache/blob/master/LICENSE)] (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 
 [npm-url]: https://npmjs.org/package/sw-precache
 [npm-image]: https://badge.fury.io/js/sw-precache.svg
