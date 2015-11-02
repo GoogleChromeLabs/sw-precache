@@ -21,6 +21,7 @@ var assert = require('assert');
 var externalFunctions = require('../lib/functions.js');
 var fs = require('fs');
 var generate = require('../lib/sw-precache.js').generate;
+var path = require('path');
 var write = require('../lib/sw-precache.js').write;
 
 var NOOP = function() {};
@@ -42,6 +43,17 @@ describe('sw-precache core functionality', function() {
         done();
       });
     });
+  });
+
+  it('should return a promise that resolves with the same output', function(done) {
+    generate({logger: NOOP}).then(function(responseStringOne) {
+      generate({logger: NOOP}, function(error, responseStringTwo) {
+        assert.ifError(error);
+
+        assert.strictEqual(responseStringOne, responseStringTwo);
+        done();
+      });
+    }, assert.ifError);
   });
 
   it('should produce the same output given the same input files', function(done) {
@@ -207,8 +219,40 @@ describe('sw-precache write functionality', function() {
     });
   });
 
+  it('should return a promise that resolves when the file has been written', function(done) {
+    write(SW_FILE, {logger: NOOP}).then(function() {
+      fs.stat(SW_FILE, function(error, stats) {
+        assert.ifError(error);
+        assert(stats.isFile(), 'file exists');
+        assert(stats.size > 0, 'file contains data');
+        done();
+      });
+    }, assert.ifError);
+  });
+
+  afterEach(function() {
+    fs.unlinkSync(SW_FILE);
+  });
+});
+
+describe('sw-precache write functionality with missing parent directory', function() {
+  var SW_FILE = 'test/data/new_directory/generated_sw.js';
+
+  it('should write to disk, creating a new parent directory', function(done) {
+    write(SW_FILE, {logger: NOOP}, function(error) {
+      assert.ifError(error);
+      fs.stat(SW_FILE, function(error, stats) {
+        assert.ifError(error);
+        assert(stats.isFile(), 'file exists');
+        assert(stats.size > 0, 'file contains data');
+        done();
+      });
+    });
+  });
+
   after(function() {
     fs.unlinkSync(SW_FILE);
+    fs.rmdirSync(path.dirname(SW_FILE));
   });
 });
 
