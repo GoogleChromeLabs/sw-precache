@@ -110,7 +110,7 @@ load). The sample service-worker-registration.js file
 the service worker lifecycle event you can listen for to trigger this message.
 
 
-### Using with Gulp and Grunt
+### Command-line interface
 
 For those who would prefer not to use `sw-precache` as part of a `gulp` or `Grunt` build, there's a
 [command-line interface](cli.js) which supports all the same options, provided via flags. Sensible
