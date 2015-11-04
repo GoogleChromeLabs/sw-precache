@@ -135,7 +135,24 @@ $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 
 ## API
 
-### Options
+### Methods
+
+The `sw-precache` module exposes two methods: `generate` and `write`.
+
+#### generate(options, callback)
+`generate` takes in [options](#options), generates resulting service worker code as a string, and
+then invokes `callback(error, serviceWorkerString)`.
+In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
+
+Since 2.2.0, `generate()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+#### write(filePath, options, callback)
+`write` is a helper method that calls `generate` and takes the resulting string content and
+writes it to disk, at `filePath`. It then invokes `callback(error)`.
+
+Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+### Options Parameter
 
 Both the `generate()` and `write()` methods take the same options.
 
@@ -273,22 +290,7 @@ precached resources.
 Default: `false`
 
 
-### Methods
 
-The `sw-precache` module exposes two methods: `generate` and `write`.
-
-#### generate(options, callback)
-`generate` takes in [options](#options), generates resulting service worker code as a string, and
-then invokes `callback(error, serviceWorkerString)`.
-In the 1.x releases of `sw-precache`, this was the default and only method exposed by the module.
-
-Since 2.2.0, `generate()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
-
-#### write(filePath, options, callback)
-`write` is a helper method that calls `generate` and takes the resulting string content and
-writes it to disk, at `filePath`. It then invokes `callback(error)`.
-
-Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 
 ## Acknowledgements
