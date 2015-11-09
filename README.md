@@ -156,7 +156,7 @@ Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/
 
 Both the `generate()` and `write()` methods take the same options.
 
-### cacheId [String]
+#### cacheId [String]
 A string used to distinguish the caches created by different web applications that are served off
 of the same origin and path. While serving completely different sites from the same URL is not
 likely to be an issue in a production environment, it avoids cache-conflicts when testing various
@@ -165,7 +165,7 @@ property from your `package.json`.
 
 Default: `''`
 
-### directoryIndex [String]
+#### directoryIndex [String]
 Many web servers automatically treat a URL corresponding to a directory (i.e. ending in `'/'`) as
 if it were a request for a specific index file in that directory, traditionally `'index.html'`.
 `sw-precache` will take that translation into account and serve the contents a relative
@@ -176,7 +176,7 @@ explicitly set up mappings between a directory URL and the corresponding file to
 
 Default: `'index.html'`
 
-### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]
+#### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]
 Maps a dynamic URL string to an array of all the files that URL's contents depend on.
 E.g., if the contents of `/pages/home` are generated server-side via the templates `layout.jade` and
 `home.jade`, then specify `'/pages/home': ['layout.jade', 'home.jade']`. The MD5 hash used to
@@ -185,14 +185,14 @@ determine whether `/pages/home` has changed will depend on the hashes of both
 
 Default: `{}`
 
-### handleFetch [boolean]
+#### handleFetch [boolean]
 Determines whether the `fetch` event handler is included in the generated service worker code.
 It is useful to set this to `false` in development builds, to ensure that features like live reload
 still work (otherwise, the content would always be served from the service worker cache).
 
 Default: `true`
 
-### ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]
+#### ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]
 `sw-precache` finds matching cache entries by doing a comparison with the full request URL. It's
 common for sites to support URL query parameters that don't affect the site's content and should
 be effectively ignored for the purposes of cache matching—one example is the
@@ -203,7 +203,7 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 
 Default: `[/^utm_/]`
 
-### importScripts [Array&#x27e8;String&#x27e9;]
+#### importScripts [Array&#x27e8;String&#x27e9;]
 If you'd like to include one or more external scripts as part of the generated service worker code,
 use this option. The scripts passed in will be passed directly to the
 [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)
@@ -211,7 +211,7 @@ method.
 
 Default: `[]`
 
-### logger [function]
+#### logger [function]
 A function used to report back on which resources are being precached (if `verbose` is `true`)
 and the overall precache size.
 Use `function() {}` if you'd prefer that nothing is logged.
@@ -220,12 +220,12 @@ Within a `gulp` script, it's recommended that you use
 
 Default: `console.log`
 
-### maximumFileSizeToCacheInBytes [Number]
+#### maximumFileSizeToCacheInBytes [Number]
 Files larger than this size will not be added to the precache list.
 
 Default: `2097152` (2 megabytes)
 
-### navigateFallback [String]
+#### navigateFallback [String]
 If set, then a request for an HTML document whose URL doesn't otherwise match any cached entries
 will be treated as if it were a request for the `navigateFallback` value, relative to the URL that
 the service worker is served from. To be effective, this fallback URL should be already cached via
@@ -246,7 +246,7 @@ check for `event.request.mode === 'navigate'`.
 
 Default: `''`
 
-### stripPrefix [String]
+#### stripPrefix [String]
 Useful when there's a discrepancy between the relative path to a local file at build time and the
 relative URL that the resource will be served from.
 E.g. if all your local files are under `dist/app/` and your web root is also at `dist/app/`, you'd
@@ -254,7 +254,7 @@ strip that prefix from the start of each local file's path in order to get the c
 
 Default: `''`
 
-### replacePrefix [String]
+#### replacePrefix [String]
 Useful when you are using stripPrefix to remove some portion of the url, but instead of just removing it,
 need a replacement string to be used instead. Use this option if you are serving statics from a different directory.
 E.g. if all your local files are under `dist/app/` but your static asset root is at `/public/`, you'd
@@ -262,7 +262,7 @@ strip 'dist/app/' and replace it with '/public/' in order to get the correct URL
 
 Default: `''`
 
-### staticFileGlobs [Array&#x27e8;String&#x27e9;]
+#### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to
 [`glob`](https://github.com/isaacs/node-glob).
 All files matching these globs will be automatically precached by the generated service worker.
@@ -270,7 +270,7 @@ You'll almost always want to specify something for this.
 
 Default: `[]`
 
-### templateFilePath [String]
+#### templateFilePath [String]
 The path to the file used as the ([lo-dash](https://lodash.com/docs#template)) template to generate
 `service-worker.js`.
 If you need to add in additional functionality to the generated service worker code, it's
@@ -282,15 +282,12 @@ modify it locally, and use this option to point to your template file.
 
 Default: `service-worker.tmpl` (in the directory that this module lives in)
 
-### verbose [boolean]
+#### verbose [boolean]
 Determines whether there's log output for each individual static/dynamic resource that's precached.
 Even if this is set to false, there will be a final log entry indicating the total size of all
 precached resources.
 
 Default: `false`
-
-
-
 
 
 ## Acknowledgements
