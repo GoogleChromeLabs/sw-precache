@@ -176,11 +176,9 @@ US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 #### write(filePath, options, callback) 
 `write` takes in [options](#options), generates a service worker from them, 
-and writes the service worker to a specified file. If any errors are 
-encountered, this method calls the callback function, which must have the 
-following interface:
-
-`callback(error)`
+and writes the service worker to a specified file. This method always 
+invokes `callback(error)`. If no error was found, the `error` parameter will 
+be `null'
 
 Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org
 /en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
