@@ -149,9 +149,9 @@ subdirectory of the current directory, you could run
 $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 ```
  
-**Note: Be sure to use quotes around parameter values that have special meanings
-**to your shell (such as the `*` characters in the sample command line above,
-**for example).
+**Note:** Be sure to use quotes around parameter values that have special meanings
+to your shell (such as the `*` characters in the sample command line above,
+for example).
 
 ## API
 
@@ -198,14 +198,14 @@ property from your `package.json`.
 
 _Default_: `''`
 
-#### directoryIndex [String] Sets a default filename to return for URL's
-formatted like directory paths (in other words, those ending in `'/'`). `sw-
-precache` will take that translation into account and serve the contents a
-relative `directoryIndex` file when there's no other match for a URL ending in
-`'/'`. To turn off this behavior, set `directoryIndex` to `false` or `null`. To
-override this behavior for one or more URLs, use the `dynamicUrlToDependencies`
-option to explicitly set up mappings between a directory URL and a corresponding
-file.
+#### directoryIndex [String] 
+Sets a default filename to return for URL's formatted like directory paths (in 
+other words, those ending in `'/'`). `sw-precache` will take that translation 
+into account and serve the contents a relative `directoryIndex` file when 
+there's no other match for a URL ending in `'/'`. To turn off this behavior, 
+set `directoryIndex` to `false` or `null`. To override this behavior for one 
+or more URLs, use the `dynamicUrlToDependencies` option to explicitly set up 
+mappings between a directory URL and a corresponding file.
 
 _Default_: `'index.html'`
 
@@ -219,11 +219,11 @@ the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
 
 _Default_: `{}`
 
-#### handleFetch [boolean] Determines whether the `fetch` event handler is
-included in the generated service worker code. It is useful to set this to
-`false` in development builds, to ensure that features like live reload still
-work. Otherwise, the content would always be served from the service worker
-cache.
+#### handleFetch [boolean] 
+Determines whether the `fetch` event handler is included in the generated 
+service worker code. It is useful to set this to `false` in development builds, 
+to ensure that features like live reload still work. Otherwise, the content 
+would always be served from the service worker cache.
 
 _Default_: `true`
 
@@ -238,10 +238,10 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 
 _Default_: `[/^utm_/]`
 
-#### importScripts [Array&#x27e8;String&#x27e9;] Writes calls to
-[`importScripts()`](https://developer.mozilla.org/en-
-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)  to
-the resulting service worker to import the specified scripts.
+#### importScripts [Array&#x27e8;String&#x27e9;] 
+Writes calls to [`importScripts()`]
+(https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries) 
+to the resulting service worker to import the specified scripts.
 
 _Default_: `[]`
 
@@ -270,9 +270,9 @@ arbitrary URL that the client generates to map to a fallback cached HTML entry. 
 ideally should serve as an "application shell" that is able to load the appropriate resources
 client-side, based on the request URL.
 
-**Note: The current implementation searches the request's `accept` header and
-**triggers the fallback when `'text/html'` is found. It does this whether or not
-**the request is a navigation.
+**Note:** The current implementation searches the request's `accept` header and
+triggers the fallback when `'text/html'` is found. It does this whether or not
+the request is a navigation.
 
 _Default_: `''`
 
