@@ -159,9 +159,11 @@ $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 
 The `sw-precache` module exposes two methods: `generate` and `write`.
 
-#### generate(options, callback) `generate` takes in [options](#options),
-generates a service worker from them and passes the result to a callback
-fundtion, which must have the following interface:
+#### generate(options, callback) 
+
+`generate` takes in [options](#options), generates a service worker 
+from them and passes the result to a callback fundtion, which must 
+have the following interface:
 
 `callback(error, serviceWorkerString)
 
@@ -172,10 +174,11 @@ Since 2.2.0, `generate()` also returns a
 [`Promise`](https://developer.mozilla.org/en-
 US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
-#### write(filePath, options, callback) `write` takes in [options](#options),
-generates a service worker from them, and writes the service worker to a
-specified file. If any errors are encountered, this method calls the callback
-function, which must have the following interface:
+#### write(filePath, options, callback) 
+`write` takes in [options](#options), generates a service worker from them, 
+and writes the service worker to a specified file. If any errors are 
+encountered, this method calls the callback function, which must have the 
+following interface:
 
 `callback(error)
 
