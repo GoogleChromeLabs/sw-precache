@@ -193,7 +193,7 @@ likely to be an issue in a production environment, it avoids cache-conflicts whe
 projects all served off of `http://localhost`. You may want to set it to, e.g., the `name`
 property from your `package.json`.
 
-Default: `''`
+_Default_: `''`
 
 #### directoryIndex [String] Sets a default filename to return for URL's
 formatted like directory paths (in other words, those ending in `'/'`). `sw-
@@ -204,7 +204,7 @@ override this behavior for one or more URLs, use the `dynamicUrlToDependencies`
 option to explicitly set up mappings between a directory URL and a corresponding
 file.
 
-Default: `'index.html'`
+_Default_: `'index.html'`
 
 #### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]  
 Maps a dynamic URL string to an array of all the files that URL's contents
@@ -214,7 +214,7 @@ the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
 `/pages/home` has changed will depend on the hashes of both `layout.jade` and
 `home.jade`.
 
-Default: `{}`
+_Default_: `{}`
 
 #### handleFetch [boolean] Determines whether the `fetch` event handler is
 included in the generated service worker code. It is useful to set this to
@@ -222,7 +222,7 @@ included in the generated service worker code. It is useful to set this to
 work. Otherwise, the content would always be served from the service worker
 cache.
 
-Default: `true`
+_Default_: `true`
 
 #### ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]
 `sw-precache` finds matching cache entries by doing a comparison with the full request URL. It's
@@ -233,14 +233,14 @@ campaign performance. By default, `sw-precache` will ignore `key=value` when `ke
 the regular expressions provided in this option.
 To ignore all parameters, use `[/./]`. To take all parameters into account when matching, use `[]`.
 
-Default: `[/^utm_/]`
+_Default_: `[/^utm_/]`
 
 #### importScripts [Array&#x27e8;String&#x27e9;] Writes calls to
 [`importScripts()`](https://developer.mozilla.org/en-
 US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)  to
 the resulting service worker to import the specified scripts.
 
-Default: `[]`
+_Default_: `[]`
 
 #### logger [function] 
 
@@ -249,12 +249,12 @@ a precache size. Use `function() {}` if you'd prefer that nothing is logged.
 Within a `gulp` script, it's recommended that you use [`gulp-
 util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
 
-Default: `console.log`
+_Default_: `console.log`
 
 #### maximumFileSizeToCacheInBytes [Number]
 Sets the maximum allowed size for a file in the precache list.
 
-Default: `2097152` (2 megabytes)
+_Default_: `2097152` (2 megabytes)
 
 #### navigateFallback [String] 
 Sets an HTML document to use as a fallback for URLs not found in the cache. To
@@ -271,7 +271,7 @@ client-side, based on the request URL.
 **triggers the fallback when `'text/html'` is found. It does this whether or not
 **the request is a navigation.
 
-Default: `''`
+_Default_: `''`
 
 #### stripPrefix [String] 
 Removes a specified string from the beginning of path URL's at runtime. Use this
@@ -281,7 +281,7 @@ the same path at run time. For example, if all your local files are under
 from the start of each local file's path in order to get the correct relative
 URL.
 
-Default: `''`
+_Default_: `''`
 
 #### replacePrefix [String]
 Replaces a specified string at the beginning of path URL's at runtime. Use this
@@ -290,7 +290,7 @@ than you are at build time. For example, if your local files are under
 `dist/app/` but your static asset root is at `/public/`, you'd strip 'dist/app/'
 and replace it with '/public/'.
 
-Default: `''`
+_Default_: `''`
 
 #### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to
@@ -298,7 +298,7 @@ An array of one or more string patterns that will be passed in to
 All files matching these globs will be automatically precached by the generated service worker.
 You'll almost always want to specify something for this.
 
-Default: `[]`
+_Default_: `[]`
 
 #### templateFilePath [String]
 
@@ -312,14 +312,14 @@ template](https://github.com/googlechrome/sw-precache/blob/master/service-
 worker.tmpl), modify it locally, and use this option to point to your template
 file.
 
-Default: `service-worker.tmpl` (in the directory that this module lives in)
+_Default_: `service-worker.tmpl` (in the directory that this module lives in)
 
 #### verbose [boolean]
 Determines whether there's log output for each individual static/dynamic resource that's precached.
 Even if this is set to false, there will be a final log entry indicating the total size of all
 precached resources.
 
-Default: `false`
+_Default_: `false`
 
 
 ## Acknowledgements
