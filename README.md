@@ -165,7 +165,7 @@ The `sw-precache` module exposes two methods: `generate` and `write`.
 from them and passes the result to a callback fundtion, which must 
 have the following interface:
 
-`callback(error, serviceWorkerString)
+`callback(error, serviceWorkerString)`
 
 In the 1.x releases of `sw-precache`, this was the default and only method
 exposed by the module.
@@ -180,7 +180,7 @@ and writes the service worker to a specified file. If any errors are
 encountered, this method calls the callback function, which must have the 
 following interface:
 
-`callback(error)
+`callback(error)`
 
 Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org
 /en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
