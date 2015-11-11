@@ -1,7 +1,10 @@
+@import "colors";
+
 body {
-  margin: 0;
-  padding: 0;
+  background-color: $background-color;
   font-family: Roboto, sans-serif;
   font-size: 16px;
   line-height: 22px;
+  margin: 0;
+  padding: 0;
 }
