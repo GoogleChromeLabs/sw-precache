@@ -162,7 +162,7 @@ The `sw-precache` module exposes two methods: `generate` and `write`.
 #### generate(options, callback) 
 
 `generate` takes in [options](#options), generates a service worker 
-from them and passes the result to a callback fundtion, which must 
+from them and passes the result to a callback function, which must 
 have the following interface:
 
 `callback(error, serviceWorkerString)`
