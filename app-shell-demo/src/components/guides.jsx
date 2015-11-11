@@ -28,6 +28,7 @@ export default class Guides extends React.Component {
 
     return (
       <div>
+        <div id="title-bar">Featured iFixit Guides</div>
         <GuidesWrapper guides={guides} {...bindActionCreators(Actions, dispatch)}/>
       </div>
     );

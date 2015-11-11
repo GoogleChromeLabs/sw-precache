@@ -1,7 +1,13 @@
+@import "colors";
+
+.attribution {
+  margin: 16px;
+}
+
 section {
-  background-color: #f1f1f1;
+  background-color: $background-color;
   border-radius: 8px;
-  margin-bottom: 16px;
+  margin: 16px;
   padding: 16px;
 
   header {

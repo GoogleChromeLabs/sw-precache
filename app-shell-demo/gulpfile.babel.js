@@ -137,7 +137,7 @@ gulp.task('build', callback => {
 gulp.task('serve', callback => {
   nodemon({
     script: 'index.js',
-    ext: 'js jsx html json',
+    ext: 'js jsx html json css',
     watch: [SRC_DIR, BUILD_DIR],
     verbose: true,
     delay: 3
@@ -159,6 +159,7 @@ gulp.task('lint', () => {
 gulp.task('watch', () => {
   gulp.watch(`${SRC_DIR}/**/*.{js,jsx}`, sequence('bundle-app', 'lint', 'version-assets'));
   gulp.watch(`${SRC_DIR}/static/**/*`, ['copy-static']);
+  gulp.watch(`${SRC_DIR}/static/sass/*.scss`, ['sass']);
 });
 
 gulp.task('default', callback => {

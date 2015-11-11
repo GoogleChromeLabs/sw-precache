@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 export default class GuideWrapper extends React.Component {
   render() {
@@ -21,8 +22,13 @@ export default class GuideWrapper extends React.Component {
 
     return (
       <div>
-        <h1>{guide.get('title')}</h1>
-        <h5>By {guide.get('author').get('username')} • Difficulty: {guide.get('difficulty')}</h5>
+        <div id="title-bar">
+          <Link to="/" title="Back to Guides">
+            <img id="back-arrow" src="/images/ic_arrow_back_white_24dp_2x.png"/>
+          </Link>
+          {guide.get('title')}
+        </div>
+        <h5 className="attribution">By {guide.get('author').get('username')} • Difficulty: {guide.get('difficulty')}</h5>
         {optionalIntroduction}
         {guide.get('steps').map((step, stepCounter) => {
           return (
