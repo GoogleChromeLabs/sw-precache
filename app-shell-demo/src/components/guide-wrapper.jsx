@@ -5,7 +5,14 @@ export default class GuideWrapper extends React.Component {
   render() {
     let guide = this.props.guide;
     if (!guide) {
-      return <h3>Loading...</h3>;
+      return (
+        <div id="title-bar">
+          <Link to="/" title="Back to Guides">
+            <img id="back-arrow" src="/images/ic_arrow_back_white_24dp_2x.png"/>
+          </Link>
+          Loading...
+        </div>
+      );
     }
 
     let optionalIntroduction = guide.get('introduction_rendered') ? (
