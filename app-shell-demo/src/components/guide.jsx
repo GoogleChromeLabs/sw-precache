@@ -6,8 +6,7 @@ import {connect} from 'react-redux';
 
 const GUIDE_URL_PREFIX = 'https://www.ifixit.com/api/2.0/guides/';
 
-@connect(state => ({urlToResponse: state.urlToResponse}))
-export default class Guide extends React.Component {
+class Guide extends React.Component {
   static fetchData(dispatch, props) {
     let url = GUIDE_URL_PREFIX + props.params.guideId;
     let boundActions = bindActionCreators(Actions, dispatch);
@@ -36,3 +35,5 @@ export default class Guide extends React.Component {
     );
   }
 }
+
+export default connect(state => ({urlToResponse: state.urlToResponse}))(Guide);
