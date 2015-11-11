@@ -32,7 +32,7 @@ export default class GuideWrapper extends React.Component {
         {optionalIntroduction}
         {guide.get('steps').map((step, stepCounter) => {
           return (
-            <section key={`section-${stepCounter}`}>
+            <section key={`section-${stepCounter}`} id={`Step${stepCounter + 1}`}>
               <header key={`header-${stepCounter}`}>{step.get('title') || `Step ${stepCounter + 1}`}</header>
               {step.get('media').get('data').map((image, imageCounter) => {
                 if (image && image.get && image.get('standard')) {
