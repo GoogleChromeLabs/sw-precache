@@ -1,4 +1,5 @@
 @import "colors";
+@import "variables";
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -7,7 +8,7 @@ body {
   font-family: Roboto, sans-serif;
   font-size: 16px;
   line-height: 22px;
-  margin: 0;
+  margin: ($header-height + 8px) 0 0 0;
   padding: 0;
   text-rendering: optimizeLegibility;
 }

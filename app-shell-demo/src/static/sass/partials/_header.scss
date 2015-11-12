@@ -1,4 +1,5 @@
 @import "colors";
+@import "variables";
 
 #title-bar {
   align-items: center;
@@ -7,11 +8,18 @@
   color: #ffffff;
   display: flex;
   font-size: 20px;
-  height: 56px;
+  font-weight: 500;
+  height: $header-height;
+  left: 0;
   padding-left: 16px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1;
 }
 
 #back-arrow {
+  position: relative;
   height: 24px;
   width: 24px;
   margin-top: 4px;
