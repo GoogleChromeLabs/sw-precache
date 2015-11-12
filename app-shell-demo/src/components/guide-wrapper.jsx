@@ -33,7 +33,7 @@ export default class GuideWrapper extends React.Component {
           <Link to="/" title="Back to Guides">
             <img id="back-arrow" src="/images/ic_arrow_back_white_24dp_2x.png"/>
           </Link>
-          {guide.get('title')}
+          <span id="title">{guide.get('title')}</span>
         </div>
         <h5 className="attribution">By {guide.get('author').get('username')} • Difficulty: {guide.get('difficulty')}</h5>
         {optionalIntroduction}
