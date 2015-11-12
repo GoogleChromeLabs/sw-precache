@@ -16,7 +16,16 @@
     <script>
       window.__STATE__ = {{{state}}};
     </script>
-    <link rel="stylesheet" href="/rev/{{revManifest.[styles/all.css]}}">
+    <script>
+      (function() {
+        var linkElement = document.createElement('link');
+        linkElement.rel = 'stylesheet';
+        linkElement.type = 'text/css';
+        linkElement.media = 'screen';
+        linkElement.href = '/rev/{{revManifest.[styles/all.css]}}';
+        document.querySelector('head').appendChild(linkElement);
+      })();
+    </script>
     <script src="/rev/{{revManifest.[js/third-party.js]}}"></script>
     <script src="/rev/{{revManifest.[js/app.js]}}"></script>
     <script src="/rev/{{revManifest.[js/register-service-worker.js]}}"></script>
