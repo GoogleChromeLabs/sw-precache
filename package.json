@@ -17,7 +17,7 @@
     "serviceworker"
   ],
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">= 0.12"
   },
   "devDependencies": {
     "del": "^1.2.0",
@@ -36,7 +36,6 @@
   },
   "dependencies": {
     "dom-urls": "^1.0.0",
-    "es6-promise": "^3.0.2",
     "glob": "^5.0.10",
     "lodash.defaults": "^3.1.1",
     "lodash.template": "^3.6.1",
