@@ -18,17 +18,25 @@
   z-index: 1;
 
   #title {
-    margin-right: 8px;
+    flex: 1;
+    margin-right: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  svg {
+    position: relative;
+    margin-right: 16px;
+    fill: #ffffff;
+  }
+
+  #refresh {
+    cursor: pointer;
+  }
+
+  #back {
+    margin-top: 4px;
+  }
 }
 
-#back-arrow {
-  position: relative;
-  height: 24px;
-  width: 24px;
-  margin-top: 4px;
-  margin-right: 16px;
-}

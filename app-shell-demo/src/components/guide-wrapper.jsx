@@ -24,7 +24,10 @@ export default class GuideWrapper extends React.Component {
       return (
         <div id="title-bar">
           <Link to="/" title="Back to Guides">
-            <img id="back-arrow" src="/images/ic_arrow_back_white_24dp_2x.png"/>
+            <svg id="back" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 0h24v24H0z" fill="none"/>
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
           </Link>
           Loading...
         </div>
@@ -47,7 +50,10 @@ export default class GuideWrapper extends React.Component {
       <div>
         <div id="title-bar">
           <Link to="/" title="Back to Guides">
-            <img id="back-arrow" src="/images/ic_arrow_back_white_24dp_2x.png"/>
+            <svg id="back" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 0h24v24H0z" fill="none"/>
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
           </Link>
           <span id="title">{guide.get('title')}</span>
         </div>
