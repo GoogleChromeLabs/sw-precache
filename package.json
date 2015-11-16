@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "del": "^1.2.0",
+    "eslint": "^1.9.0",
     "eslint-config-xo": "^0.6.0",
     "express": "^4.12.4",
     "gh-pages": "^0.3.1",

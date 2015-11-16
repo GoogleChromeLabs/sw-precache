@@ -1,0 +1,81 @@
+@import "colors";
+
+.attribution {
+  margin: 16px;
+}
+
+section {
+  background-color: $step-color;
+  border-radius: 8px;
+  margin: 16px;
+  padding: 16px;
+
+  header {
+    font-size: 150%;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 8px;
+
+  .level-1 {
+    margin-left: 16px;
+  }
+
+  .level-2 {
+    margin-left: 32px;
+  }
+
+  .level-3 {
+    margin-left: 48px;
+  }
+
+  &:before {
+    content: "\2b24";
+    font-size: 14px;
+    margin-right: 8px;
+    vertical-align: text-bottom;
+  }
+
+  &.bullet-icon_note:before {
+    content: "\24D8";
+    font-size: 18px;
+  }
+
+  &.bullet-orange:before {
+    color: orange;
+  }
+
+  &.bullet-yellow:before {
+    color: yellow;
+  }
+
+  &.bullet-red:before {
+    color: red;
+  }
+
+  &.bullet-green:before {
+    color: green;
+  }
+
+  &.bullet-violet:before {
+    color: violet;
+  }
+
+  &.bullet-light_blue:before {
+    color: lightblue;
+  }
+
+  &.bullet-blue:before {
+    color: blue;
+  }
+}
+

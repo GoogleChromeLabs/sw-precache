@@ -1,0 +1,42 @@
+@import "colors";
+@import "variables";
+
+#title-bar {
+  align-items: center;
+  background: $primary-color;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 2px 9px 1px rgba(0, 0, 0, 0.12), 0 4px 2px -2px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  display: flex;
+  font-size: 20px;
+  font-weight: 500;
+  height: $header-height;
+  left: 0;
+  padding-left: 16px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1;
+
+  #title {
+    flex: 1;
+    margin-right: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  svg {
+    position: relative;
+    margin-right: 16px;
+    fill: #ffffff;
+  }
+
+  #refresh {
+    cursor: pointer;
+  }
+
+  #back {
+    margin-top: 4px;
+  }
+}
+
