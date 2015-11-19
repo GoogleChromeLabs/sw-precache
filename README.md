@@ -42,33 +42,27 @@ work well with either `gulp` or `Grunt`, or other build scripts that run on
 build script in `demo` has a function called `writeServiceWorkerFile()` that
 shows how to use the API. Both scripts generate fully-functional JavaScript code
 that takes care of precaching and fetching all the resources your site needs to
-function offline. There is also a [command-line interface](#command-line-
-interface) available, for those using alternate build setups.
+function offline. There is also a [command-line interface](#command-line-interface)
+available, for those using alternate build setups.
 
 3. **Register the service worker JavaScript.** The JavaScript that's generated
 needs to be registered as the controlling service worker for your pages. This
 technically only needs to be done from within a top-level "entry" page for your
-site, since the registration includes a [`scope`](https://slightlyoff.github.io/
-ServiceWorker/spec/service_worker/index.html#service-worker-registration-scope)
-which will apply to all pages underneath your top-level page. [`service-worker-
-registration.js`](https://github.com/googlechrome/sw-
-precache/blob/master/demo/app/js/service-worker-registration.js) is a sample
+site, since the registration includes a [`scope`](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-registration-scope)
+which will apply to all pages underneath your top-level page. [`service-worker-registration.js`](/demo/app/js/service-worker-registration.js) is a sample
 script that illustrates the best practices for registering the generated service
-worker and handling the various [lifecycle](https://slightlyoff.github.io/Servic
-eWorker/spec/service_worker/index.html#service-worker-state.1) events.
+worker and handling the various [lifecycle](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-state.1) events.
 
 ### Example
 
-The project's [sample `gulpfile.js`](https://github.com/googlechrome/sw-
-precache/blob/master/demo/gulpfile.js) illustrates the full use of sw-precache
+The project's [sample `gulpfile.js`](/demo/gulpfile.js) illustrates the full use of sw-precache
 in context. (Note that the sample gulpfile.js is the one in the `demo` folder,
 not the one in the root of the project.) You can run the sample by cloning this
 repo, using [`npm install`](https://docs.npmjs.com/) to pull in the
 dependencies, changing to the `demo/` directory, running `gulp serve-dist`, and
 then visiting http://localhost:3000.
 
-There's also a [sample `Gruntfile.js`](https://github.com/googlechrome/sw-
-precache/blob/master/demo/Gruntfile.js) that shows service worker generation in
+There's also a [sample `Gruntfile.js`](/demo/Gruntfile.js) that shows service worker generation in
 Grunt. Though, it doesn't run a server on localhost.
 
 Here's a simpler gulp example for a basic use case. It assumes your site's resources are located under
@@ -86,10 +80,8 @@ Here's a simpler gulp example for a basic use case. It assumes your site's resou
     });
 
 This task will create `app/service-worker.js`, which your client pages need to
-[register](https://slightlyoff.github.io/ServiceWorker/spec/service_worker
-/#navigator-service-worker-register) before it can take control of your site's
-pages. [`service-worker-registration.js`](https://github.com/googlechrome/sw-
-precache/blob/master/demo/app/js/service-worker-registration.js) is a ready-to-
+[register](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#navigator-service-worker-register) before it can take control of your site's
+pages. [`service-worker-registration.js`](/demo/app/js/service-worker-registration.js) is a ready-to-
 use script to handle registration.
 
 
@@ -108,23 +100,19 @@ thread as soon as the service worker is installed. You should be judicious in wh
 more data then is strictly necessary.
 
 - Precaching doesn't make sense for all types of resources (see the previous
-point). Other caching strategies, like those outlined in the [Offline
-Cookbook](http://jakearchibald.com/2014/offline-cookbook/), can be used in
+point). Other caching strategies, like those outlined in the [Offline Cookbook](http://jakearchibald.com/2014/offline-cookbook/), can be used in
 conjunction with `sw-precache` to provide the best experience for your users. If
 you do implement additional caching logic, put the code in a separate JavaScript
 file and include it using the `importScripts()` method.
 
-- `sw-precache` uses a [cache-first](http://jakearchibald.com/2014/offline-
-cookbook/#cache-falling-back-to-network) strategy, which results in a copy of
+- `sw-precache` uses a [cache-first](http://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network) strategy, which results in a copy of
 any cached content being returned without consulting the network. A useful
 pattern to adopt with this strategy is to display a toast/alert to your users
 when there's new content available, and give them an opportunity to reload the
 page to pick up that new content (which the service worker will have added to
 the cache, and will be available at the next page load). The sample service-
-worker-registration.js file [illustrates](https://github.com/GoogleChrome/sw-
-precache/blob/7688ee8ccdaddd9171af352384d04d16d712f9d3/demo/app/js/service-
-worker-registration.js#L51) the service worker lifecycle event you can listen
-for to trigger this message.
+worker-registration.js file [illustrates](https://github.com/GoogleChrome/sw-precache/blob/7688ee8ccdaddd9171af352384d04d16d712f9d3/demo/app/js/service-worker-registration.js#L51)
+the service worker lifecycle event you can listen for to trigger this message.
 
 
 ### Command-line interface
@@ -171,8 +159,7 @@ In the 1.x releases of `sw-precache`, this was the default and only method
 exposed by the module.
 
 Since 2.2.0, `generate()` also returns a
-[`Promise`](https://developer.mozilla.org/en-
-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+[`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 #### write(filePath, options, callback) 
 `write` takes in [options](#options), generates a service worker from them, 
@@ -180,8 +167,7 @@ and writes the service worker to a specified file. This method always
 invokes `callback(error)`. If no error was found, the `error` parameter will 
 be `null'
 
-Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org
-/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
 ### Options Parameter
 
@@ -247,8 +233,7 @@ _Default_: `[]`
 
 Specifies a callback function for logging which resources are being precched and
 a precache size. Use `function() {}` if you'd prefer that nothing is logged.
-Within a `gulp` script, it's recommended that you use [`gulp-
-util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
+Within a `gulp` script, it's recommended that you use [`gulp-util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
 
 _Default_: `console.log`
 
@@ -308,10 +293,8 @@ generate `service-worker.js`. If you need to add additional functionality to the
 generated service worker code, it's recommended that you use the
 [`importScripts`](#importscripts) option to include extra JavaScript rather than
 using a different template. But if you do need to change the basic generated
-service worker code, please make a copy of the [original
-template](https://github.com/googlechrome/sw-precache/blob/master/service-
-worker.tmpl), modify it locally, and use this option to point to your template
-file.
+service worker code, please make a copy of the [original template](https://github.com/googlechrome/sw-precache/blob/master/service-worker.tmpl),
+modify it locally, and use this option to point to your template file.
 
 _Default_: `service-worker.tmpl` (in the directory that this module lives in)
 
