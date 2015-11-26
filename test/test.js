@@ -388,3 +388,89 @@ describe('addDirectoryIndex', function() {
     done();
   });
 });
+
+describe('dynamicUrlToDependencies', function() {
+  var SW_FILE = 'test/output/dynamicUrlToDependencies_sw.js';
+
+  it('should not throw an error when using dynamicUrlToDependencies', function(done) {
+    var config = {
+      logger: NOOP,
+      dynamicUrlToDependencies: {
+        '/fake': [
+          'test/data/templates/a.handlebars'
+        ]
+      }
+    };
+
+    write(SW_FILE, config, function(error) {
+      assert.ifError(error);
+      fs.stat(SW_FILE, function(error, stats) {
+        assert.ifError(error);
+        assert(stats.isFile(), 'file exists');
+        assert(stats.size > 0, 'file contains data');
+        done();
+      });
+    });
+  });
+
+  it('should not throw an error for multiple files in a dynamicUrlToDependency', function(done) {
+    var config = {
+      logger: NOOP,
+      dynamicUrlToDependencies: {
+        '/fake': [
+          'test/data/templates/a.handlebars',
+          'test/data/templates/b.handlebars'
+        ]
+      }
+    };
+
+    write(SW_FILE, config, function(error) {
+      assert.ifError(error);
+      fs.stat(SW_FILE, function(error, stats) {
+        assert.ifError(error);
+        assert(stats.isFile(), 'file exists');
+        assert(stats.size > 0, 'file contains data');
+        done();
+      });
+    });
+  });
+
+  it('should throw an error for an invalid file in a dynamicUrlToDependency', function(done) {
+    var config = {
+      logger: NOOP,
+      dynamicUrlToDependencies: {
+        '/fake': [
+          'test/data/templates/non-existant.handlebars'
+        ]
+      }
+    };
+
+    write(SW_FILE, config, function(error) {
+      assert(error);
+      done();
+    });
+  });
+
+  it('should throw an error for one non existant file in an array in dynamicUrlToDependency', function(done) {
+    var config = {
+      logger: NOOP,
+      dynamicUrlToDependencies: {
+        '/fake': [
+          'test/data/templates/a.handlebars',
+          'test/data/templates/b.handlebars',
+          'test/data/templates/non-existant.handlebars'
+        ]
+      }
+    };
+
+    write(SW_FILE, config, function(error) {
+      assert(error);
+      done();
+    });
+  });
+
+  after(function() {
+    fs.unlinkSync(SW_FILE);
+    fs.rmdirSync(path.dirname(SW_FILE));
+  });
+});
