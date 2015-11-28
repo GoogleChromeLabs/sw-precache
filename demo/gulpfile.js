@@ -58,6 +58,9 @@ function writeServiceWorkerFile(rootDir, handleFetch, callback) {
       rootDir + '/images/**.*',
       rootDir + '/js/**.js'
     ],
+    remoteResources: [
+      'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.17/angular.min.js'
+    ],
     stripPrefix: rootDir + '/',
     // verbose defaults to false, but for the purposes of this demo, log more.
     verbose: true

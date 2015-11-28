@@ -286,6 +286,19 @@ You'll almost always want to specify something for this.
 
 _Default_: `[]`
 
+#### remoteResources [Array&#x27e8;String&#x27e9;]
+An optional array of URLs of remote resources to be automatically precached by the generated service worker.
+
+This can be used to cache frameworks loaded from CDNs. e.g. AngularJS.
+
+**Note**: To avoid the need for fetching remote resources and the additional
+build time this would add up to, it assumes that the resource URL is a unique
+identifier of the resource and the URL would change for an updated
+resource. If you want to force a cache update for the resource make sure to 
+update the URL, e.g. by adding revision number as a parameter. e.g. ?123
+
+_Default_: `[]`
+
 #### templateFilePath [String]
 
 The path to the  ([lo-dash](https://lodash.com/docs#template)) template used to
