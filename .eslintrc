@@ -1,10 +1,17 @@
 {
-  "extends": "xo",
+  "extends": "./node_modules/eslint-config-xo/index.js",
   "rules": {
     "default-case": 0,
     "indent": [2, 2, {"SwitchCase": 1}],
     "no-console": 0,
     "no-inline-comments": 0,
-    "space-before-function-paren": [2, "never"]
+    "space-before-function-paren": [2, "never"],
+    "func-style": 0,
+
+		"no-empty-class": 0,
+    "no-extra-strict": 0,
+    "no-reserved-keys": 0,
+    "no-space-before-semi": 0,
+    "no-wrap-func": 0
   }
 }

@@ -14,7 +14,7 @@ gulp.task('generate-demo-service-worker', function(callback) {
 });
 
 gulp.task('lint', ['generate-demo-service-worker'], function() {
-  return gulp.src(['{lib,test,demo}/**/*.js', '*.js'])
+  return gulp.src(['{lib,demo}/**/*.js', '*.js'])
     .pipe($.eslint())
     .pipe($.eslint.format())
     .pipe($.eslint.failOnError());
@@ -25,7 +25,8 @@ gulp.task('test', function() {
     .pipe($.mocha())
     .on('error', function(error) {
       console.error(error);
-      process.exit(1);
+      // process.exit(1);
+      throw error;
     });
 });
 
