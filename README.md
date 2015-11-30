@@ -259,16 +259,6 @@ the request is a navigation.
 
 _Default_: `''`
 
-#### stripPrefix [String] 
-Removes a specified string from the beginning of path URL's at runtime. Use this
-option when there's a discrepancy between a relative path at build time and
-the same path at run time. For example, if all your local files are under
-`dist/app/` and your web root is also at `dist/app/`, you'd strip that prefix
-from the start of each local file's path in order to get the correct relative
-URL.
-
-_Default_: `''`
-
 #### replacePrefix [String]
 Replaces a specified string at the beginning of path URL's at runtime. Use this
 option when you are serving static files from a different directory at runtime
@@ -285,6 +275,16 @@ All files matching these globs will be automatically precached by the generated 
 You'll almost always want to specify something for this.
 
 _Default_: `[]`
+
+#### stripPrefix [String] 
+Removes a specified string from the beginning of path URL's at runtime. Use this
+option when there's a discrepancy between a relative path at build time and
+the same path at run time. For example, if all your local files are under
+`dist/app/` and your web root is also at `dist/app/`, you'd strip that prefix
+from the start of each local file's path in order to get the correct relative
+URL.
+
+_Default_: `''`
 
 #### templateFilePath [String]
 
