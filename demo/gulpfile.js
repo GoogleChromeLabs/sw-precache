@@ -28,8 +28,8 @@ function runExpress(port, rootDir) {
 
   var server = app.listen(port, function() {
     var host = server.address().address;
-    var port = server.address().port;
-    console.log('Server running at http://%s:%s', host, port);
+    var serverPort = server.address().port;
+    console.log('Server running at http://%s:%s', host, serverPort);
   });
 }
 
