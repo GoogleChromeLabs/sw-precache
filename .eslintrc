@@ -1,10 +1,11 @@
 {
-  "extends": "xo",
+  "extends": "google",
   "rules": {
     "default-case": 0,
     "indent": [2, 2, {"SwitchCase": 1}],
     "no-console": 0,
     "no-inline-comments": 0,
-    "space-before-function-paren": [2, "never"]
+    "space-before-function-paren": [2, "never"],
+    "require-jsdoc": 0
   }
 }

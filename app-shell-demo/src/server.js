@@ -53,19 +53,22 @@ app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-let revManifest = JSON.parse(fs.readFileSync(path.join('build', 'rev-manifest.json'), 'utf8'));
+let revManifest = JSON.parse(
+  fs.readFileSync(path.join('build', 'rev-manifest.json'), 'utf8'));
 let styles = new Map(
   Object.keys(revManifest).filter(originalFile => originalFile.endsWith('.css'))
     .map(originalFile => {
       let revFile = revManifest[originalFile];
-      let contents = fs.readFileSync(path.join('build', 'rev', revFile), 'utf8');
+      let contents = fs.readFileSync(
+        path.join('build', 'rev', revFile), 'utf8');
       return [originalFile, contents];
     })
 );
 
 app.use((req, res) => {
   let location = createMemoryHistory().createLocation(req.url);
-  let createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
+  let createStoreWithMiddleware = applyMiddleware(
+    promiseMiddleware)(createStore);
   let store = createStoreWithMiddleware(reducer);
 
   match({routes, location}, (error, redirectLocation, renderProps) => {

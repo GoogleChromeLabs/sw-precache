@@ -146,7 +146,10 @@ gulp.task('generate-service-worker', () => {
 
 gulp.task('build', callback => {
   sequence(
-    ['bundle-app', 'bundle-third-party', 'copy-static', 'copy-third-party-sw', 'sass'],
+    [
+      'bundle-app', 'bundle-third-party', 'copy-static',
+      'copy-third-party-sw', 'sass', 'lint'
+    ],
     'uglify-js',
     'version-assets',
     'generate-service-worker',
@@ -177,7 +180,8 @@ gulp.task('lint', () => {
 });
 
 gulp.task('watch', () => {
-  gulp.watch(`${SRC_DIR}/**/*.{js,jsx}`, sequence('bundle-app', 'lint', 'version-assets'));
+  gulp.watch(`${SRC_DIR}/**/*.{js,jsx}`, sequence('bundle-app',
+    'lint', 'version-assets'));
   gulp.watch(`${SRC_DIR}/static/**/*`, ['copy-static']);
   gulp.watch(`${SRC_DIR}/static/sass/*.scss`, ['sass']);
 });
