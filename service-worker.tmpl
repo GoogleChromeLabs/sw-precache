@@ -71,7 +71,6 @@ self.addEventListener('install', function(event) {
           }
           urlWithCacheBusting.search += 'sw-precache=' + now;
 
-          console.log('Adding URL "%s" to cache named "%s"', urlWithCacheBusting, cacheName);
           return caches.open(cacheName).then(function(cache) {
             var request = new Request(urlWithCacheBusting.toString(), {credentials: 'same-origin'});
             return fetch(request).then(function(response) {
@@ -92,7 +91,6 @@ self.addEventListener('install', function(event) {
             return cacheName.indexOf(CacheNamePrefix) === 0 &&
                    !(cacheName in CurrentCacheNamesToAbsoluteUrl);
           }).map(function(cacheName) {
-            console.log('Deleting out-of-date cache "%s"', cacheName);
             return caches.delete(cacheName);
           })
         );
