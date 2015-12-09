@@ -64,15 +64,11 @@ self.addEventListener('install', function(event) {
         Object.keys(CurrentCacheNamesToAbsoluteUrl).filter(function(cacheName) {
           return allCacheNames.indexOf(cacheName) === -1;
         }).map(function(cacheName) {
-          var urlWithCacheBusting = new URL(CurrentCacheNamesToAbsoluteUrl[cacheName]);
-          // Put in a cache-busting parameter to ensure we're caching a fresh response.
-          if (urlWithCacheBusting.search) {
-            urlWithCacheBusting.search += '&';
-          }
-          urlWithCacheBusting.search += 'sw-precache=' + now;
+          var urlWithCacheBusting = getCacheBustedUrl(CurrentCacheNamesToAbsoluteUrl[cacheName],
+            now);
 
           return caches.open(cacheName).then(function(cache) {
-            var request = new Request(urlWithCacheBusting.toString(), {credentials: 'same-origin'});
+            var request = new Request(urlWithCacheBusting, {credentials: 'same-origin'});
             return fetch(request).then(function(response) {
               if (response.ok) {
                 return cache.put(CurrentCacheNamesToAbsoluteUrl[cacheName], response);
