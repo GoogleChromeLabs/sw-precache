@@ -30,12 +30,16 @@ function setDefaults(cli) {
   cli.flags.stripPrefix = cli.flags.stripPrefix || cli.flags.root;
   cli.flags.swFile = cli.flags.swFile || 'service-worker.js';
   cli.flags.swFilePath = path.join(cli.flags.root, cli.flags.swFile);
-  cli.flags.staticFileGlobs = cli.flags.staticFileGlobs ? [cli.flags.staticFileGlobs] : [cli.flags.root + '/**/*.*'];
+  cli.flags.staticFileGlobs = cli.flags.staticFileGlobs ?
+    [cli.flags.staticFileGlobs] : [cli.flags.root + '/**/*.*'];
   cli.flags.cacheId = cli.flags.cacheId || cli.pkg.name;
   if (cli.flags.ignoreUrlParametersMatching) {
-    cli.flags.ignoreUrlParametersMatching = cli.flags.ignoreUrlParametersMatching.split(',').map(function(s) {
-      return new RegExp(s);
-    });
+    cli.flags.ignoreUrlParametersMatching =
+      cli.flags.ignoreUrlParametersMatching.split(',').map(
+        function(s) {
+          return new RegExp(s);
+        }
+      );
   }
   if (cli.flags.importScripts) {
     cli.flags.importScripts = cli.flags.importScripts.split(',');
@@ -54,5 +58,6 @@ swPrecache.write(options.swFilePath, options, function(error) {
     throw error;
   }
 
-  console.log(options.swFilePath, 'has been generated with the service worker contents.');
+  console.log(options.swFilePath,
+    'has been generated with the service worker contents.');
 });

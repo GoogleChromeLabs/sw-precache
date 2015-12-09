@@ -9,12 +9,13 @@ var spawn = require('child_process').spawn;
 gulp.task('default', ['test', 'lint']);
 
 gulp.task('generate-demo-service-worker', function(callback) {
-  spawn('gulp', ['--cwd', 'demo', 'generate-service-worker-dev'], {stdio: 'inherit'})
-    .on('close', callback);
+  spawn('gulp', ['--cwd', 'demo', 'generate-service-worker-dev'],
+  {stdio: 'inherit'})
+  .on('close', callback);
 });
 
 gulp.task('lint', ['generate-demo-service-worker'], function() {
-  return gulp.src(['{lib,test,demo}/**/*.js', '*.js'])
+  return gulp.src(['./**/*.js'])
     .pipe($.eslint())
     .pipe($.eslint.format())
     .pipe($.eslint.failOnError());

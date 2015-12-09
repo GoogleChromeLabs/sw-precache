@@ -1,5 +1,4 @@
 {
-  "extends": "xo",
   "plugins": [
     "react"
   ],
@@ -11,6 +10,7 @@
     "react/jsx-uses-vars": 1,
     "indent": [2, 2, {"SwitchCase": 1}],
     "space-before-function-paren": 0,
-    "default-case": 0
+    "default-case": 0,
+    "require-jsdoc": 0
   }
 }

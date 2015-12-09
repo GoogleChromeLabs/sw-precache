@@ -13,8 +13,8 @@
     "browserify": "^11.2.0",
     "compression": "^1.6.0",
     "del": "^2.0.2",
-    "eslint": "^1.6.0",
-    "eslint-config-xo": "^0.6.0",
+    "eslint": "^1.10.3",
+    "eslint-config-google": "^0.3.0",
     "eslint-plugin-react": "^3.5.1",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1",
@@ -49,5 +49,8 @@
   "scripts": {
     "postinstall": "gulp build",
     "start": "node index.js"
+  },
+  "eslintConfig": {
+    "extends": "google"
   }
 }
