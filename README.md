@@ -59,7 +59,7 @@ The project's [sample `gulpfile.js`](/demo/gulpfile.js) illustrates the full use
 in context. (Note that the sample gulpfile.js is the one in the `demo` folder,
 not the one in the root of the project.) You can run the sample by cloning this
 repo, using [`npm install`](https://docs.npmjs.com/) to pull in the
-dependencies, changing to the `demo/` directory, running `gulp serve-dist`, and
+dependencies, changing to the `demo/` directory, running `` `npm bin`/gulp serve-dist ``, and
 then visiting http://localhost:3000.
 
 There's also a [sample `Gruntfile.js`](/demo/Gruntfile.js) that shows service worker generation in
