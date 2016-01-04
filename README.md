@@ -119,7 +119,7 @@ the service worker lifecycle event you can listen for to trigger this message.
 
 For those who would prefer not to use `sw-precache` as part of a `gulp` or
 `Grunt` build, there's a [command-line interface](cli.js) which supports the
-[options listed](#Options-Parameter) in the API, provided via flags. Sensible
+[options listed](#options-parameter) in the API, provided via flags. Sensible
 defaults are assumed for options that are not provided.
 
 For example, if you are inside the top-level directory that contains your site's contents, and you'd
