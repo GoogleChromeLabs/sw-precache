@@ -24,6 +24,12 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren */
 'use strict';
 
+<% if (handleFetch && swToolboxCode) { %>
+// *** Start of auto-included sw-toolbox code. ***
+<%= swToolboxCode %>
+// *** End of auto-included sw-toolbox code. ***
+<% } %>
+
 <% if (importScripts) { %>
 importScripts(<%= importScripts %>);
 <% } %>
@@ -169,4 +175,10 @@ self.addEventListener('fetch', function(event) {
     }
   }
 });
+
+<% if (runtimeCaching) { %>
+// Runtime cache configuration, using the sw-toolbox library.
+<%= runtimeCaching %>
+<% } %>
+
 <% } %>
