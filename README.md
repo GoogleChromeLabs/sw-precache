@@ -119,12 +119,15 @@ the service worker lifecycle event you can listen for to trigger this message.
 
 For those who would prefer not to use `sw-precache` as part of a `gulp` or
 `Grunt` build, there's a [command-line interface](cli.js) which supports the
-[options listed](#options-parameter) in the API, provided via flags. Sensible
-defaults are assumed for options that are not provided.
+[options listed](#options-parameter) in the API, provided via flags.
 
-For example, if you are inside the top-level directory that contains your site's contents, and you'd
-like to generate a `service-worker.js` file that will automatically precache all of the local
-files, you can simply run
+**Warning:** When using `sw-precache` "by hand", outside of an automated build process, it's your
+responsibility to re-run the command each time there's a change to any local resources! If `sw-precache`
+is not run again, the previously cached local resources will be reused indefinitely.
+
+Sensible defaults are assumed for options that are not provided. For example, if you are inside
+the top-level directory that contains your site's contents, and you'd like to generate a
+`service-worker.js` file that will automatically precache all of the local files, you can simply run
 
 ```sh
 $ sw-precache
