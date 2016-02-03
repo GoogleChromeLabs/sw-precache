@@ -181,7 +181,7 @@ concept of a "fallback URL":
 
 ```js
 {
-  navigateFallback: '/app-shell,
+  navigateFallback: '/app-shell',
   // ...other options as needed...
 }
 ```
