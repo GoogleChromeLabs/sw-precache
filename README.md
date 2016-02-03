@@ -144,6 +144,18 @@ $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 to your shell (such as the `*` characters in the sample command line above,
 for example).
 
+Finally, there's support for storing a complex configuration in an external
+JSON file, using `--config <file>`. Any of the options from the file can be
+overridden via a command-line flag. For example,
+
+```sh
+$ sw-precache --config=path/to/sw-precache-config.json --verbose --no-handle-fetch
+```
+
+will generate a service worker file using the options provided in the
+`path/to/sw-precache-config.json` file, but with the `verbose` option set to
+`true` and the `handleFetch` option set to `false`.
+
 ## API
 
 ### Methods
