@@ -50,9 +50,8 @@ include CSS and JavaScript, either inline or in external files.
 
 Some static web apps consist entirely of an App Shell.
 
-A helpful analogy when thinking about your App Shell is to the code and
-resources that would be published to an App Store for a native iOS or Android
-application.
+A helpful analogy is to think of your App Shell as the code and resources that
+would be published to an app store for a native iOS or Android application.
 
 The App Shell should ideally be loaded directly from the local cache, just like
 a native iOS or Android application is loaded directly from a device's storage.
@@ -76,21 +75,20 @@ to choose the right caching strategy for each source of dynamic content.
 
 ## Caching Strategy
 
-There are several approaches to caching, outlined in excellent detail in the
-[The Offline Cookbook](https://jakearchibald.com/2014/offline-cookbook/).
-
-You should always use a [cache-first strategy](https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network)
+You should always use a
+[cache-first strategy](https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network)
 for your App Shell. `sw-precache` handles the details of that for you.
 
-The right caching strategy for your dynamic content is not always clear-cut.
-It's recommended that you read through the
+However, the right caching strategy for your dynamic content is not always
+clear-cut. It's recommended that you read through the
 [The Offline Cookbook](https://jakearchibald.com/2014/offline-cookbook/) and
-think about how important freshness is for each of your data sources.
+think about which strategy provides the right balance between speed and data
+freshness for each of your data sources.
 
-Regardless of what you choose, `sw-precache` handles the details for you. All of
-the standard caching strategies, along with control over advanced options like
-maximum cache size and age, are supported via the automatic inclusion of the
-`sw-toolbox` library.
+Regardless of which strategy you choose, `sw-precache` handles the
+implementation for you. All of the standard caching strategies, along with
+control over advanced options like maximum cache size and age, are supported via
+the automatic inclusion of the `sw-toolbox` library.
 
 # Add `sw-precache` to Your Build
 
@@ -189,8 +187,8 @@ concept of a "fallback URL":
 In this configuration, whenever the service worker intercepts a
 [navigate request](https://fetch.spec.whatwg.org/#concept-request-mode) for a
 URL that doesn't exist in the cache, it will respond with the cached contents of
-`/app-shell`. (It's up to you to ensure that `/app-shell` contains all of the
-resources needed to bootstrap your SPA.)
+`/app-shell`. It's up to you to ensure that `/app-shell` contains all of the
+resources needed to bootstrap your SPA.
 
 # Examples
 

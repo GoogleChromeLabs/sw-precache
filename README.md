@@ -306,7 +306,7 @@ and replace it with '/public/'.
 _Default_: `''`
 
 #### runtimeCaching [Array&#x27e8;Object&#x27e9;]
-Used to configure runtime caching for dynamic content. If you use this option, the `sw-toolbox`
+Configures runtime caching for dynamic content. If you use this option, the `sw-toolbox`
 library configured with the caching strategies you specify will automatically be included in
 your generated service worker file.
 
@@ -320,9 +320,9 @@ a `handler`, which should be either a string corresponding to one of the
 support for `options`, which corresponds to the same options supported by a
 [`sw-toolbox` handler](https://github.com/GoogleChrome/sw-toolbox#options).
 
-For example, the following defines runtime caching behavior for two different URL patterns, using a
-different handler for each, and specifying a dedicated cache with maximum size for requests
-matching `/articles/`:
+For example, the following defines runtime caching behavior for two different URL patterns. It uses a
+different handler for each, and specifies a dedicated cache with maximum size for requests
+that match `/articles/`:
 
 ```js
 runtimeCaching: [{
