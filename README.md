@@ -9,8 +9,45 @@ precaches resources. The module is designed for use with
 [`gulp`](http://gulpjs.com/) or [`grunt`](http://gruntjs.com/) build scripts,
 though it also provides a command-line interface. The module's API provides
 methods for creating a service worker and saving the resulting code to a file.
-Everything you need to get started is in this readme. Those of you who want more
-depth can read the [background doc](background.md).
+The full documentation is in this README, and the
+[getting started guide](GettingStarted.md) provides a quicker jumping off point.
+
+
+# Table of Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Install](#install)
+- [Usage](#usage)
+  - [Overview](#overview)
+  - [Example](#example)
+  - [Considerations](#considerations)
+  - [Command-line interface](#command-line-interface)
+- [API](#api)
+  - [Methods](#methods)
+    - [generate(options, callback)](#generateoptions-callback)
+    - [write(filePath, options, callback)](#writefilepath-options-callback)
+  - [Options Parameter](#options-parameter)
+    - [cacheId [String]](#cacheid-string)
+    - [directoryIndex [String]](#directoryindex-string)
+    - [dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-object&x27e8stringarray&x27e8string&x27e9&x27e9)
+    - [handleFetch [boolean]](#handlefetch-boolean)
+    - [ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]](#ignoreurlparametersmatching-array&x27e8regex&x27e9)
+    - [importScripts [Array&#x27e8;String&#x27e9;]](#importscripts-array&x27e8string&x27e9)
+    - [logger [function]](#logger-function)
+    - [maximumFileSizeToCacheInBytes [Number]](#maximumfilesizetocacheinbytes-number)
+    - [navigateFallback [String]](#navigatefallback-string)
+    - [replacePrefix [String]](#replaceprefix-string)
+    - [runtimeCaching [Array&#x27e8;Object&#x27e9;]](#runtimecaching-array&x27e8object&x27e9)
+    - [staticFileGlobs [Array&#x27e8;String&#x27e9;]](#staticfileglobs-array&x27e8string&x27e9)
+    - [stripPrefix [String]](#stripprefix-string)
+    - [templateFilePath [String]](#templatefilepath-string)
+    - [verbose [boolean]](#verbose-boolean)
+- [Acknowledgements](#acknowledgements)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
 ## Install
@@ -270,6 +307,43 @@ than you are at build time. For example, if your local files are under
 and replace it with '/public/'.
 
 _Default_: `''`
+
+#### runtimeCaching [Array&#x27e8;Object&#x27e9;]
+Configures runtime caching for dynamic content. If you use this option, the `sw-toolbox`
+library configured with the caching strategies you specify will automatically be included in
+your generated service worker file.
+
+Each `Object` in the `Array` needs a `urlPattern`, which is either a
+[`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
+or a string, following the conventions of the `sw-toolbox` library's
+[routing configuration](https://github.com/GoogleChrome/sw-toolbox#basic-routes). Also required is
+a `handler`, which should be either a string corresponding to one of the
+[built-in handlers](https://github.com/GoogleChrome/sw-toolbox#built-in-handlers) under the `toolbox.` namespace, or a function corresponding to your custom
+[request handler](https://github.com/GoogleChrome/sw-toolbox#defining-request-handlers). There is also
+support for `options`, which corresponds to the same options supported by a
+[`sw-toolbox` handler](https://github.com/GoogleChrome/sw-toolbox#options).
+
+For example, the following defines runtime caching behavior for two different URL patterns. It uses a
+different handler for each, and specifies a dedicated cache with maximum size for requests
+that match `/articles/`:
+
+```js
+runtimeCaching: [{
+  urlPattern: new RegExp('^https://example\.com/api'),
+  handler: 'networkFirst'
+}, {
+  urlPattern: new RegExp('/articles/'),
+  handler: 'fastest',
+  options: {
+    cache: {
+      maxEntries: 10,
+      name: 'articles-cache'
+    }
+  }
+}]
+```
+
+_Default_: `[]`
 
 #### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to

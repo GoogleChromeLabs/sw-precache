@@ -52,6 +52,18 @@ function writeServiceWorkerFile(rootDir, handleFetch, callback) {
     // local changes from being picked up during the development cycle.
     handleFetch: handleFetch,
     logger: $.util.log,
+    runtimeCaching: [{
+      // See https://github.com/GoogleChrome/sw-toolbox#methods
+      urlPattern: /runtime-caching/,
+      handler: 'cacheFirst',
+      // See https://github.com/GoogleChrome/sw-toolbox#options
+      options: {
+        cache: {
+          maxEntries: 1,
+          name: 'runtime-cache'
+        }
+      }
+    }],
     staticFileGlobs: [
       rootDir + '/css/**.css',
       rootDir + '/**.html',

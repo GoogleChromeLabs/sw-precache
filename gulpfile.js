@@ -10,8 +10,7 @@ gulp.task('default', ['test', 'lint']);
 
 gulp.task('generate-demo-service-worker', function(callback) {
   spawn('gulp', ['--cwd', 'demo', 'generate-service-worker-dev'],
-  {stdio: 'inherit'})
-  .on('close', callback);
+    {stdio: 'inherit'}).on('close', callback);
 });
 
 gulp.task('lint', ['generate-demo-service-worker'], function() {
@@ -28,6 +27,15 @@ gulp.task('test', function() {
       console.error(error);
       process.exit(1);
     });
+});
+
+gulp.task('update-markdown-toc', function(callback) {
+  // doctoc only exposes a binary in node_modules/.bin/doctoc, without a
+  // corresponding API. To make starting this up a little bit nicer, there's a
+  // npm script defined in package.json, which let's us use
+  // 'npm run doctoc <file.md>'
+  spawn('npm', ['run', 'doctoc', '--', 'GettingStarted.md', 'README.md'],
+    {stdio: 'inherit'}).on('close', callback);
 });
 
 gulp.task('publish', ['test', 'lint'], function(callback) {
