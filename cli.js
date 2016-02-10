@@ -22,40 +22,75 @@ var meow = require('meow');
 var path = require('path');
 var swPrecache = require('./');
 
-function setDefaults(cli) {
-  cli.flags.root = cli.flags.root || './';
-  if (cli.flags.root.lastIndexOf('/') !== cli.flags.root.length - 1) {
-    cli.flags.root += '/';
-  }
-  cli.flags.stripPrefix = cli.flags.stripPrefix || cli.flags.root;
-  cli.flags.swFile = cli.flags.swFile || 'service-worker.js';
-  cli.flags.swFilePath = path.join(cli.flags.root, cli.flags.swFile);
-  cli.flags.staticFileGlobs = cli.flags.staticFileGlobs ?
-    [cli.flags.staticFileGlobs] : [cli.flags.root + '/**/*.*'];
-  cli.flags.cacheId = cli.flags.cacheId || cli.pkg.name;
-  if (cli.flags.ignoreUrlParametersMatching) {
-    cli.flags.ignoreUrlParametersMatching =
-      cli.flags.ignoreUrlParametersMatching.split(',').map(
-        function(s) {
-          return new RegExp(s);
-        }
-      );
-  }
-  if (cli.flags.importScripts) {
-    cli.flags.importScripts = cli.flags.importScripts.split(',');
+function setDefaults(cli, configFileFlags) {
+  var compositeFlags = cli.flags;
+
+  compositeFlags.root = compositeFlags.root || configFileFlags.root || './';
+  if (compositeFlags.root.lastIndexOf('/') !== compositeFlags.root.length - 1) {
+    compositeFlags.root += '/';
   }
 
-  return cli.flags;
+  compositeFlags.stripPrefix = compositeFlags.stripPrefix ||
+    configFileFlags.stripPrefix || compositeFlags.root;
+
+  compositeFlags.swFile = compositeFlags.swFile || configFileFlags.swFile ||
+    'service-worker.js';
+  compositeFlags.swFilePath = path.join(compositeFlags.root,
+    compositeFlags.swFile);
+
+  compositeFlags.cacheId = compositeFlags.cacheId ||
+    configFileFlags.cacheId || cli.pkg.name;
+
+  compositeFlags.staticFileGlobs = compositeFlags.staticFileGlobs ||
+    configFileFlags.staticFileGlobs;
+  if (compositeFlags.staticFileGlobs) {
+    if (typeof compositeFlags.staticFileGlobs === 'string') {
+      compositeFlags.staticFileGlobs = [compositeFlags.staticFileGlobs];
+    }
+  } else {
+    compositeFlags.staticFileGlobs = [compositeFlags.root + '/**/*.*'];
+  }
+
+  compositeFlags.ignoreUrlParametersMatching =
+    compositeFlags.ignoreUrlParametersMatching ||
+    configFileFlags.ignoreUrlParametersMatching;
+  if (compositeFlags.ignoreUrlParametersMatching &&
+      typeof compositeFlags.ignoreUrlParametersMatching === 'string') {
+    compositeFlags.ignoreUrlParametersMatching =
+      compositeFlags.ignoreUrlParametersMatching.split(',').map(function(s) {
+        return new RegExp(s);
+      });
+  }
+
+  compositeFlags.importScripts = compositeFlags.importScripts ||
+    configFileFlags.importScripts;
+  if (compositeFlags.importScripts &&
+      typeof compositeFlags.importScripts === 'string') {
+    compositeFlags.importScripts = compositeFlags.importScripts.split(',');
+  }
+
+  return compositeFlags;
 }
 
 var cli = meow({
-  help: 'Options from https://github.com/GoogleChrome/sw-precache#options are accepted as flags.'
+  help: 'Options from https://github.com/GoogleChrome/sw-precache#options ' +
+        'are accepted as flags.\nAlternatively, use --config <file>, where ' +
+        '<file> is the path to the JSON data representing the same options.\n' +
+        'When both a config file and command line option is given, the ' +
+        'command line option takes precedence.'
 });
-var options = setDefaults(cli);
+
+// If the --config option is used, then read the options from an external
+// JSON configuration file. Options from the --config file can be overwritten
+// by any command line options.
+var configFileFlags = cli.flags.config ?
+  require(path.resolve(cli.flags.config)) : {};
+var options = setDefaults(cli, configFileFlags);
 
 swPrecache.write(options.swFilePath, options, function(error) {
   if (error) {
-    throw error;
+    console.error(error.stack);
+    process.exit(1);
   }
 
   console.log(options.swFilePath,
