@@ -156,6 +156,20 @@ will generate a service worker file using the options provided in the
 `path/to/sw-precache-config.json` file, but with the `verbose` option set to
 `true` and the `handleFetch` option set to `false`.
 
+`sw-precache-config.json` might look like:
+
+```json
+{
+  "staticFileGlobs": [
+    "app/css/**.css",
+    "app/**.html",
+    "app/images/**.*",
+    "app/js/**.js"
+  ],
+  "stripPrefix": "app/"
+}
+```
+
 ## API
 
 ### Methods
