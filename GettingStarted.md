@@ -128,10 +128,10 @@ use for runtime requests that match specific URL patterns:
 ```js
 {
   runtimeCaching: [{
-    urlPattern: new RegExp('^https://example\.com/api'),
+    urlPattern: /^https:\/\/example\.com\/api/,
     handler: 'networkFirst'
   }, {
-    urlPattern: new RegExp('/articles/'),
+    urlPattern: /\/articles\//,
     handler: 'fastest',
     options: {
         cache: {
