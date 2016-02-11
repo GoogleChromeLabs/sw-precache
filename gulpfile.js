@@ -29,13 +29,12 @@ gulp.task('test', function() {
     });
 });
 
-gulp.task('update-markdown-toc', function(callback) {
-  // doctoc only exposes a binary in node_modules/.bin/doctoc, without a
-  // corresponding API. To make starting this up a little bit nicer, there's a
-  // npm script defined in package.json, which let's us use
-  // 'npm run doctoc <file.md>'
-  spawn('npm', ['run', 'doctoc', '--', 'GettingStarted.md', 'README.md'],
-    {stdio: 'inherit'}).on('close', callback);
+gulp.task('update-markdown-toc', function() {
+  return gulp.src('*.md')
+    .pipe($.doctoc())
+    // Get rid of the HTML character entities from the anchor values.
+    .pipe($.replace(/&x27e[89]/g, ''))
+    .pipe(gulp.dest('.'));
 });
 
 gulp.task('publish', ['test', 'lint'], function(callback) {
