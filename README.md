@@ -38,6 +38,7 @@ The full documentation is in this README, and the
     - [logger [function]](#logger-function)
     - [maximumFileSizeToCacheInBytes [Number]](#maximumfilesizetocacheinbytes-number)
     - [navigateFallback [String]](#navigatefallback-string)
+    - [navigateFallbackWhitelist [Array&#x27e8;RegExp&#x27e9;]](#navigatefallbackwhitelist-arrayregexp)
     - [replacePrefix [String]](#replaceprefix-string)
     - [runtimeCaching [Array&#x27e8;Object&#x27e9;]](#runtimecaching-arrayobject)
     - [staticFileGlobs [Array&#x27e8;String&#x27e9;]](#staticfileglobs-arraystring)
