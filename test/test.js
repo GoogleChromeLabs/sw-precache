@@ -449,7 +449,7 @@ describe('isPathWhitelisted', function() {
   });
 
   it('should return true when passed a whitelist whose second value matches the url', function(done) {
-    assert(externalFunctions.isPathWhitelisted([/^\/test\/path$/, /^oops$/], url));
+    assert(externalFunctions.isPathWhitelisted([/^oops$/, /^\/test\/path$/], url));
     done();
   });
 });
