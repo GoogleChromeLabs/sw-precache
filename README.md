@@ -38,6 +38,7 @@ The full documentation is in this README, and the
     - [logger [function]](#logger-function)
     - [maximumFileSizeToCacheInBytes [Number]](#maximumfilesizetocacheinbytes-number)
     - [navigateFallback [String]](#navigatefallback-string)
+    - [navigateFallbackWhitelist [Array&#x27e8;RegExp&#x27e9;]](#navigatefallbackwhitelist-arrayregexp)
     - [replacePrefix [String]](#replaceprefix-string)
     - [runtimeCaching [Array&#x27e8;Object&#x27e9;]](#runtimecaching-arrayobject)
     - [staticFileGlobs [Array&#x27e8;String&#x27e9;]](#staticfileglobs-arraystring)
@@ -324,6 +325,30 @@ triggers the fallback when `'text/html'` is found. It does this whether or not
 the request is a navigation.
 
 _Default_: `''`
+
+#### navigateFallbackWhitelist [Array&#x27e8;RegExp&#x27e9;] 
+Works to limit the effect of `navigateFallback`, so that the fallback only
+applies to requests for URLs with paths that match at least one
+[`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
+
+This option is useful if you want to fallback to the cached App Shell for
+certain specific subsections of your site, but not have that behavior apply
+to all of your site's URLs.
+
+For example, if you would like to have `navigateFallback` only apply to
+navigation requests to URLs whose path begins with `/guide/`
+(e.g. `https://example.com/guide/1234`), the following configuration could be
+used:
+
+```js
+navigateFallback: '/shell',
+navigateFallbackWhitelist: [/^\/guide\//]
+```
+
+If set to `[]` (the default), the whitelist will be effectively bypassed, and
+`navigateFallback` will apply to all navigation requests, regardless of URL.
+
+_Default_: `[]`
 
 #### replacePrefix [String]
 Replaces a specified string at the beginning of path URL's at runtime. Use this
