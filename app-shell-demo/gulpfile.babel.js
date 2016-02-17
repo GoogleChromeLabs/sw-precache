@@ -30,7 +30,7 @@ import rev from 'gulp-rev';
 import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
-import swPrecache from 'sw-precache';
+import swPrecache from '../';
 import uglify from 'gulp-uglify';
 
 const SRC_DIR = 'src';
@@ -133,6 +133,7 @@ gulp.task('generate-service-worker', () => {
       importScripts: swScripts,
       logger: gutil.log,
       navigateFallback: '/shell',
+      navigateFallbackWhitelist: [/^\/guide\//],
       staticFileGlobs: [
         `${BUILD_DIR}/rev/js/**/*.js`,
         `${BUILD_DIR}/rev/styles/all*.css`,

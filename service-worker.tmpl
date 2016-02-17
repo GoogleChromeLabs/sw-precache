@@ -148,7 +148,8 @@ self.addEventListener('fetch', function(event) {
     // https://code.google.com/p/chromium/issues/detail?id=540967
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1209081
     if (!cacheName && navigateFallback && event.request.headers.has('accept') &&
-        event.request.headers.get('accept').includes('text/html')) {
+        event.request.headers.get('accept').includes('text/html') &&
+        isPathWhitelisted(<%= navigateFallbackWhitelist %>, event.request.url)) {
       var navigateFallbackUrl = new URL(navigateFallback, self.location);
       cacheName = AbsoluteUrlToCacheName[navigateFallbackUrl.toString()];
     }

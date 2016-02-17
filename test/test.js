@@ -429,3 +429,27 @@ describe('getCacheBustedUrl', function() {
     done();
   });
 });
+
+describe('isPathWhitelisted', function() {
+  var url = 'http://example.com/test/path?one=two';
+
+  it('should return true when passed an empty whitelist', function(done) {
+    assert(externalFunctions.isPathWhitelisted([], url));
+    done();
+  });
+
+  it('should return true when passed a whitelist matching the url', function(done) {
+    assert(externalFunctions.isPathWhitelisted([/^\/test\/path$/], url));
+    done();
+  });
+
+  it('should return false when passed a whitelist not matching the url', function(done) {
+    assert(!externalFunctions.isPathWhitelisted([/^oops$/], url));
+    done();
+  });
+
+  it('should return true when passed a whitelist whose second value matches the url', function(done) {
+    assert(externalFunctions.isPathWhitelisted([/^\/test\/path$/, /^oops$/], url));
+    done();
+  });
+});
