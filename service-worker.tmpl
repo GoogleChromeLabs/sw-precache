@@ -149,7 +149,9 @@ self.addEventListener('fetch', function(event) {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1209081
     if (!cacheName && navigateFallback && event.request.headers.has('accept') &&
         event.request.headers.get('accept').includes('text/html') &&
+        /* eslint-disable quotes, comma-spacing */
         isPathWhitelisted(<%= navigateFallbackWhitelist %>, event.request.url)) {
+        /* eslint-enable quotes, comma-spacing */
       var navigateFallbackUrl = new URL(navigateFallback, self.location);
       cacheName = AbsoluteUrlToCacheName[navigateFallbackUrl.toString()];
     }
