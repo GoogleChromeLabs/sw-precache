@@ -116,11 +116,11 @@ describe('sw-precache core functionality', function() {
       ]
     };
 
-    generate(config, function(error, reponseString) {
+    generate(config, function(error, responseString) {
       assert.ifError(error);
       generate(configPrime, function(error, responseStringPrime) {
         assert.ifError(error);
-        assert.strictEqual(reponseString, responseStringPrime);
+        assert.strictEqual(responseString, responseStringPrime);
         done();
       });
     });
@@ -163,11 +163,11 @@ describe('sw-precache core functionality', function() {
       ]
     };
 
-    generate(config, function(error, reponseString) {
+    generate(config, function(error, responseString) {
       assert.ifError(error);
       generate(configPrime, function(error, responseStringPrime) {
         assert.ifError(error);
-        assert.strictEqual(reponseString, responseStringPrime);
+        assert.strictEqual(responseString, responseStringPrime);
         done();
       });
     });
@@ -193,11 +193,11 @@ describe('sw-precache core functionality', function() {
       ]
     };
 
-    generate(config, function(error, reponseString) {
+    generate(config, function(error, responseString) {
       assert.ifError(error);
       generate(configPrime, function(error, responseStringPrime) {
         assert.ifError(error);
-        assert.notStrictEqual(reponseString, responseStringPrime);
+        assert.notStrictEqual(responseString, responseStringPrime);
         done();
       });
     });
