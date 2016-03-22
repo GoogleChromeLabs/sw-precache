@@ -298,7 +298,7 @@ _Default_: `[]`
 
 #### logger [function] 
 
-Specifies a callback function for logging which resources are being precched and
+Specifies a callback function for logging which resources are being precached and
 a precache size. Use `function() {}` if you'd prefer that nothing is logged.
 Within a `gulp` script, it's recommended that you use [`gulp-util`](https://github.com/gulpjs/gulp-util) and pass in `gutil.log`.
 
