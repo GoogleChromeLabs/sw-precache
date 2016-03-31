@@ -1,4 +1,5 @@
 {
+  "extends": "google",
   "plugins": [
     "react"
   ],

@@ -17,7 +17,8 @@
 /* eslint-env browser */
 (function() {
   'use strict';
-
+  // TODO: Remove this block comment.
+/*
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js')
     .then(function(registration) {
@@ -43,4 +44,5 @@
       console.error('Error during service worker registration:', error);
     });
   }
+*/
 })();

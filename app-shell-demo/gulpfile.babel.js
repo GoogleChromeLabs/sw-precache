@@ -22,14 +22,14 @@ import eslint from 'gulp-eslint';
 import glob from 'glob';
 import gulp from 'gulp';
 import gutil from 'gulp-util';
-import minifyCss from 'gulp-minify-css';
-import nodemon from 'nodemon';
+import cleanCSS from 'gulp-clean-css';
 import packageJson from './package.json';
 import path from 'path';
 import rev from 'gulp-rev';
 import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
+import {spawn} from 'child_process';
 import swPrecache from '../';
 import uglify from 'gulp-uglify';
 
@@ -87,7 +87,7 @@ gulp.task('copy-third-party-sw', () => {
 gulp.task('sass', () => {
   gulp.src(`${SRC_DIR}/static/sass/*.scss`)
     .pipe(sass().on('error', sass.logError))
-    .pipe(minifyCss())
+    .pipe(cleanCSS())
     .pipe(gulp.dest(`${BUILD_DIR}/styles`));
 });
 
@@ -145,7 +145,19 @@ gulp.task('generate-service-worker', () => {
   });
 });
 
-gulp.task('build', callback => {
+gulp.task('build:dev', ['clean'], callback => {
+  sequence(
+    [
+      'bundle-app', 'bundle-third-party', 'copy-static',
+      'copy-third-party-sw', 'sass'
+    ],
+    'version-assets',
+    'generate-service-worker',
+    callback
+  );
+});
+
+gulp.task('build:dist', ['clean'], callback => {
   sequence(
     [
       'bundle-app', 'bundle-third-party', 'copy-static',
@@ -159,36 +171,20 @@ gulp.task('build', callback => {
 });
 
 gulp.task('serve', callback => {
-  nodemon({
-    script: 'index.js',
-    ext: 'js jsx html json css',
-    watch: [SRC_DIR, BUILD_DIR],
-    verbose: true,
-    delay: 3
-  }).on('start', () => {
-    gutil.log('Server started.');
-  }).on('crash', () => {
-    gutil.log('Server crashed.');
-  }).on('restart', files => {
-    gutil.log('Restarted server. Changed files: ', files);
-  }).on('quit', callback);
+  spawn('node', ['index.js'], {stdio: 'inherit'})
+    .on('error', error => callback(error))
+    .on('exit', error => callback(error));
 });
 
 gulp.task('lint', () => {
   return gulp.src([`${SRC_DIR}/**/*.{js,jsx}`, '*.js'])
     .pipe(eslint())
-    .pipe(eslint.format());
-});
-
-gulp.task('watch', () => {
-  gulp.watch(`${SRC_DIR}/**/*.{js,jsx}`, sequence('bundle-app',
-    'lint', 'version-assets'));
-  gulp.watch(`${SRC_DIR}/static/**/*`, ['copy-static']);
-  gulp.watch(`${SRC_DIR}/static/sass/*.scss`, ['sass']);
+    .pipe(eslint.format())
+    .pipe(eslint.failOnError());
 });
 
 gulp.task('default', callback => {
-  sequence('clean', 'build', ['watch', 'serve'], callback);
+  sequence('build:dev', 'serve', callback);
 });
 
 process.on('SIGINT', process.exit);
