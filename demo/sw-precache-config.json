@@ -16,5 +16,9 @@
     "app/js/**.js"
   ],
   "stripPrefix": "app/",
-  "verbose": true
+  "verbose": true,
+  "runtimeCaching": [{
+    "urlPattern": "/this\\.is\\.a\\.regex/",
+    "handler": "networkFirst"
+  }]
 }

@@ -69,6 +69,9 @@ function setDefaults(cli, configFileFlags) {
     compositeFlags.importScripts = compositeFlags.importScripts.split(',');
   }
 
+  compositeFlags.runtimeCaching = compositeFlags.runtimeCaching ||
+    configFileFlags.runtimeCaching;
+
   return compositeFlags;
 }
 
