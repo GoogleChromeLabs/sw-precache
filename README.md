@@ -112,7 +112,7 @@ Here's a simpler gulp example for a basic use case. It assumes your site's resou
       var rootDir = 'app';
 
       swPrecache.write(path.join(rootDir, 'service-worker.js'), {
-        staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif}'],
+        staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'],
         stripPrefix: rootDir
       }, callback);
     });
