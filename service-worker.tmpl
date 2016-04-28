@@ -62,8 +62,6 @@ function deleteAllCaches() {
 }
 
 self.addEventListener('install', function(event) {
-  var now = Date.now();
-
   event.waitUntil(
     // Take a look at each of the cache names we expect for this version.
     Promise.all(Object.keys(CurrentCacheNamesToAbsoluteUrl).map(function(cacheName) {
@@ -72,12 +70,16 @@ self.addEventListener('install', function(event) {
         // For caches that are already populated for a given version of a
         // resource, there should be 1 entry.
         return cache.keys().then(function(keys) {
+          // If there are 0 entries, either because this is a brand new version
+          // of a resource or because the install step was interrupted the
+          // last time it ran, then we need to populate the cache.
           if (keys.length === 0) {
-            // If there are 0 entries, either because this is a brand new version
-            // of a resource or because the install step was interrupted the
-            // last time it ran, then we need to populate the cache.
+            // Use the last bit of the cache name, which contains the hash,
+            // as the cache-busting parameter.
+            // See https://github.com/GoogleChrome/sw-precache/issues/100
+            var cacheBustParam = cacheName.split('-').pop();
             var urlWithCacheBusting = getCacheBustedUrl(
-              CurrentCacheNamesToAbsoluteUrl[cacheName], now);
+              CurrentCacheNamesToAbsoluteUrl[cacheName], cacheBustParam);
 
             var request = new Request(urlWithCacheBusting,
               {credentials: 'same-origin'});
