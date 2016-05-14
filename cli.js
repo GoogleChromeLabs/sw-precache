@@ -72,6 +72,9 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.runtimeCaching = compositeFlags.runtimeCaching ||
     configFileFlags.runtimeCaching;
 
+    compositeFlags.maximumFileSizeToCacheInBytes = compositeFlags.maximumFileSizeToCacheInBytes ||
+    configFileFlags.maximumFileSizeToCacheInBytes;
+
   return compositeFlags;
 }
 
