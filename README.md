@@ -367,12 +367,12 @@ your generated service worker file.
 Each `Object` in the `Array` needs a `urlPattern`, which is either a
 [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp)
 or a string, following the conventions of the `sw-toolbox` library's
-[routing configuration](https://github.com/GoogleChrome/sw-toolbox#basic-routes). Also required is
+[routing configuration](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-usage.html). Also required is
 a `handler`, which should be either a string corresponding to one of the
-[built-in handlers](https://github.com/GoogleChrome/sw-toolbox#built-in-handlers) under the `toolbox.` namespace, or a function corresponding to your custom
-[request handler](https://github.com/GoogleChrome/sw-toolbox#defining-request-handlers). There is also
+[built-in handlers](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-api.html) under the `toolbox.` namespace, or a function corresponding to your custom
+[request handler](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-usage). There is also
 support for `options`, which corresponds to the same options supported by a
-[`sw-toolbox` handler](https://github.com/GoogleChrome/sw-toolbox#options).
+[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-api.html).
 
 For example, the following defines runtime caching behavior for two different URL patterns. It uses a
 different handler for each, and specifies a dedicated cache with maximum size for requests
