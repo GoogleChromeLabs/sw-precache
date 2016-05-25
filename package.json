@@ -1,7 +1,7 @@
 {
   "name": "sw-precache",
-  "version": "3.1.1",
-  "description": "Generate service worker code that will precache specific resources.",
+  "version": "3.2.0",
+  "description": "Generates a service worker to cache your local App Shell resources.",
   "author": {
     "name": "Jeff Posnick",
     "email": "jeffy@google.com",
@@ -14,7 +14,9 @@
     "offline",
     "precaching",
     "service-worker",
-    "serviceworker"
+    "serviceworker",
+    "appshell",
+    "pwa"
   ],
   "engines": {
     "node": ">=0.10.0"
