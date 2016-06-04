@@ -393,43 +393,6 @@ describe('addDirectoryIndex', function() {
   });
 });
 
-describe('getCacheBustedUrl', function() {
-  it('should append the cache-busting parameter', function(done) {
-    var url = 'http://example.com/';
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url);
-    assert.notStrictEqual(url, cacheBustedUrl);
-    done();
-  });
-
-  it('should produce the same output when called with the same "now" parameter', function(done) {
-    var url = 'http://example.com/';
-    var now = 123;
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url, now);
-    var cacheBustedUrlPrime = externalFunctions.getCacheBustedUrl(url, now);
-    assert.strictEqual(cacheBustedUrl, cacheBustedUrlPrime);
-    done();
-  });
-
-  it('should produce different output when called twice, with a delay in between', function(done) {
-    var url = 'http://example.com/';
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url);
-    setTimeout(function() {
-      var cacheBustedUrlPrime = externalFunctions.getCacheBustedUrl(url);
-      assert.notStrictEqual(cacheBustedUrl, cacheBustedUrlPrime);
-      done();
-    }, 2);
-  });
-
-  it('should append the URL parameter without modifying any existing parameters', function(done) {
-    var url = 'http://example.com/?one=two';
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url);
-    // The cache-busted URL should consist of the basic URL, followed by '&' and then the
-    // cached-busting parameters, in order to keep the same semantics.
-    assert(cacheBustedUrl.indexOf(url + '&') === 0);
-    done();
-  });
-});
-
 describe('isPathWhitelisted', function() {
   var url = 'http://example.com/test/path?one=two';
 
@@ -452,4 +415,8 @@ describe('isPathWhitelisted', function() {
     assert(externalFunctions.isPathWhitelisted([/^oops$/, /^\/test\/path$/], url));
     done();
   });
+});
+
+describe('createCacheKey', function() {
+  var url = 'http://example.com/test/path?one=two';
 });
