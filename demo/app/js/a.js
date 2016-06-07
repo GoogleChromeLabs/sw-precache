@@ -1,2 +1,2 @@
 /* eslint-disable no-unused-vars */
-var a1;
+var a;
