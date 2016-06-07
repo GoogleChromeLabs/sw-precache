@@ -74,7 +74,6 @@ self.addEventListener('install', function(event) {
           Array.from(UrlsToCacheKeys.values()).map(function(cacheKey) {
             // If we don't have a key matching url in the cache already, add it.
             if (!cachedUrls.has(cacheKey)) {
-              console.log('Adding:', cacheKey);
               return cache.add(new Request(cacheKey, {credentials: 'same-origin'}));
             }
           })
@@ -96,7 +95,6 @@ self.addEventListener('activate', function(event) {
         return Promise.all(
           existingRequests.map(function(existingRequest) {
             if (!setOfExpectedUrls.has(existingRequest.url)) {
-              console.log('Deleting:', existingRequest.url);
               return cache.delete(existingRequest);
             }
           })
@@ -116,15 +114,21 @@ self.addEventListener('fetch', function(event) {
     // handlers a chance to handle the request if need be.
     var shouldRespond;
 
+    // First, remove all the ignored parameter and see if we have that URL
+    // in our cache. If so, great! shouldRespond will be true.
     var url = stripIgnoredUrlParameters(event.request.url, IgnoreUrlParametersMatching);
     shouldRespond = UrlsToCacheKeys.has(url);
 
+    // If shouldRespond is false, check again, this time with 'index.html'
+    // (or whatever the directoryIndex option is set to) at the end.
     var directoryIndex = '<%= directoryIndex %>';
     if (!shouldRespond && directoryIndex) {
       url = addDirectoryIndex(url, directoryIndex);
       shouldRespond = UrlsToCacheKeys.has(url);
     }
 
+    // If shouldRespond is still false, check to see if this is a navigation
+    // request, and if so, whether the URL matches navigateFallbackWhitelist.
     var navigateFallback = '<%= navigateFallback %>';
     if (!shouldRespond &&
         navigateFallback &&
@@ -134,11 +138,15 @@ self.addEventListener('fetch', function(event) {
       shouldRespond = UrlsToCacheKeys.has(url);
     }
 
+    // If shouldRespond was set to true at any point, then call
+    // event.respondWith(), using the appropriate cache key.
     if (shouldRespond) {
       event.respondWith(
         caches.open(CacheName).then(function(cache) {
           return cache.match(UrlsToCacheKeys.get(url));
         }).catch(function(e) {
+          // Fall back to just fetch()ing the request if some unexpected error
+          // prevented the cached response from being valid.
           console.warn('Couldn\'t serve response for "%s" from cache: %O', event.request.url, e);
           return fetch(event.request);
         })

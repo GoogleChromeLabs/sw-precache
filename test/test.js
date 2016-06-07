@@ -335,32 +335,6 @@ describe('stripIgnoredUrlParameters', function() {
   });
 });
 
-describe('populateCurrentCacheNames', function() {
-  var precacheConfig = [
-    ['./', '123'],
-    ['css/main.css', 'abc']
-  ];
-  var cacheNamePrefix = 'test-prefix-';
-  var baseUrl = 'http://example.com/';
-
-  it('should return valid mappings', function(done) {
-    var expectedMappings = {
-      absoluteUrlToCacheName: {
-        'http://example.com/': 'test-prefix-http://example.com/-123',
-        'http://example.com/css/main.css': 'test-prefix-http://example.com/css/main.css-abc'
-      },
-      currentCacheNamesToAbsoluteUrl: {
-        'test-prefix-http://example.com/css/main.css-abc': 'http://example.com/css/main.css',
-        'test-prefix-http://example.com/-123': 'http://example.com/'
-      }
-    };
-    var mappings = externalFunctions.populateCurrentCacheNames(precacheConfig, cacheNamePrefix,
-      baseUrl);
-    assert.deepEqual(mappings, expectedMappings);
-    done();
-  });
-});
-
 describe('addDirectoryIndex', function() {
   var directoryIndex = 'index.html';
 
@@ -418,5 +392,17 @@ describe('isPathWhitelisted', function() {
 });
 
 describe('createCacheKey', function() {
-  var url = 'http://example.com/test/path?one=two';
+  it('should create the expected value when the original URL.search is empty', function(done) {
+    var url = 'http://example.com/test/path';
+    var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value');
+    assert.strictEqual(cacheKey, 'http://example.com/test/path?name=value');
+    done();
+  });
+
+  it('should create the expected value when the original URL.search is not empty', function(done) {
+    var url = 'http://example.com/test/path?existing=value';
+    var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value');
+    assert.strictEqual(cacheKey, 'http://example.com/test/path?existing=value&name=value');
+    done();
+  });
 });
