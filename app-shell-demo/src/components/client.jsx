@@ -32,15 +32,7 @@ Object.keys(state).forEach(key => {
 let createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
 let store = createStoreWithMiddleware(reducer, state);
 
-// As per https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md#async-routes
 match({history: browserHistory, routes}, (error, redirect, renderProps) => {
-  // The values in renderProps.location.basename and
-  // renderProps.location.pathname seem incorrect, and that might be related
-  // to the problem I'm having.
-  // When navigating to http://localhost:8080/guide/30410, for instance,
-  // basename is '/guide/30410' and pathname is '/'
-  console.log(error, redirect, renderProps);
-
   ReactDOM.render(
     <Provider store={store}>
       <Router {...renderProps}/>
@@ -48,13 +40,3 @@ match({history: browserHistory, routes}, (error, redirect, renderProps) => {
     document.querySelector('main')
   );
 });
-
-// Older version of the code, which worked with previous react-router.
-/*
-ReactDOM.render(
-  <Provider store={store}>
-    <Router routes={routes} history={browserHistory}/>
-  </Provider>,
-  document.querySelector('main')
-);
-*/
