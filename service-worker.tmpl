@@ -34,24 +34,24 @@
 importScripts(<%= importScripts %>);
 <% } %>
 
-var PrecacheConfig = <%= precacheConfig %>;
-var CacheName = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '');
+var precacheConfig = <%= precacheConfig %>;
+var cacheName = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '');
 
 <% if (handleFetch) { %>
-var IgnoreUrlParametersMatching = [<%= ignoreUrlParametersMatching %>];
+var ignoreUrlParametersMatching = [<%= ignoreUrlParametersMatching %>];
 <% } %>
 
 <% Object.keys(externalFunctions).sort().forEach(function(functionName) {%>
 var <%- functionName %> = <%= externalFunctions[functionName] %>;
 <% }); %>
 
-var HashParamName = '_sw-precache';
-var UrlsToCacheKeys = new Map(
-  PrecacheConfig.map(function(item) {
+var hashParamName = '_sw-precache';
+var urlsToCacheKeys = new Map(
+  precacheConfig.map(function(item) {
     var relativeUrl = item[0];
     var hash = item[1];
     var absoluteUrl = new URL(relativeUrl, self.location);
-    var cacheKey = createCacheKey(absoluteUrl, HashParamName, hash);
+    var cacheKey = createCacheKey(absoluteUrl, hashParamName, hash);
     return [absoluteUrl.toString(), cacheKey];
   })
 );
@@ -68,10 +68,10 @@ function setOfCachedUrls(cache) {
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
-    caches.open(CacheName).then(function(cache) {
+    caches.open(cacheName).then(function(cache) {
       return setOfCachedUrls(cache).then(function(cachedUrls) {
         return Promise.all(
-          Array.from(UrlsToCacheKeys.values()).map(function(cacheKey) {
+          Array.from(urlsToCacheKeys.values()).map(function(cacheKey) {
             // If we don't have a key matching url in the cache already, add it.
             if (!cachedUrls.has(cacheKey)) {
               return cache.add(new Request(cacheKey, {credentials: 'same-origin'}));
@@ -87,10 +87,10 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-  var setOfExpectedUrls = new Set(UrlsToCacheKeys.values());
+  var setOfExpectedUrls = new Set(urlsToCacheKeys.values());
 
   event.waitUntil(
-    caches.open(CacheName).then(function(cache) {
+    caches.open(cacheName).then(function(cache) {
       return cache.keys().then(function(existingRequests) {
         return Promise.all(
           existingRequests.map(function(existingRequest) {
@@ -116,15 +116,15 @@ self.addEventListener('fetch', function(event) {
 
     // First, remove all the ignored parameter and see if we have that URL
     // in our cache. If so, great! shouldRespond will be true.
-    var url = stripIgnoredUrlParameters(event.request.url, IgnoreUrlParametersMatching);
-    shouldRespond = UrlsToCacheKeys.has(url);
+    var url = stripIgnoredUrlParameters(event.request.url, ignoreUrlParametersMatching);
+    shouldRespond = urlsToCacheKeys.has(url);
 
     // If shouldRespond is false, check again, this time with 'index.html'
     // (or whatever the directoryIndex option is set to) at the end.
     var directoryIndex = '<%= directoryIndex %>';
     if (!shouldRespond && directoryIndex) {
       url = addDirectoryIndex(url, directoryIndex);
-      shouldRespond = UrlsToCacheKeys.has(url);
+      shouldRespond = urlsToCacheKeys.has(url);
     }
 
     // If shouldRespond is still false, check to see if this is a navigation
@@ -135,15 +135,15 @@ self.addEventListener('fetch', function(event) {
         (event.request.mode === 'navigate') &&
         isPathWhitelisted(<%= navigateFallbackWhitelist %>, event.request.url)) {
       url = new URL(navigateFallback, self.location).toString();
-      shouldRespond = UrlsToCacheKeys.has(url);
+      shouldRespond = urlsToCacheKeys.has(url);
     }
 
     // If shouldRespond was set to true at any point, then call
     // event.respondWith(), using the appropriate cache key.
     if (shouldRespond) {
       event.respondWith(
-        caches.open(CacheName).then(function(cache) {
-          return cache.match(UrlsToCacheKeys.get(url));
+        caches.open(cacheName).then(function(cache) {
+          return cache.match(urlsToCacheKeys.get(url));
         }).catch(function(e) {
           // Fall back to just fetch()ing the request if some unexpected error
           // prevented the cached response from being valid.
