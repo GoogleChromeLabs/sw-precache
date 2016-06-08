@@ -1,7 +1,7 @@
 {
   "name": "app-shell-demo",
   "version": "1.0.0",
-  "description": "A Progressive Web App for browsing iFixit contentcd .",
+  "description": "A Progressive Web App for browsing iFixit content.",
   "main": "index.js",
   "author": "Jeff Posnick <jeffy@google.com> (https://jeffy.info)",
   "license": "Apache-2.0",
