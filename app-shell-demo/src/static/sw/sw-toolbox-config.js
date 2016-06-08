@@ -26,7 +26,7 @@
   });
 
   const MISSING_IMAGE = '/images/missing.png';
-  global.toolbox.precache(MISSING_IMAGE);
+  global.toolbox.precache([MISSING_IMAGE]);
 
   function imageHandler(request, values, options) {
     return global.toolbox.cacheFirst(request, values, options).catch(() => {

@@ -40,7 +40,7 @@
     "redux-promise": "^0.5.3",
     "run-sequence": "^1.2.1",
     "sw-precache": "^3.2.0",
-    "sw-toolbox": "^3.2.0",
+    "sw-toolbox": "3.1.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
