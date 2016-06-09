@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import React from 'react';
+import React from 'react'; // eslint-disable-line no-unused-vars
+import ReactDOMServer from 'react-dom/server';
 import compression from 'compression';
 import express from 'express';
 import expressHandlebars from 'express-handlebars';
@@ -24,9 +25,8 @@ import promiseMiddleware from 'redux-promise';
 import reducer from './reducer';
 import routes from './routes';
 import {Provider} from 'react-redux';
-import {RoutingContext, match} from 'react-router';
+import {RouterContext, match} from 'react-router';
 import {applyMiddleware, createStore} from 'redux';
-import {createMemoryHistory} from 'history';
 
 let app = express();
 
@@ -66,18 +66,21 @@ let styles = new Map(
 );
 
 app.use((req, res) => {
-  let location = createMemoryHistory().createLocation(req.url);
   let createStoreWithMiddleware = applyMiddleware(
     promiseMiddleware)(createStore);
   let store = createStoreWithMiddleware(reducer);
 
-  match({routes, location}, (error, redirectLocation, renderProps) => {
+  match({routes, location: req.url}, (error, redirect, renderProps) => {
     if (error) {
       return handleError(res, error);
     }
 
     if (!renderProps) {
       return res.status(404).end('Not Found');
+    }
+
+    if (redirect) {
+      return res.redirect(302, redirect.pathname + redirect.search);
     }
 
     let fetchDataPromises = renderProps.components
@@ -94,13 +97,13 @@ app.use((req, res) => {
     Promise.all(fetchDataPromises).then(() => {
       let InitialComponent = (
         <Provider store={store}>
-          {() => <RoutingContext {...renderProps}/>}
+          <RouterContext {...renderProps}/>
         </Provider>
       );
 
       res.setHeader('Cache-Control', 'max-age=0, no-cache');
       res.render('index', {
-        reactHtml: React.renderToString(InitialComponent),
+        reactHtml: ReactDOMServer.renderToString(InitialComponent),
         state: JSON.stringify(store.getState()),
         revManifest,
         inlineStyles

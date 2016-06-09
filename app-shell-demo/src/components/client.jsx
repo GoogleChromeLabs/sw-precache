@@ -16,13 +16,13 @@
 
 /* eslint-env browser */
 import React from 'react';
+import ReactDOM from 'react-dom';
 import promiseMiddleware from 'redux-promise';
 import reducer from '../reducer';
 import routes from '../routes';
 import {Provider} from 'react-redux';
-import {Router} from 'react-router';
+import {Router, browserHistory, match} from 'react-router';
 import {applyMiddleware, createStore} from 'redux';
-import {createHistory} from 'history';
 import {fromJS} from 'immutable';
 
 let state = window.__STATE__;
@@ -32,11 +32,11 @@ Object.keys(state).forEach(key => {
 let createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
 let store = createStoreWithMiddleware(reducer, state);
 
-let history = createHistory();
-
-React.render(
-  <Provider store={store}>
-    {() => <Router children={routes} history={history}/>}
-  </Provider>,
-  document.querySelector('main')
-);
+match({history: browserHistory, routes}, (error, redirect, renderProps) => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router {...renderProps}/>
+    </Provider>,
+    document.querySelector('main')
+  );
+});

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-require('babel/register');
+require('babel-core/register');
 
 var server = require('./src/server');
 server.listen(process.env.PORT || 8080);
