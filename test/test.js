@@ -335,32 +335,6 @@ describe('stripIgnoredUrlParameters', function() {
   });
 });
 
-describe('populateCurrentCacheNames', function() {
-  var precacheConfig = [
-    ['./', '123'],
-    ['css/main.css', 'abc']
-  ];
-  var cacheNamePrefix = 'test-prefix-';
-  var baseUrl = 'http://example.com/';
-
-  it('should return valid mappings', function(done) {
-    var expectedMappings = {
-      absoluteUrlToCacheName: {
-        'http://example.com/': 'test-prefix-http://example.com/-123',
-        'http://example.com/css/main.css': 'test-prefix-http://example.com/css/main.css-abc'
-      },
-      currentCacheNamesToAbsoluteUrl: {
-        'test-prefix-http://example.com/css/main.css-abc': 'http://example.com/css/main.css',
-        'test-prefix-http://example.com/-123': 'http://example.com/'
-      }
-    };
-    var mappings = externalFunctions.populateCurrentCacheNames(precacheConfig, cacheNamePrefix,
-      baseUrl);
-    assert.deepEqual(mappings, expectedMappings);
-    done();
-  });
-});
-
 describe('addDirectoryIndex', function() {
   var directoryIndex = 'index.html';
 
@@ -393,43 +367,6 @@ describe('addDirectoryIndex', function() {
   });
 });
 
-describe('getCacheBustedUrl', function() {
-  it('should append the cache-busting parameter', function(done) {
-    var url = 'http://example.com/';
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url);
-    assert.notStrictEqual(url, cacheBustedUrl);
-    done();
-  });
-
-  it('should produce the same output when called with the same "now" parameter', function(done) {
-    var url = 'http://example.com/';
-    var now = 123;
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url, now);
-    var cacheBustedUrlPrime = externalFunctions.getCacheBustedUrl(url, now);
-    assert.strictEqual(cacheBustedUrl, cacheBustedUrlPrime);
-    done();
-  });
-
-  it('should produce different output when called twice, with a delay in between', function(done) {
-    var url = 'http://example.com/';
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url);
-    setTimeout(function() {
-      var cacheBustedUrlPrime = externalFunctions.getCacheBustedUrl(url);
-      assert.notStrictEqual(cacheBustedUrl, cacheBustedUrlPrime);
-      done();
-    }, 2);
-  });
-
-  it('should append the URL parameter without modifying any existing parameters', function(done) {
-    var url = 'http://example.com/?one=two';
-    var cacheBustedUrl = externalFunctions.getCacheBustedUrl(url);
-    // The cache-busted URL should consist of the basic URL, followed by '&' and then the
-    // cached-busting parameters, in order to keep the same semantics.
-    assert(cacheBustedUrl.indexOf(url + '&') === 0);
-    done();
-  });
-});
-
 describe('isPathWhitelisted', function() {
   var url = 'http://example.com/test/path?one=two';
 
@@ -450,6 +387,22 @@ describe('isPathWhitelisted', function() {
 
   it('should return true when passed a whitelist whose second value matches the url', function(done) {
     assert(externalFunctions.isPathWhitelisted([/^oops$/, /^\/test\/path$/], url));
+    done();
+  });
+});
+
+describe('createCacheKey', function() {
+  it('should create the expected value when the original URL.search is empty', function(done) {
+    var url = 'http://example.com/test/path';
+    var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value');
+    assert.strictEqual(cacheKey, 'http://example.com/test/path?name=value');
+    done();
+  });
+
+  it('should create the expected value when the original URL.search is not empty', function(done) {
+    var url = 'http://example.com/test/path?existing=value';
+    var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value');
+    assert.strictEqual(cacheKey, 'http://example.com/test/path?existing=value&name=value');
     done();
   });
 });
