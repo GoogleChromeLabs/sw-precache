@@ -24,16 +24,6 @@
 /* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
 'use strict';
 
-<% if (handleFetch && swToolboxCode) { %>
-// *** Start of auto-included sw-toolbox code. ***
-<%= swToolboxCode %>
-// *** End of auto-included sw-toolbox code. ***
-<% } %>
-
-<% if (importScripts) { %>
-importScripts(<%= importScripts %>);
-<% } %>
-
 var precacheConfig = <%= precacheConfig %>;
 var cacheName = 'sw-precache-<%= version %>-<%= cacheId %>-' + (self.registration ? self.registration.scope : '');
 
@@ -155,9 +145,18 @@ self.addEventListener('fetch', function(event) {
   }
 });
 
+<% if (swToolboxCode) { %>
+// *** Start of auto-included sw-toolbox code. ***
+<%= swToolboxCode %>
+// *** End of auto-included sw-toolbox code. ***
+<% } %>
+
 <% if (runtimeCaching) { %>
 // Runtime cache configuration, using the sw-toolbox library.
 <%= runtimeCaching %>
 <% } %>
+<% } %>
 
+<% if (importScripts) { %>
+importScripts(<%= importScripts %>);
 <% } %>
