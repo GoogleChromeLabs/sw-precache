@@ -149,6 +149,7 @@ gulp.task('generate-service-worker', () => {
 });
 
 gulp.task('build:dev', ['clean'], callback => {
+  process.env.NODE_ENV = 'development';
   sequence(
     ['bundle-app', 'bundle-third-party', 'copy-static', 'sass'],
     'version-assets',
@@ -158,6 +159,7 @@ gulp.task('build:dev', ['clean'], callback => {
 });
 
 gulp.task('build:dist', ['clean'], callback => {
+  process.env.NODE_ENV = 'production';
   sequence(
     ['bundle-app', 'bundle-third-party', 'copy-static', 'sass', 'lint'],
     'uglify-js',
