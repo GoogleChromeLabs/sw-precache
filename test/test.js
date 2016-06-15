@@ -405,4 +405,18 @@ describe('createCacheKey', function() {
     assert.strictEqual(cacheKey, 'http://example.com/test/path?existing=value&name=value');
     done();
   });
+
+  it('should not append the parameter when the URL matches the exclusion pattern', function(done) {
+    var url = 'http://example.com/test/path?existing=value';
+    var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value', /example/);
+    assert.strictEqual(cacheKey, url);
+    done();
+  });
+
+  it('should append the parameter when the URL does not match the exclusion pattern', function(done) {
+    var url = 'http://example.com/test/path?existing=value';
+    var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value', /no_match/);
+    assert.strictEqual(cacheKey, 'http://example.com/test/path?existing=value&name=value');
+    done();
+  });
 });
