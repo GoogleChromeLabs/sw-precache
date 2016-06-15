@@ -35,7 +35,17 @@ import uglify from 'gulp-uglify';
 
 const SRC_DIR = 'src';
 const BUILD_DIR = 'build';
-const THIRD_PARTY_MODULES = ['react', 'react-router'];
+const THIRD_PARTY_MODULES = [
+  'immutable',
+  'isomorphic-fetch',
+  'react',
+  'react-dom',
+  'react-redux',
+  'react-router',
+  'redux',
+  'redux-actions',
+  'redux-promise'
+];
 
 gulp.task('clean', () => {
   return del(BUILD_DIR);
@@ -47,6 +57,7 @@ gulp.task('bundle-app', () => {
     extensions: ['.jsx'],
     transform: [babelify]
   });
+
   THIRD_PARTY_MODULES.forEach(module => bundler.external(module));
 
   return bundler.bundle()
@@ -79,11 +90,6 @@ gulp.task('copy-static', () => {
     .pipe(gulp.dest(BUILD_DIR));
 });
 
-gulp.task('copy-third-party-sw', () => {
-  return gulp.src('node_modules/sw-toolbox/sw-toolbox.js')
-    .pipe(gulp.dest(`${BUILD_DIR}/sw`));
-});
-
 gulp.task('sass', () => {
   gulp.src(`${SRC_DIR}/static/sass/*.scss`)
     .pipe(sass().on('error', sass.logError))
@@ -108,49 +114,43 @@ gulp.task('version-assets', () => {
 gulp.task('generate-service-worker', () => {
   let serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
 
-  let swScripts = [];
-  let swToolboxRegex = /sw-toolbox-[a-f0-9]{10}\.js$/;
-  glob.sync('rev/sw/**/*.js', {cwd: BUILD_DIR}).forEach(file => {
-    if (file.match(swToolboxRegex)) {
-      // The sw-toolbox.js script (with the hash in its filename) needs to be imported first.
-      swScripts.unshift(file);
-    } else {
-      swScripts.push(file);
-    }
-  });
-
-  return del(serviceWorkerFile).then(() => {
-    return swPrecache.write(serviceWorkerFile, {
-      cacheId: packageJson.name,
-      directoryIndex: null,
-      dynamicUrlToDependencies: {
-        '/shell': [
-          ...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`),
-          ...glob.sync(`${BUILD_DIR}/rev/styles/all*.css`),
-          `${SRC_DIR}/views/index.handlebars`
-        ]
-      },
-      importScripts: swScripts,
-      logger: gutil.log,
-      navigateFallback: '/shell',
-      navigateFallbackWhitelist: [/^\/guide\//],
-      staticFileGlobs: [
-        `${BUILD_DIR}/rev/js/**/*.js`,
-        `${BUILD_DIR}/rev/styles/all*.css`,
-        `${BUILD_DIR}/images/**/*`
-      ],
-      stripPrefix: 'build/',
-      verbose: true
-    });
+  return swPrecache.write(serviceWorkerFile, {
+    cacheId: packageJson.name,
+    dynamicUrlToDependencies: {
+      '/shell': [
+        ...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`),
+        ...glob.sync(`${BUILD_DIR}/rev/styles/all*.css`),
+        `${SRC_DIR}/views/index.handlebars`
+      ]
+    },
+    logger: gutil.log,
+    navigateFallback: '/shell',
+    runtimeCaching: [{
+      urlPattern: /www\.ifixit\.com\/api\/2\.0\//,
+      handler: 'fastest'
+    }, {
+      urlPattern: /cloudfront\.net/,
+      handler: 'cacheFirst',
+      options: {
+        cache: {
+          name: 'image-cache',
+          maxEntries: 50
+        }
+      }
+    }],
+    staticFileGlobs: [
+      `${BUILD_DIR}/rev/js/**/*.js`,
+      `${BUILD_DIR}/rev/styles/all*.css`,
+      `${BUILD_DIR}/images/**/*`
+    ],
+    stripPrefix: 'build/',
+    verbose: true
   });
 });
 
 gulp.task('build:dev', ['clean'], callback => {
   sequence(
-    [
-      'bundle-app', 'bundle-third-party', 'copy-static',
-      'copy-third-party-sw', 'sass'
-    ],
+    ['bundle-app', 'bundle-third-party', 'copy-static', 'sass'],
     'version-assets',
     'generate-service-worker',
     callback
@@ -159,10 +159,7 @@ gulp.task('build:dev', ['clean'], callback => {
 
 gulp.task('build:dist', ['clean'], callback => {
   sequence(
-    [
-      'bundle-app', 'bundle-third-party', 'copy-static',
-      'copy-third-party-sw', 'sass', 'lint'
-    ],
+    ['bundle-app', 'bundle-third-party', 'copy-static', 'sass', 'lint'],
     'uglify-js',
     'version-assets',
     'generate-service-worker',
