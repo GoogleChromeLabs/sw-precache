@@ -31,6 +31,7 @@ The full documentation is in this README, and the
   - [Options Parameter](#options-parameter)
     - [cacheId [String]](#cacheid-string)
     - [directoryIndex [String]](#directoryindex-string)
+    - [dontCacheBustUrlsMatching [Regex]](#dontcachebusturlsmatching-regex)
     - [dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringarraystring)
     - [handleFetch [boolean]](#handlefetch-boolean)
     - [ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]](#ignoreurlparametersmatching-arrayregex)
@@ -259,6 +260,33 @@ or more URLs, use the `dynamicUrlToDependencies` option to explicitly set up
 mappings between a directory URL and a corresponding file.
 
 _Default_: `'index.html'`
+
+#### dontCacheBustUrlsMatching [Regex]
+It's very important that the requests `sw-precache` makes to populate your cache
+result in the most up-to-date version of a resource at a given URL. Requests
+that are fulfilled with out-of-date responses (like those found in your
+browser's HTTP cache) can end up being read from the service worker's cache
+indefinitely. Jake Archibald's [blog post](https://jakearchibald.com/2016/caching-best-practices/#a-service-worker-can-extend-the-life-of-these-bugs)
+provides more context about this problem.
+
+In the interest of avoiding that scenario, `sw-precache` will, by default,
+append a cache-busting parameter to the end of each URL it requests when
+populating or updating its cache. Developers who are explicitly doing "the right
+thing" when it comes to setting HTTP caching headers on their responses might
+want to opt out of this cache-busting. For example, if all of your static
+resources already include versioning information in their URLs (via a tool like
+[`gulp-rev`](https://github.com/sindresorhus/gulp-rev)), and are served with
+long-lived HTTP caching headers, then the extra cache-busting URL parameter
+is not needed, and can be safely excluded.
+
+`dontCacheBustUrlsMatching` gives you a way of opting-in to skipping the cache
+busting behavior for a subset of your URLs (or all of them, if a catch-all value
+like `/./` is used).
+If set, then each URL that's prefetched will be matched against this value.
+If there's a match, then the URL will be prefetched as-is, without an additional
+cache-busting URL parameter appended.
+
+_Default_: not set
 
 #### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]  
 Maps a dynamic URL string to an array of all the files that URL's contents
