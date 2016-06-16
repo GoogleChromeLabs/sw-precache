@@ -91,7 +91,7 @@ gulp.task('copy-static', () => {
 });
 
 gulp.task('sass', () => {
-  gulp.src(`${SRC_DIR}/static/sass/*.scss`)
+  return gulp.src(`${SRC_DIR}/static/sass/*.scss`)
     .pipe(sass().on('error', sass.logError))
     .pipe(cleanCSS())
     .pipe(gulp.dest(`${BUILD_DIR}/styles`));
@@ -116,6 +116,7 @@ gulp.task('generate-service-worker', () => {
 
   return swPrecache.write(serviceWorkerFile, {
     cacheId: packageJson.name,
+    dontCacheBustUrlsMatching: /./,
     dynamicUrlToDependencies: {
       '/shell': [
         ...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`),

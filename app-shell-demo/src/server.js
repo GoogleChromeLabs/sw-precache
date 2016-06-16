@@ -47,7 +47,7 @@ function setHeaders(res, file) {
   }
 }
 
-app.use(express.static('build', {setHeaders}));
+app.use(express.static('build', {index: false, setHeaders}));
 
 app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
