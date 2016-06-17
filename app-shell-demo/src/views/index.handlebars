@@ -6,25 +6,17 @@
     <title>iFixit Progressive Web App</title>
     <link rel="icon" href="/images/icon.png">
     <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1976D2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <base target="_blank">
-    <style>
-      {{inlineStyles}}
-    </style>
+    <link rel="stylesheet" href="/rev/{{revManifest.[styles/all.css]}}">
   </head>
   <body>
-    <main><div>{{{reactHtml}}}</div></main>
+    <main>
+      <div>{{{reactHtml}}}</div>
+    </main>
     <script>
       window.__STATE__ = {{{state}}};
-    </script>
-    <script>
-      (function() {
-        var linkElement = document.createElement('link');
-        linkElement.rel = 'stylesheet';
-        linkElement.type = 'text/css';
-        linkElement.media = 'screen';
-        linkElement.href = '/rev/{{revManifest.[styles/all.css]}}';
-        document.querySelector('head').appendChild(linkElement);
-      })();
     </script>
     <script src="/rev/{{revManifest.[js/third-party.js]}}"></script>
     <script src="/rev/{{revManifest.[js/app.js]}}"></script>

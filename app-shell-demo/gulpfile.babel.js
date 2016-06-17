@@ -30,7 +30,7 @@ import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
 import {spawn} from 'child_process';
-import swPrecache from '../';
+import swPrecache from 'sw-precache';
 import uglify from 'gulp-uglify';
 
 const SRC_DIR = 'src';
