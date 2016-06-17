@@ -17,4 +17,8 @@ vm: true
 api_version: 1
 env_variables:
   PORT: 8080
+handlers:
+- url: /.*
+  script: IGNORED
+  secure: always
 # [END app_yaml]

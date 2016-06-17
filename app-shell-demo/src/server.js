@@ -47,14 +47,13 @@ function setHeaders(res, file) {
   }
 }
 
-app.use(express.static('build', {setHeaders}));
+app.use(express.static('build', {index: false, setHeaders}));
 
 app.engine('handlebars', expressHandlebars());
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
 
-let revManifest = JSON.parse(
-  fs.readFileSync(path.join('build', 'rev-manifest.json'), 'utf8'));
+let revManifest = require('../build/rev-manifest.json');
 let styles = new Map(
   Object.keys(revManifest).filter(originalFile => originalFile.endsWith('.css'))
     .map(originalFile => {

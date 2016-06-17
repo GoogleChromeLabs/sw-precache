@@ -4,45 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iFixit Progressive Web App</title>
-    <link rel="icon" sizes="192x192" href="/images/fist-enclosed-black.png">
+    <link rel="icon" href="/images/icon.png">
     <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1976D2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <base target="_blank">
-    <script>
-      (function() {
-        var isLocalhost = Boolean(window.location.hostname === 'localhost' ||
-          // [::1] is the IPv6 localhost address.
-          window.location.hostname === '[::1]' ||
-          // 127.0.0.1/8 is considered localhost for IPv4.
-          window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
-        );
-
-        if (window.location.protocol === 'http:' && !isLocalhost) {
-          // Redirect to https: if we're currently using http: and we're not on localhost.
-          window.location.protocol = 'https:';
-        }
-      })();
-    </script>
-    <style>
-      {{inlineStyles}}
-    </style>
+    <link rel="stylesheet" href="/rev/{{revManifest.[styles/all.css]}}">
   </head>
   <body>
-    <main><div>{{{reactHtml}}}</div></main>
+    <main>
+      <div>{{{reactHtml}}}</div>
+    </main>
     <script>
       window.__STATE__ = {{{state}}};
     </script>
-    <script>
-      (function() {
-        var linkElement = document.createElement('link');
-        linkElement.rel = 'stylesheet';
-        linkElement.type = 'text/css';
-        linkElement.media = 'screen';
-        linkElement.href = '/rev/{{revManifest.[styles/all.css]}}';
-        document.querySelector('head').appendChild(linkElement);
-      })();
-    </script>
     <script src="/rev/{{revManifest.[js/third-party.js]}}"></script>
     <script src="/rev/{{revManifest.[js/app.js]}}"></script>
-    <script src="/rev/{{revManifest.[js/register-service-worker.js]}}"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
+      }
+    </script>
   </body>
 </html>
