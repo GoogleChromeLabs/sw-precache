@@ -2,7 +2,7 @@
   "name": "iFixit Web App",
   "short_name": "iFixit",
   "icons": [{
-    "src": "/images/fist-enclosed-black.png",
+    "src": "/images/icon.png",
     "type": "image/png",
     "sizes": "192x192"
   }],
