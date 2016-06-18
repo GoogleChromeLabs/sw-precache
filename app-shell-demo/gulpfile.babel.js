@@ -139,9 +139,7 @@ gulp.task('generate-service-worker', () => {
         }
       }
     }, {
-      // Temporary HACK to work around https://github.com/GoogleChrome/lighthouse/issues/425
-      urlPattern: /\/$/,
-      handler: 'networkFirst'
+      default: 'networkFirst'
     }],
     staticFileGlobs: [
       `${BUILD_DIR}/rev/js/**/*.js`,
