@@ -19,15 +19,18 @@ import browserify from 'browserify';
 import buffer from 'vinyl-buffer';
 import del from 'del';
 import eslint from 'gulp-eslint';
+import glob from 'glob';
 import gulp from 'gulp';
 import gutil from 'gulp-util';
 import cleanCSS from 'gulp-clean-css';
+import packageJson from './package.json';
 import path from 'path';
 import rev from 'gulp-rev';
 import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
 import {spawn} from 'child_process';
+import swPrecache from 'sw-precache';
 import uglify from 'gulp-uglify';
 
 const SRC_DIR = 'src';
@@ -108,11 +111,52 @@ gulp.task('version-assets', () => {
     .pipe(gulp.dest(BUILD_DIR));
 });
 
+gulp.task('generate-service-worker', () => {
+  let serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
+
+  return swPrecache.write(serviceWorkerFile, {
+    cacheId: packageJson.name,
+    dontCacheBustUrlsMatching: /./,
+    dynamicUrlToDependencies: {
+      '/shell': [
+        ...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`),
+        ...glob.sync(`${BUILD_DIR}/rev/styles/all*.css`),
+        `${SRC_DIR}/views/index.handlebars`
+      ]
+    },
+    logger: gutil.log,
+    navigateFallback: '/shell',
+    runtimeCaching: [{
+      urlPattern: /www\.ifixit\.com\/api\/2\.0\//,
+      handler: 'fastest'
+    }, {
+      urlPattern: /cloudfront\.net/,
+      handler: 'cacheFirst',
+      options: {
+        cache: {
+          name: 'image-cache',
+          maxEntries: 50
+        }
+      }
+    }, {
+      default: 'networkFirst'
+    }],
+    staticFileGlobs: [
+      `${BUILD_DIR}/rev/js/**/*.js`,
+      `${BUILD_DIR}/rev/styles/all*.css`,
+      `${BUILD_DIR}/images/**/*`
+    ],
+    stripPrefix: 'build/',
+    verbose: true
+  });
+});
+
 gulp.task('build:dev', ['clean'], callback => {
   process.env.NODE_ENV = 'development';
   sequence(
     ['bundle-app', 'bundle-third-party', 'copy-static', 'sass'],
     'version-assets',
+    'generate-service-worker',
     callback
   );
 });
@@ -123,6 +167,7 @@ gulp.task('build:dist', ['clean'], callback => {
     ['bundle-app', 'bundle-third-party', 'copy-static', 'sass', 'lint'],
     'uglify-js',
     'version-assets',
+    'generate-service-worker',
     callback
   );
 });

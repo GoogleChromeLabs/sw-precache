@@ -16,5 +16,10 @@
     </script>
     <script src="/rev/{{revManifest.[js/third-party.js]}}"></script>
     <script src="/rev/{{revManifest.[js/app.js]}}"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js');
+      }
+    </script>
   </body>
 </html>
