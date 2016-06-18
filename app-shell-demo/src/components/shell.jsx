@@ -22,6 +22,6 @@ export default class Shell extends React.Component {
   }
 
   render() {
-    return <span></span>;
+    return <div className="card-container">Loading...</div>;
   }
 }
