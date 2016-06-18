@@ -1,0 +1,13 @@
+{
+  "name": "iFixit Web App",
+  "short_name": "iFixit",
+  "icons": [{
+    "src": "/images/icon.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }],
+  "start_url": "/?utm_source=homescreen",
+  "display": "standalone",
+  "background_color": "#E3F2FD",
+  "theme_color": "#1976D2"
+}
