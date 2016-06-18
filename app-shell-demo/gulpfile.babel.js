@@ -27,6 +27,7 @@ import rev from 'gulp-rev';
 import sass from 'gulp-sass';
 import sequence from 'run-sequence';
 import source from 'vinyl-source-stream';
+import {spawn} from 'child_process';
 import uglify from 'gulp-uglify';
 
 const SRC_DIR = 'src';
@@ -124,6 +125,12 @@ gulp.task('build:dist', ['clean'], callback => {
     'version-assets',
     callback
   );
+});
+
+gulp.task('serve', callback => {
+  spawn('node', ['index.js'], {stdio: 'inherit'})
+    .on('error', error => callback(error))
+    .on('exit', error => callback(error));
 });
 
 gulp.task('lint', () => {
