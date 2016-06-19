@@ -115,8 +115,17 @@ gulp.task('generate-service-worker', () => {
   let serviceWorkerFile = path.join(BUILD_DIR, 'service-worker.js');
 
   return swPrecache.write(serviceWorkerFile, {
-    cacheId: packageJson.name,
-    dontCacheBustUrlsMatching: /./,
+    // Start of interesting bits!
+
+    // Ensure all our static, local assets are cached.
+    staticFileGlobs: [
+      `${BUILD_DIR}/rev/js/**/*.js`,
+      `${BUILD_DIR}/rev/styles/all*.css`,
+      `${BUILD_DIR}/images/**/*`
+    ],
+
+    // Define the dependencies for the server-rendered /shell URL,
+    // so that it's kept up to date.
     dynamicUrlToDependencies: {
       '/shell': [
         ...glob.sync(`${BUILD_DIR}/rev/js/**/*.js`),
@@ -124,10 +133,16 @@ gulp.task('generate-service-worker', () => {
         `${SRC_DIR}/views/index.handlebars`
       ]
     },
-    logger: gutil.log,
+
+    // Brute force server worker routing:
+    // Tell the service worker to use /shell for all navigations.
+    // E.g. A request for /guides/12345 will be fulfilled with /shell
     navigateFallback: '/shell',
+
+    // Various runtime caching strategies: sets up sw-toolbox handlers.
     runtimeCaching: [{
       urlPattern: /www\.ifixit\.com\/api\/2\.0\//,
+      // Effectively "stale while revalidate".
       handler: 'fastest'
     }, {
       urlPattern: /cloudfront\.net/,
@@ -135,17 +150,20 @@ gulp.task('generate-service-worker', () => {
       options: {
         cache: {
           name: 'image-cache',
+          // Use sw-toolbox's LRU expiration.
           maxEntries: 50
         }
       }
     }, {
+      // Use a network first strategy for everything else.
       default: 'networkFirst'
     }],
-    staticFileGlobs: [
-      `${BUILD_DIR}/rev/js/**/*.js`,
-      `${BUILD_DIR}/rev/styles/all*.css`,
-      `${BUILD_DIR}/images/**/*`
-    ],
+
+    // End of interesting bits...
+
+    cacheId: packageJson.name,
+    dontCacheBustUrlsMatching: /./,
+    logger: gutil.log,
     stripPrefix: 'build/',
     verbose: true
   });
