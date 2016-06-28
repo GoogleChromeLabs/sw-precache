@@ -18,4 +18,4 @@ as to the quality or fluency of the React.js code...
 
 The following video is a companion to the code, and walks through some of the key concepts:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/jCKZDTtUA2A" frameborder="0" allowfullscreen></iframe>
+[![Instant Loading with Service Workers video](http://img.youtube.com/vi/jCKZDTtUA2A/0.jpg)](http://www.youtube.com/watch?v=jCKZDTtUA2A "Instant Loading with Service Workers")
