@@ -15,3 +15,7 @@ It's written as "universal" JavaScript, with the following stack:
 
 While it should serve as a good example of the App Shell + service worker model, no claims are made
 as to the quality or fluency of the React.js code...
+
+The following video is a companion to the code, and walks through some of the key concepts:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jCKZDTtUA2A" frameborder="0" allowfullscreen></iframe>
