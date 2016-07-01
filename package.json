@@ -54,7 +54,7 @@
   "bugs": "https://github.com/googlechrome/sw-precache/issues",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "gulp test lint",
+    "test": "NODE_ENV=test gulp test lint",
     "doctoc": "doctoc"
   },
   "files": [
