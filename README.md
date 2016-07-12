@@ -442,6 +442,20 @@ URL.
 
 _Default_: `''`
 
+#### stripPrefixMulti [Object]
+Maps mutliple strings to be stripped & replaced from the beginning of path URL's at runtime.
+Use this option when you have multiple discrepancies between relative paths at build time and
+the same path at run time.
+If stripPrefix and replacePrefix are not equal to `''`, they are automatically added to this option.
+```js
+stripPrefixMulti: {
+  'www-root/public-precached/': 'public/',
+  'www-root/public/': 'public/'
+}
+```
+
+_Default_: `{}`
+
 #### templateFilePath [String]
 
 The path to the  ([lo-dash](https://lodash.com/docs#template)) template used to
