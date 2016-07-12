@@ -25,6 +25,7 @@ var assert = require('assert');
 var externalFunctions = require('../lib/functions.js');
 var fs = require('fs');
 var generate = require('../lib/sw-precache.js').generate;
+var generateRuntimeCaching = require('../lib/sw-precache.js').generateRuntimeCaching;
 var path = require('path');
 var write = require('../lib/sw-precache.js').write;
 
@@ -418,5 +419,27 @@ describe('createCacheKey', function() {
     var cacheKey = externalFunctions.createCacheKey(url, 'name', 'value', /no_match/);
     assert.strictEqual(cacheKey, 'http://example.com/test/path?existing=value&name=value');
     done();
+  });
+});
+
+describe('generateRuntimeCaching', function() {
+  it('should handle an empty array', function() {
+    assert.equal(generateRuntimeCaching([]), '');
+  });
+
+  it('should handle urlPattern string', function() {
+    var code = generateRuntimeCaching([{
+      urlPattern: '/*',
+      handler: 'testHandler'
+    }]);
+    assert.equal(code, '\ntoolbox.router.get("/*", toolbox.testHandler, {});');
+  });
+
+  it('should handle urlPattern regex', function() {
+    var code = generateRuntimeCaching([{
+      urlPattern: /test/,
+      handler: 'testHandler'
+    }]);
+    assert.equal(code, '\ntoolbox.router.get(/test/, toolbox.testHandler, {});');
   });
 });
