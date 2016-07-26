@@ -17,9 +17,12 @@
  // This is a test and we want descriptions to be useful, if this
  // breaks the max-length, it's ok.
 
- /* eslint-disable max-len */
+/* eslint-disable max-len */
 /* eslint-env node, mocha */
 'use strict';
+
+// Extra interfaces, like generateRuntimeCaching, are exposed while testing.
+process.env.NODE_ENV = 'swprecache-test';
 
 var assert = require('assert');
 var externalFunctions = require('../lib/functions.js');
