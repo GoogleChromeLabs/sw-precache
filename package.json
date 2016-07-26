@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Generates a service worker to cache your local App Shell resources.",
   "author": {
     "name": "Jeff Posnick",
@@ -54,7 +54,7 @@
   "bugs": "https://github.com/googlechrome/sw-precache/issues",
   "license": "Apache-2.0",
   "scripts": {
-    "test": "NODE_ENV=swprecache-test gulp test lint",
+    "test": "gulp test lint",
     "doctoc": "doctoc"
   },
   "files": [
