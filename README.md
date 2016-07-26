@@ -44,6 +44,7 @@ The full documentation is in this README, and the
     - [runtimeCaching [Array&#x27e8;Object&#x27e9;]](#runtimecaching-arrayobject)
     - [staticFileGlobs [Array&#x27e8;String&#x27e9;]](#staticfileglobs-arraystring)
     - [stripPrefix [String]](#stripprefix-string)
+    - [stripPrefixMulti [Object]](#stripprefixmulti-object)
     - [templateFilePath [String]](#templatefilepath-string)
     - [verbose [boolean]](#verbose-boolean)
 - [Acknowledgements](#acknowledgements)
@@ -443,10 +444,10 @@ URL.
 _Default_: `''`
 
 #### stripPrefixMulti [Object]
-Maps mutliple strings to be stripped & replaced from the beginning of path URL's at runtime.
+Maps mutliple strings to be stripped and replaced from the beginning of URL paths at runtime.
 Use this option when you have multiple discrepancies between relative paths at build time and
 the same path at run time.
-If stripPrefix and replacePrefix are not equal to `''`, they are automatically added to this option.
+If `stripPrefix` and `replacePrefix` are not equal to `''`, they are automatically added to this option.
 ```js
 stripPrefixMulti: {
   'www-root/public-precached/': 'public/',
