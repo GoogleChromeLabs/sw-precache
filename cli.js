@@ -35,7 +35,7 @@ function setDefaults(cli, configFileFlags) {
 
   compositeFlags.swFile = compositeFlags.swFile || configFileFlags.swFile ||
     'service-worker.js';
-  compositeFlags.swFilePath = path.join(compositeFlags.root,
+  compositeFlags.swFilePath = compositeFlags.swFilePath || configFileFlags.swFilePath || path.join(compositeFlags.root,
     compositeFlags.swFile);
 
   compositeFlags.cacheId = compositeFlags.cacheId ||
