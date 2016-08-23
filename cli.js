@@ -41,6 +41,9 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.cacheId = compositeFlags.cacheId ||
     configFileFlags.cacheId || cli.pkg.name;
 
+  compositeFlags.dynamicUrlToDependencies = compositeFlags.dynamicUrlToDependencies ||
+    configFileFlags.dynamicUrlToDependencies;
+
   compositeFlags.staticFileGlobs = compositeFlags.staticFileGlobs ||
     configFileFlags.staticFileGlobs;
   if (compositeFlags.staticFileGlobs) {
