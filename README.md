@@ -150,8 +150,7 @@ any cached content being returned without consulting the network. A useful
 pattern to adopt with this strategy is to display a toast/alert to your users
 when there's new content available, and give them an opportunity to reload the
 page to pick up that new content (which the service worker will have added to
-the cache, and will be available at the next page load). The sample service-
-worker-registration.js file [illustrates](https://github.com/GoogleChrome/sw-precache/blob/7688ee8ccdaddd9171af352384d04d16d712f9d3/demo/app/js/service-worker-registration.js#L51)
+the cache, and will be available at the next page load). The sample [`service-worker-registration.js`](/demo/app/js/service-worker-registration.js) file [illustrates](https://github.com/GoogleChrome/sw-precache/blob/7688ee8ccdaddd9171af352384d04d16d712f9d3/demo/app/js/service-worker-registration.js#L51)
 the service worker lifecycle event you can listen for to trigger this message.
 
 
