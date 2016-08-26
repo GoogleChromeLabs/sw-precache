@@ -5,10 +5,16 @@
 > Precache specific resources
 
 Service Worker Precache is a module for generating a service worker that
-precaches resources. The module is designed for use with
-[`gulp`](http://gulpjs.com/) or [`grunt`](http://gruntjs.com/) build scripts,
-though it also provides a command-line interface. The module's API provides
-methods for creating a service worker and saving the resulting code to a file.
+precaches resources. The module can be used in JavaScript-based build scripts,
+like those written with [`gulp`](http://gulpjs.com/), and it also provides a
+[command-line interface](#command-line-interface). You can use the module
+directly, or if you'd prefer, use of the [wrappers](#wrappers-and-starter-kits)
+around `sw-precache` for specific build environments, like
+[`webpack`](https://webpack.github.io/).
+
+It can be [used alongside](sw-precache-and-sw-toolbox.md) the `sw-toolbox`
+library, which works well when following the App Shell + dynamic content model.
+
 The full documentation is in this README, and the
 [getting started guide](GettingStarted.md) provides a quicker jumping off point.
 
@@ -47,6 +53,7 @@ The full documentation is in this README, and the
     - [stripPrefixMulti [Object]](#stripprefixmulti-object)
     - [templateFilePath [String]](#templatefilepath-string)
     - [verbose [boolean]](#verbose-boolean)
+- [Wrappers and Starter Kits](#wrappers-and-starter-kits)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
@@ -422,6 +429,9 @@ runtimeCaching: [{
 }]
 ```
 
+The [`sw-precache` + `sw-toolbox` explainer](sw-precache-and-sw-toolbox.md) has
+more information about how and why you'd use both libraries together.
+
 _Default_: `[]`
 
 #### staticFileGlobs [Array&#x27e8;String&#x27e9;]
@@ -474,6 +484,25 @@ Even if this is set to false, there will be a final log entry indicating the tot
 precached resources.
 
 _Default_: `false`
+
+
+## Wrappers and Starter Kits
+
+While it's possible to use the `sw-precache` module's API directly within any
+JavaScript environment, several wrappers have been developed by members of the
+community tailored to specific build environments. They include:
+- [`sw-precache-webpack-plugin`](https://www.npmjs.com/package/sw-precache-webpack-plugin)
+- [`sw-precache-brunch`](https://www.npmjs.com/package/sw-precache-brunch)
+- [`grunt-sw-precache`](https://www.npmjs.com/package/grunt-sw-precache)
+- [`exhibit-builder-sw-precache`](https://www.npmjs.com/package/exhibit-builder-sw-precache)
+
+There are also several starter kits or scaffolding projects that incorporate
+`sw-precache` into their build process, giving you a full service worker out of
+the box. The include:
+- [`polymer-cli`](https://github.com/Polymer/polymer-cli)
+- [Polymer Starter Kit](https://github.com/polymerelements/polymer-starter-kit)
+- [`create-react-pwa`](https://github.com/jeffposnick/create-react-pwa)
+- [Web Starter Kit](https://github.com/google/web-starter-kit)
 
 
 ## Acknowledgements

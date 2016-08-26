@@ -30,7 +30,7 @@ gulp.task('test', function() {
 });
 
 gulp.task('update-markdown-toc', function() {
-  return gulp.src('*.md')
+  return gulp.src('README.md')
     .pipe($.doctoc())
     // Get rid of the HTML character entities from the anchor values.
     .pipe($.replace(/&x27e[89]/g, ''))
