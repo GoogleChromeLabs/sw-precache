@@ -514,9 +514,7 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 ## License
 
-[Apache 2.0](https://github.com/googlechrome/sw-precache/blob/master/LICENSE) © 2015 Google Inc.
-
-Copyright 2015 Google, Inc.
+Copyright © 2016 Google, Inc.
 
 Licensed under the [Apache License, Version 2.0](LICENSE) (the "License"); 
 you may not use this file except in compliance with the License. You may 
