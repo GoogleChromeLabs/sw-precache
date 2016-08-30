@@ -36,6 +36,7 @@ function runExpress(port, rootDir) {
 function writeServiceWorkerFile(rootDir, handleFetch, callback) {
   var config = {
     cacheId: packageJson.name,
+    /*
     dynamicUrlToDependencies: {
       'dynamic/page1': [
         path.join(rootDir, 'views', 'layout.jade'),
@@ -46,6 +47,7 @@ function writeServiceWorkerFile(rootDir, handleFetch, callback) {
         path.join(rootDir, 'views', 'page2.jade')
       ]
     },
+    */
     // If handleFetch is false (i.e. because this is called from generate-service-worker-dev), then
     // the service worker will precache resources but won't actually serve them.
     // This allows you to test precaching behavior without worry about the cache preventing your
