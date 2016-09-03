@@ -115,16 +115,18 @@ Grunt. Though, it doesn't run a server on localhost.
 Here's a simpler gulp example for a basic use case. It assumes your site's resources are located under
 `app` and that you'd like to cache *all* your JavaScript, HTML, CSS, and image files.
 
-    gulp.task('generate-service-worker', function(callback) {
-      var path = require('path');
-      var swPrecache = require('sw-precache');
-      var rootDir = 'app';
+```js
+gulp.task('generate-service-worker', function(callback) {
+  var path = require('path');
+  var swPrecache = require('sw-precache');
+  var rootDir = 'app';
 
-      swPrecache.write(path.join(rootDir, 'service-worker.js'), {
-        staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'],
-        stripPrefix: rootDir
-      }, callback);
-    });
+  swPrecache.write(path.join(rootDir, 'service-worker.js'), {
+    staticFileGlobs: [rootDir + '/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'],
+    stripPrefix: rootDir
+  }, callback);
+});
+```
 
 This task will create `app/service-worker.js`, which your client pages need to
 [register](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#navigator-service-worker-register) before it can take control of your site's
