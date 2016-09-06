@@ -12,7 +12,7 @@ directly, or if you'd prefer, use of the [wrappers](#wrappers-and-starter-kits)
 around `sw-precache` for specific build environments, like
 [`webpack`](https://webpack.github.io/).
 
-It can be [used alongside](sw-precache-and-sw-toolbox.md) the `sw-toolbox`
+It can be [used alongside](sw-precache-and-sw-toolbox.md) the [`sw-toolbox`](https://github.com/GoogleChrome/sw-toolbox)
 library, which works well when following the App Shell + dynamic content model.
 
 The full documentation is in this README, and the
