@@ -504,46 +504,11 @@ the box. The include:
 - [`create-react-pwa`](https://github.com/jeffposnick/create-react-pwa)
 - [Web Starter Kit](https://github.com/google/web-starter-kit)
 
-### Writing a custom Gradle wrapper
-Using `sw-precache` with Gradle is rather straightforward which allows you to for example generate a service-worker for the Javadoc of your Java application.
+### Recipes for writing a custom wrapper
 
-```groovy
-task generateJavadoc(type: Javadoc) {
-  <...>
-  // Specify your Javadoc options here
-  <...>
-  // After the javadoc is generated, also generate the service-worker
-  doLast {
-    try {
-      logger.lifecycle("Installing sw-precache globally")
-      exec {
-        commandLine "npm", "install", "-g", "sw-precache"
-      }
-      exec {
-        commandLine "sw-precache", "--config=sw-precache-config.json"
-      }
-      // Even though there is an option ignoreExitValue for exec, exec keeps on throwing exceptions.
-      // Therefore we just have to catch them and continue on with the build.
-    } catch(Exception ignored) {
-      logger.lifecycle("NPM is not installed. Aborting generating service-worker");
-    }
-  }
-}
-```
-An example `sw-precache-config.json` for the javadoc is:
-```json
-{
-  "staticFileGlobs": [
-    "build/javadoc/index-files/*.html",
-    "build/javadoc/js/*.js",
-    "build/javadoc/**/*.html",
-    "build/javadoc/*.html",
-    "build/javadoc/favicon.ico"
-  ],
-  "stripPrefix": "build/javadoc/",
-  "swFile": "build/javadoc/service-worker.js"
-}
-```
+Not always are there ready-to-use wrappers built for specific environments, but this list contains some recipes to integrate `sw-precache` in your workflow:
+
+- [Gradle wrapper for offline JavaDoc](https://gist.github.com/TimvdLippe/4c39b99e3b0ffbcdd8814a31e2969ed1)
 
 ## Acknowledgements
 
