@@ -506,7 +506,7 @@ the box. The include:
 
 ### Recipes for writing a custom wrapper
 
-Not always are there ready-to-use wrappers built for specific environments, but this list contains some recipes to integrate `sw-precache` in your workflow:
+While there are not always ready-to-use wrappers for specific environments, this list contains some recipes to integrate `sw-precache` in your workflow:
 
 - [Gradle wrapper for offline JavaDoc](https://gist.github.com/TimvdLippe/4c39b99e3b0ffbcdd8814a31e2969ed1)
 
