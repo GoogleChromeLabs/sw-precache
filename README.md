@@ -506,6 +506,11 @@ the box. The include:
 - [`create-react-pwa`](https://github.com/jeffposnick/create-react-pwa)
 - [Web Starter Kit](https://github.com/google/web-starter-kit)
 
+### Recipes for writing a custom wrapper
+
+While there are not always ready-to-use wrappers for specific environments, this list contains some recipes to integrate `sw-precache` in your workflow:
+
+- [Gradle wrapper for offline JavaDoc](https://gist.github.com/TimvdLippe/4c39b99e3b0ffbcdd8814a31e2969ed1)
 
 ## Acknowledgements
 
