@@ -44,6 +44,12 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.dynamicUrlToDependencies = compositeFlags.dynamicUrlToDependencies ||
     configFileFlags.dynamicUrlToDependencies;
 
+  compositeFlags.directoryIndex = compositeFlags.directoryIndex ||
+    configFileFlags.directoryIndex;
+
+  compositeFlags.navigateFallback = compositeFlags.navigateFallback ||
+    configFileFlags.navigateFallback;
+
   compositeFlags.staticFileGlobs = compositeFlags.staticFileGlobs ||
     configFileFlags.staticFileGlobs;
   if (compositeFlags.staticFileGlobs) {
