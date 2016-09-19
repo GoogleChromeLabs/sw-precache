@@ -81,7 +81,7 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.runtimeCaching = compositeFlags.runtimeCaching ||
     configFileFlags.runtimeCaching;
 
-  compositeFlags.templateFilePath = compositeFlags.templateFilePath || 
+  compositeFlags.templateFilePath = compositeFlags.templateFilePath ||
     configFileFlags.templateFilePath;
 
   compositeFlags.maximumFileSizeToCacheInBytes =
