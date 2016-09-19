@@ -133,7 +133,12 @@ self.addEventListener('fetch', function(event) {
     if (shouldRespond) {
       event.respondWith(
         caches.open(cacheName).then(function(cache) {
-          return cache.match(urlsToCacheKeys.get(url));
+          return cache.match(urlsToCacheKeys.get(url)).then(function(response) {
+            if (response) {
+              return response;
+            }
+            throw Error('The cached response that was expected is missing.');
+          });
         }).catch(function(e) {
           // Fall back to just fetch()ing the request if some unexpected error
           // prevented the cached response from being valid.
