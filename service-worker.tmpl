@@ -70,8 +70,10 @@ self.addEventListener('install', function(event) {
         );
       });
     }).then(function() {
+      <% if (skipWaiting) { %>
       // Force the SW to transition from installing -> active state
       return self.skipWaiting();
+      <% } %>
     })
   );
 });
@@ -91,7 +93,9 @@ self.addEventListener('activate', function(event) {
         );
       });
     }).then(function() {
+      <% if (clientsClaim) { %>
       return self.clients.claim();
+      <% } %>
     })
   );
 });
