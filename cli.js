@@ -16,6 +16,7 @@
  */
 
 /* eslint-env node */
+/* eslint no-nested-ternary: 0 */
 'use strict';
 
 var meow = require('meow');
@@ -35,13 +36,15 @@ function setDefaults(cli, configFileFlags) {
 
   compositeFlags.swFile = compositeFlags.swFile || configFileFlags.swFile ||
     'service-worker.js';
-  compositeFlags.swFilePath = compositeFlags.swFilePath || configFileFlags.swFilePath || path.join(compositeFlags.root,
-    compositeFlags.swFile);
+  compositeFlags.swFilePath = compositeFlags.swFilePath ||
+    configFileFlags.swFilePath ||
+    path.join(compositeFlags.root, compositeFlags.swFile);
 
   compositeFlags.cacheId = compositeFlags.cacheId ||
     configFileFlags.cacheId || cli.pkg.name;
 
-  compositeFlags.dynamicUrlToDependencies = compositeFlags.dynamicUrlToDependencies ||
+  compositeFlags.dynamicUrlToDependencies =
+    compositeFlags.dynamicUrlToDependencies ||
     configFileFlags.dynamicUrlToDependencies;
 
   compositeFlags.directoryIndex = compositeFlags.directoryIndex ||
@@ -87,6 +90,18 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.maximumFileSizeToCacheInBytes =
     compositeFlags.maximumFileSizeToCacheInBytes ||
     configFileFlags.maximumFileSizeToCacheInBytes;
+
+  // We can't just use ||, since compositeFlags.skipWaiting might be false.
+  compositeFlags.skipWaiting = ('skipWaiting' in compositeFlags) ?
+    compositeFlags.skipWaiting :
+    (('skipWaiting' in configFileFlags) ?
+      configFileFlags.skipWaiting : undefined);
+
+  // We can't just use ||, since compositeFlags.clientsClaim might be false.
+  compositeFlags.clientsClaim = ('clientsClaim' in compositeFlags) ?
+    compositeFlags.clientsClaim :
+    (('clientsClaim' in configFileFlags) ?
+      configFileFlags.clientsClaim : undefined);
 
   return compositeFlags;
 }

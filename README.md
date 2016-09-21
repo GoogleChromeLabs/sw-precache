@@ -36,6 +36,7 @@ The full documentation is in this README, and the
     - [write(filePath, options, callback)](#writefilepath-options-callback)
   - [Options Parameter](#options-parameter)
     - [cacheId [String]](#cacheid-string)
+    - [clientsClaim [Boolean]](#clientsclaim-boolean)
     - [directoryIndex [String]](#directoryindex-string)
     - [dontCacheBustUrlsMatching [Regex]](#dontcachebusturlsmatching-regex)
     - [dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringarraystring)
@@ -48,12 +49,14 @@ The full documentation is in this README, and the
     - [navigateFallbackWhitelist [Array&#x27e8;RegExp&#x27e9;]](#navigatefallbackwhitelist-arrayregexp)
     - [replacePrefix [String]](#replaceprefix-string)
     - [runtimeCaching [Array&#x27e8;Object&#x27e9;]](#runtimecaching-arrayobject)
+    - [skipWaiting [Boolean]](#skipwaiting-boolean)
     - [staticFileGlobs [Array&#x27e8;String&#x27e9;]](#staticfileglobs-arraystring)
     - [stripPrefix [String]](#stripprefix-string)
     - [stripPrefixMulti [Object]](#stripprefixmulti-object)
     - [templateFilePath [String]](#templatefilepath-string)
     - [verbose [boolean]](#verbose-boolean)
 - [Wrappers and Starter Kits](#wrappers-and-starter-kits)
+  - [Recipes for writing a custom wrapper](#recipes-for-writing-a-custom-wrapper)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
 
@@ -259,6 +262,17 @@ property from your `package.json`.
 
 _Default_: `''`
 
+#### clientsClaim [Boolean]
+Controls whether or not the generated service worker will call
+[`clients.claim()`](https://developer.mozilla.org/en-US/docs/Web/API/Clients/claim)
+inside the `activate` handler.
+
+Calling `clients.claim()` allows a newly registered service worker to take
+control of a page immediately, instead of having to wait until the next page
+navigation.
+
+_Default_: `true`
+
 #### directoryIndex [String] 
 Sets a default filename to return for URL's formatted like directory paths (in 
 other words, those ending in `'/'`). `sw-precache` will take that translation 
@@ -435,6 +449,26 @@ The [`sw-precache` + `sw-toolbox` explainer](sw-precache-and-sw-toolbox.md) has
 more information about how and why you'd use both libraries together.
 
 _Default_: `[]`
+
+#### skipWaiting [Boolean]
+Controls whether or not the generated service worker will call
+[`skipWaiting()`](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope/skipWaiting)
+inside the `install` handler.
+
+By default, when there's an update to a previously installed
+service worker, then the new service worker delays activation and stays in a
+`waiting` state until all pages controlled by the old service worker are
+unloaded. Calling `skipWaiting()` allows a newly registered service worker to
+bypass the `waiting` state.
+
+When `skipWaiting` is `true`, the new service worker's `activate` handler will
+be called immediately, and any out of date cache entries from the previous
+service worker will be deleted. Please keep this in mind if you rely on older
+cached resources to be available throughout the page's lifetime, because, for
+example, you [defer the loading of some resources](https://github.com/GoogleChrome/sw-precache/issues/180)
+until they're needed at runtime.
+
+_Default_: `true`
 
 #### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to
