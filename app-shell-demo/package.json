@@ -48,7 +48,7 @@
     "node": ">=5.0.0"
   },
   "scripts": {
-    "postinstall": "if test \"$NODE_ENV\" = \"production\"; then gulp build:dist; fi",
+    "postinstall": "gulp build:dist",
     "start": "node index.js"
   }
 }
