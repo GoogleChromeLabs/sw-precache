@@ -21,7 +21,7 @@ We wanted to make it easier for developers to use the two libraries together.
 Because `sw-precache` has to be directly integrated with your build environment
 and must be responsible for outputting your top-level service worker file, it
 made the most sense as an integration point to give `sw-precache` the ability to
-include the `sw-toolbox` code and configuration alongside the its own
+include the `sw-toolbox` code and configuration alongside its own
 configuration. Using the
 [`runtimeCaching`](https://github.com/GoogleChrome/sw-precache#runtimecaching-arrayobject)
 configuration option in `sw-precache` is a shortcut that accomplishes what you
