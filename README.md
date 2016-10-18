@@ -170,7 +170,8 @@ the service worker lifecycle event you can listen for to trigger this message.
 
 For those who would prefer not to use `sw-precache` as part of a `gulp` or
 `Grunt` build, there's a [command-line interface](cli.js) which supports the
-[options listed](#options-parameter) in the API, provided via flags.
+[options listed](#options-parameter) in the API, provided via flags or an
+external JavaScript configuration file.
 
 **Warning:** When using `sw-precache` "by hand", outside of an automated build process, it's your
 responsibility to re-run the command each time there's a change to any local resources! If `sw-precache`
@@ -195,31 +196,41 @@ $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 to your shell (such as the `*` characters in the sample command line above,
 for example).
 
-Finally, there's support for storing a complex configuration in an external
-JSON file, using `--config <file>`. Any of the options from the file can be
-overridden via a command-line flag. For example,
+Finally, there's support for storing a complex configuration as the
+[`module.exports`](https://nodejs.org/api/modules.html#modules_module_exports)
+of an external JavaScript file, using `--config <file>`. Any of the options from
+the file can be overridden via a command-line flag. For example,
 
 ```sh
-$ sw-precache --config=path/to/sw-precache-config.json --verbose --no-handle-fetch
+$ sw-precache --config=path/to/sw-precache-config.js --verbose --no-handle-fetch
 ```
 
-will generate a service worker file using the options provided in the
-`path/to/sw-precache-config.json` file, but with the `verbose` option set to
+will generate a service worker file using the configuration exported in the
+`path/to/sw-precache-config.js` file, but with the `verbose` option set to
 `true` and the `handleFetch` option set to `false`.
 
-`sw-precache-config.json` might look like:
+`sw-precache-config.js` might look like:
 
-```json
-{
-  "staticFileGlobs": [
-    "app/css/**.css",
-    "app/**.html",
-    "app/images/**.*",
-    "app/js/**.js"
+```js
+module.exports = {
+  staticFileGlobs: [
+    'app/css/**.css',
+    'app/**.html',
+    'app/images/**.*',
+    'app/js/**.js'
   ],
-  "stripPrefix": "app/"
-}
+  stripPrefix: 'app/',
+  runtimeCaching: [{
+    urlPattern: /this\\.is\\.a\\.regex/,
+    handler: 'networkFirst'
+  }]
+};
 ```
+
+(Note: It's also possible to pass in a JSON file to `--config`. Using a
+JavaScript file that defines `module.exports` allows for more flexibility than
+JSON allows, such as providing a regular expression for the 
+runtimeCaching.urlPattern` option.)
 
 ## API
 
