@@ -48,7 +48,6 @@
     "node": ">=5.0.0"
   },
   "scripts": {
-    "postinstall": "gulp build:dist",
     "start": "node index.js"
   }
 }
