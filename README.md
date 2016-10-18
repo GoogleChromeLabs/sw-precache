@@ -170,7 +170,8 @@ the service worker lifecycle event you can listen for to trigger this message.
 
 For those who would prefer not to use `sw-precache` as part of a `gulp` or
 `Grunt` build, there's a [command-line interface](cli.js) which supports the
-[options listed](#options-parameter) in the API, provided via flags.
+[options listed](#options-parameter) in the API, provided via flags or an
+external JavaScript configuration file.
 
 **Warning:** When using `sw-precache` "by hand", outside of an automated build process, it's your
 responsibility to re-run the command each time there's a change to any local resources! If `sw-precache`
@@ -195,19 +196,40 @@ $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 to your shell (such as the `*` characters in the sample command line above,
 for example).
 
-Finally, there's support for storing a complex configuration in an external
-JSON file, using `--config <file>`. Any of the options from the file can be
-overridden via a command-line flag. For example,
+Finally, there's support for passing complex configurations using `--config <file>`.
+Any of the options from the file can be overridden via a command-line flag.
+We strongly recommend passing it an external JavaScript file defining config via
+[`module.exports`](https://nodejs.org/api/modules.html#modules_module_exports).
+For example, assume there's a `path/to/sw-precache-config.js` file that contains:
 
-```sh
-$ sw-precache --config=path/to/sw-precache-config.json --verbose --no-handle-fetch
+```js
+module.exports = {
+  staticFileGlobs: [
+    'app/css/**.css',
+    'app/**.html',
+    'app/images/**.*',
+    'app/js/**.js'
+  ],
+  stripPrefix: 'app/',
+  runtimeCaching: [{
+    urlPattern: /this\\.is\\.a\\.regex/,
+    handler: 'networkFirst'
+  }]
+};
 ```
 
-will generate a service worker file using the options provided in the
-`path/to/sw-precache-config.json` file, but with the `verbose` option set to
-`true` and the `handleFetch` option set to `false`.
+That file could be passed to the command-line interface, while also setting the
+`verbose` option, via
 
-`sw-precache-config.json` might look like:
+```sh
+$ sw-precache --config=path/to/sw-precache-config.js --verbose
+```
+
+This provides the most flexibility, such as providing a regular expression for
+the `runtimeCaching.urlPattern` option.
+
+We also support passing in a JSON file for `--config`, though this provides
+less flexibility:
 
 ```json
 {
@@ -217,7 +239,11 @@ will generate a service worker file using the options provided in the
     "app/images/**.*",
     "app/js/**.js"
   ],
-  "stripPrefix": "app/"
+  "stripPrefix": "app/",
+  "runtimeCaching": [{
+    "urlPattern": "/express/style/path/(.*)",
+    "handler": "networkFirst"
+  }]
 }
 ```
 

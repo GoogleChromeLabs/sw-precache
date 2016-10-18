@@ -109,7 +109,8 @@ function setDefaults(cli, configFileFlags) {
 var cli = meow({
   help: 'Options from https://github.com/GoogleChrome/sw-precache#options ' +
         'are accepted as flags.\nAlternatively, use --config <file>, where ' +
-        '<file> is the path to the JSON data representing the same options.\n' +
+        '<file> is the path to a JavaScript file that defines the same ' +
+        'options via module.exports.\n' +
         'When both a config file and command line option is given, the ' +
         'command line option takes precedence.'
 });
