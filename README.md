@@ -196,20 +196,11 @@ $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 to your shell (such as the `*` characters in the sample command line above,
 for example).
 
-Finally, there's support for storing a complex configuration as the
-[`module.exports`](https://nodejs.org/api/modules.html#modules_module_exports)
-of an external JavaScript file, using `--config <file>`. Any of the options from
-the file can be overridden via a command-line flag. For example,
-
-```sh
-$ sw-precache --config=path/to/sw-precache-config.js --verbose --no-handle-fetch
-```
-
-will generate a service worker file using the configuration exported in the
-`path/to/sw-precache-config.js` file, but with the `verbose` option set to
-`true` and the `handleFetch` option set to `false`.
-
-`sw-precache-config.js` might look like:
+Finally, there's support for passing complex configurations using `--config <file>`.
+Any of the options from the file can be overridden via a command-line flag.
+We strongly recommend passing it an external JavaScript file defining config via
+[`module.exports`](https://nodejs.org/api/modules.html#modules_module_exports).
+For example, assume there's a `path/to/sw-precache-config.js` file that contains:
 
 ```js
 module.exports = {
@@ -227,10 +218,34 @@ module.exports = {
 };
 ```
 
-(Note: It's also possible to pass in a JSON file to `--config`. Using a
-JavaScript file that defines `module.exports` allows for more flexibility than
-JSON allows, such as providing a regular expression for the 
-runtimeCaching.urlPattern` option.)
+That file could be passed to the command-line interface, while also setting the
+`verbose` option, via
+
+```sh
+$ sw-precache --config=path/to/sw-precache-config.js --verbose
+```
+
+This provides the most flexibility, such as providing a regular expression for
+the `runtimeCaching.urlPattern` option.
+
+We also support passing in a JSON file for `--config`, though this provides
+less flexibility:
+
+```json
+{
+  "staticFileGlobs": [
+    "app/css/**.css",
+    "app/**.html",
+    "app/images/**.*",
+    "app/js/**.js"
+  ],
+  "stripPrefix": "app/",
+  "runtimeCaching": [{
+    "urlPattern": "/express/style/path/(.*)",
+    "handler": "networkFirst"
+  }]
+}
+```
 
 ## API
 
