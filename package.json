@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Generates a service worker to cache your local App Shell resources.",
   "author": {
     "name": "Jeff Posnick",
@@ -47,7 +47,7 @@
     "lodash.template": "^4.4.0",
     "meow": "^3.7.0",
     "mkdirp": "^0.5.1",
-    "pretty-bytes": "^4.0.2",
+    "pretty-bytes": "^3.0.1",
     "sw-toolbox": "^3.4.0"
   },
   "repository": "googlechrome/sw-precache",
