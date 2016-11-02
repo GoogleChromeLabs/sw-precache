@@ -5,7 +5,18 @@
 > Precache specific resources
 
 Service Worker Precache is a module for generating a service worker that
-precaches resources. The module can be used in JavaScript-based build scripts,
+precaches resources. It integrates with your build process. Once configured, it
+detects all your static resources (HTML, JavaScript, CSS, images, etc.) and
+generates a hash of each file's contents. Information about each file's URL and
+versioned hash are stored in the generated service worker file, along with logic
+to serve those files cache-first, and automatically keep those files up to date
+when changes are detected in subsequent builds.
+
+Serving your local static resources cache-first means that you can get all the
+crucial scaffolding for your web app—your App Shell—on the screen without having
+to wait for any network responses.
+
+The module can be used in JavaScript-based build scripts,
 like those written with [`gulp`](http://gulpjs.com/), and it also provides a
 [command-line interface](#command-line-interface). You can use the module
 directly, or if you'd prefer, use of the [wrappers](#wrappers-and-starter-kits)
@@ -30,6 +41,7 @@ The full documentation is in this README, and the
   - [Example](#example)
   - [Considerations](#considerations)
   - [Command-line interface](#command-line-interface)
+  - [Runtime Caching](#runtime-caching)
 - [API](#api)
   - [Methods](#methods)
     - [generate(options, callback)](#generateoptions-callback)
@@ -246,6 +258,12 @@ less flexibility:
   }]
 }
 ```
+
+## Runtime Caching
+
+It's often desireable, even necessary to use precaching and runtime caching together. You may have seen our [sw-toolbox](https://github.com/GoogleChrome/sw-toolbox) tool, which handles runtime caching, and wondered how to use them together. Fortunately, sw-precache handles this fro you.
+
+The sw-precache module has the ability to include the sw-toolbox code and configuration alongside its own configuration. Using the `runtimeCaching` configuration option in sw-precache ([see below](#runtimecaching-arrayobject)) is a shortcut that accomplishes what you could do manually by importing sw-toolbox in your service worker and writing your own routing rules.
 
 ## API
 
