@@ -289,7 +289,7 @@ Since 2.2.0, `generate()` also returns a
 `write` takes in [options](#options), generates a service worker from them, 
 and writes the service worker to a specified file. This method always 
 invokes `callback(error)`. If no error was found, the `error` parameter will 
-be `null'
+be `null`
 
 Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
