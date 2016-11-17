@@ -261,7 +261,7 @@ less flexibility:
 
 ## Runtime Caching
 
-It's often desireable, even necessary to use precaching and runtime caching together. You may have seen our `[sw-toolbox](https://github.com/GoogleChrome/sw-toolbox)` tool, which handles runtime caching, and wondered how to use them together. Fortunately, `sw-precache` handles this fro you.
+It's often desireable, even necessary to use precaching and runtime caching together. You may have seen our [`sw-toolbox`](https://github.com/GoogleChrome/sw-toolbox) tool, which handles runtime caching, and wondered how to use them together. Fortunately, `sw-precache` handles this for you.
 
 The `sw-precache` module has the ability to include the `sw-toolbox` code and configuration alongside its own configuration. Using the `runtimeCaching` configuration option in `sw-precache` ([see below](#runtimecaching-arrayobject)) is a shortcut that accomplishes what you could do manually by importing `sw-toolbox` in your service worker and writing your own routing rules.
 
