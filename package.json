@@ -1,6 +1,6 @@
 {
   "name": "sw-precache",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Generates a service worker to cache your local App Shell resources.",
   "author": {
     "name": "Jeff Posnick",
