@@ -465,7 +465,8 @@ or a string, following the conventions of the `sw-toolbox` library's
 [routing configuration](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-usage.html). Also required is
 a `handler`, which should be either a string corresponding to one of the
 [built-in handlers](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-api.html) under the `toolbox.` namespace, or a function corresponding to your custom
-[request handler](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-usage). There is also
+[request handler](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-usage).
+Optionally, `method` can be added to specify one of the [supported HTTP methods](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-api.html) (_default: `'get'`_). There is also
 support for `options`, which corresponds to the same options supported by a
 [`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/docs/master/tutorial-api.html).
 
