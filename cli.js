@@ -106,6 +106,10 @@ function setDefaults(cli, configFileFlags) {
     (('clientsClaim' in configFileFlags) ?
       configFileFlags.clientsClaim : undefined);
 
+  compositeFlags.dontCacheBustUrlsMatching =
+    compositeFlags.dontCacheBustUrlsMatching ||
+    configFileFlags.dontCacheBustUrlsMatching;
+
   return compositeFlags;
 }
 
