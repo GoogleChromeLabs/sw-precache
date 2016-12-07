@@ -1,4 +1,4 @@
-#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-url]][daviddm-image]
+#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependencies Status](https://david-dm.org/googlechrome/sw-precache/status.svg)](https://david-dm.org/googlechrome/sw-precache)
 
 # Service Worker Precache
 
@@ -618,5 +618,3 @@ limitations under the License.
 [npm-image]: https://badge.fury.io/js/sw-precache.svg
 [travis-url]: https://travis-ci.org/GoogleChrome/sw-precache
 [travis-image]: https://travis-ci.org/GoogleChrome/sw-precache.svg?branch=master
-[daviddm-url]: https://david-dm.org/googlechrome/sw-precache.svg?theme=shields.io
-[daviddm-image]: https://david-dm.org/googlechrome/sw-precache
