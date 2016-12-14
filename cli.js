@@ -56,6 +56,9 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.navigateFallback = compositeFlags.navigateFallback ||
     configFileFlags.navigateFallback;
 
+  compositeFlags.navigateFallbackWhitelist = compositeFlags.navigateFallbackWhitelist ||
+    configFileFlags.navigateFallbackWhitelist;
+
   compositeFlags.staticFileGlobs = compositeFlags.staticFileGlobs ||
     configFileFlags.staticFileGlobs;
   if (compositeFlags.staticFileGlobs) {
