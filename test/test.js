@@ -445,4 +445,26 @@ describe('generateRuntimeCaching', function() {
     }]);
     assert.equal(code, '\ntoolbox.router.get(/test/, toolbox.testHandler, {});');
   });
+
+  it('should handle origin regex', function() {
+    var code = generateRuntimeCaching([{
+      urlPattern: '/*',
+      handler: 'testHandler',
+      options: {
+        origin: /http:\/\/www.example\.com/
+      }
+    }]);
+    assert.equal(code, '\ntoolbox.router.get("/*", toolbox.testHandler, {"origin":/http:\\/\\/www.example\\.com/});');
+  });
+
+  it('should handle origin string', function() {
+    var code = generateRuntimeCaching([{
+      urlPattern: '/*',
+      handler: 'testHandler',
+      options: {
+        origin: 'http://www.example.com'
+      }
+    }]);
+    assert.equal(code, '\ntoolbox.router.get("/*", toolbox.testHandler, {"origin":"http://www.example.com"});');
+  });
 });
