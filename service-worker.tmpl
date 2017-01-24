@@ -88,8 +88,11 @@ self.addEventListener('install', function(event) {
 
                 // See https://bugs.chromium.org/p/chromium/issues/detail?id=669363&desc=2#c1
                 var responseToCache = response.redirected ?
-                  new Response(response.body) :
-                  response;
+                  new Response(response.body, {
+                    headers: response.headers,
+                    status: response.status,
+                    statusText: response.statusText
+                  }) : response;
                 return cache.put(cacheKey, responseToCache);
               });
             }
