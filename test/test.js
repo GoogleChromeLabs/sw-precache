@@ -468,3 +468,43 @@ describe('generateRuntimeCaching', function() {
     assert.equal(code, '\ntoolbox.router.get("/*", toolbox.testHandler, {"origin":"http://www.example.com"});');
   });
 });
+
+describe('cleanResponse', function() {
+  var responseText = 'test response body';
+  var globalResponse = global.Response;
+
+  before(function() {
+    if (!globalResponse) {
+      global.Response = require('node-fetch').Response;
+    }
+  });
+
+  it('should return the same response when redirected is false', function() {
+    var originalResponse = new Response(responseText); // eslint-disable-line no-undef
+    originalResponse.redirected = false;
+
+    return externalFunctions.cleanResponse(originalResponse).then(function(cleanedResponse) {
+      assert.strictEqual(originalResponse, cleanedResponse);
+    });
+  });
+
+  it('should return a new response with the same body when redirected is true', function() {
+    var originalResponse = new Response(responseText); // eslint-disable-line no-undef
+    originalResponse.redirected = true;
+
+    return externalFunctions.cleanResponse(originalResponse).then(function(cleanedResponse) {
+      assert.notStrictEqual(originalResponse, cleanedResponse);
+
+      var bodyPromises = [originalResponse.text(), cleanedResponse.text()];
+      return Promise.all(bodyPromises).then(function(bodies) {
+        assert.equal(bodies[0], bodies[1]);
+      });
+    });
+  });
+
+  after(function() {
+    if (!globalResponse) {
+      delete global.Response;
+    }
+  });
+});
