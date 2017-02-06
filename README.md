@@ -584,6 +584,7 @@ the box. The include:
 - [Polymer Starter Kit](https://github.com/polymerelements/polymer-starter-kit)
 - [`create-react-pwa`](https://github.com/jeffposnick/create-react-pwa)
 - [Web Starter Kit](https://github.com/google/web-starter-kit)
+- [`react-redux-universal-hot-example`](https://github.com/bertho-zero/react-redux-universal-hot-example)
 
 ### Recipes for writing a custom wrapper
 
