@@ -53,9 +53,11 @@ module.exports = function(grunt) {
   }
 
   grunt.registerMultiTask('swPrecache', function() {
+    /* eslint-disable no-invalid-this */
     var done = this.async();
     var rootDir = this.data.rootDir;
     var handleFetch = this.data.handleFetch;
+    /* eslint-enable */
 
     writeServiceWorkerFile(rootDir, handleFetch, function(error) {
       if (error) {
