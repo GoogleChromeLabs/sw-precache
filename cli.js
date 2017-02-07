@@ -21,7 +21,11 @@
 
 var meow = require('meow');
 var path = require('path');
+var pkg = require('./package.json');
 var swPrecache = require('./');
+var updateNotifier = require('update-notifier');
+
+updateNotifier({pkg: pkg}).notify();
 
 function setDefaults(cli, configFileFlags) {
   var compositeFlags = cli.flags;
