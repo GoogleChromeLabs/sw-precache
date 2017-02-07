@@ -349,9 +349,14 @@ is not needed, and can be safely excluded.
 `dontCacheBustUrlsMatching` gives you a way of opting-in to skipping the cache
 busting behavior for a subset of your URLs (or all of them, if a catch-all value
 like `/./` is used).
-If set, then each URL that's prefetched will be matched against this value.
+If set, then the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname)
+of each URL that's prefetched will be matched against this value.
 If there's a match, then the URL will be prefetched as-is, without an additional
 cache-busting URL parameter appended.
+
+Note: Prior to `sw-precache` v5.0.0, `dontCacheBustUrlsMatching` matched against
+the entire request URL. As of v5.0.0, it only matches against the URL's
+[pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname).
 
 _Default_: not set
 
