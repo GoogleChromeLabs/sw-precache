@@ -480,7 +480,7 @@ describe('cleanResponse', function() {
   });
 
   it('should return the same response when redirected is false', function() {
-    var originalResponse = new Response(responseText); // eslint-disable-line no-undef
+    var originalResponse = new global.Response(responseText);
     originalResponse.redirected = false;
 
     return externalFunctions.cleanResponse(originalResponse).then(function(cleanedResponse) {
@@ -489,7 +489,7 @@ describe('cleanResponse', function() {
   });
 
   it('should return a new response with the same body when redirected is true', function() {
-    var originalResponse = new Response(responseText); // eslint-disable-line no-undef
+    var originalResponse = new global.Response(responseText);
     originalResponse.redirected = true;
 
     return externalFunctions.cleanResponse(originalResponse).then(function(cleanedResponse) {
