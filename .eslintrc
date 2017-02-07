@@ -6,6 +6,9 @@
     "no-console": 0,
     "no-inline-comments": 0,
     "space-before-function-paren": [2, "never"],
-    "require-jsdoc": 0
+    "require-jsdoc": 0,
+    "no-var": 0,
+    "comma-dangle": 0,
+    "max-len": ["error", { "ignoreComments": true }]
   }
 }
