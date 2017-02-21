@@ -10,7 +10,11 @@ var ghPages = require('gh-pages');
 var packageJson = require('../package.json');
 var path = require('path');
 var runSequence = require('run-sequence');
-var swPrecache = require('../lib/sw-precache.js');
+
+const fs = require('fs');
+const swBuild = require('sw-build');
+const rollup = require('rollup').rollup;
+const resolve = require('rollup-plugin-node-resolve');
 
 var DEV_DIR = 'app';
 var DIST_DIR = 'dist';
@@ -83,14 +87,14 @@ function writeServiceWorkerFile(rootDir, handleFetch, callback) {
 gulp.task('default', ['serve-dist']);
 
 gulp.task('build', function(callback) {
-  runSequence('copy-dev-to-dist', 'generate-service-worker-dist', callback);
+  runSequence('copy-dev-to-dist', 'generate-service-worker', callback);
 });
 
 gulp.task('clean', function() {
   del.sync([DIST_DIR]);
 });
 
-gulp.task('serve-dev', ['generate-service-worker-dev'], function() {
+gulp.task('serve-dev', function() {
   runExpress(3001, DEV_DIR);
 });
 
@@ -102,15 +106,32 @@ gulp.task('gh-pages', ['build'], function(callback) {
   ghPages.publish(path.join(__dirname, DIST_DIR), callback);
 });
 
-gulp.task('generate-service-worker-dev', function(callback) {
-  writeServiceWorkerFile(DEV_DIR, false, callback);
-});
-
-gulp.task('generate-service-worker-dist', function(callback) {
-  writeServiceWorkerFile(DIST_DIR, true, callback);
-});
-
 gulp.task('copy-dev-to-dist', function() {
-  return gulp.src(DEV_DIR + '/**')
+  return gulp.src([DEV_DIR + '/**', '!**/sw.js'])
     .pipe(gulp.dest(DIST_DIR));
+});
+
+gulp.task('generate-precache-manifest', (callback) => {
+  const manifestConfig = {
+    globPatterns: [`./${DIST_DIR}/**/*`],
+    rootDirectory: DIST_DIR,
+  };
+
+  const entries = swBuild.getFileManifestEntries(manifestConfig);
+  const manifest = `export default ${JSON.stringify(entries)};`;
+  fs.writeFile(path.join(DIST_DIR, 'manifest.js'), manifest, callback);
+});
+
+gulp.task('generate-service-worker', ['generate-precache-manifest'], () => {
+  return rollup({
+    entry: `${DEV_DIR}/sw.js`,
+    plugins: [resolve({
+      jsnext: true,
+      main: true,
+      browser: true,
+    })],
+  }).then((bundle) => bundle.write({
+    dest: `${DIST_DIR}/sw.js`,
+    format: 'iife',
+  }));
 });

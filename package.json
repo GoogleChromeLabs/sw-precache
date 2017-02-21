@@ -38,7 +38,11 @@
     "jade": "^1.11.0",
     "mocha": "^3.2.0",
     "node-fetch": "^1.6.3",
-    "run-sequence": "^1.2.2"
+    "rollup": "^0.41.4",
+    "rollup-plugin-node-resolve": "^2.0.0",
+    "run-sequence": "^1.2.2",
+    "sw-build": "file:///Users/jeffy/git/sw-helpers/packages/sw-build",
+    "sw-lib": "file:///Users/jeffy/git/sw-helpers/packages/sw-lib"
   },
   "dependencies": {
     "dom-urls": "^1.1.0",
