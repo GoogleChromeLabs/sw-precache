@@ -596,6 +596,7 @@ the box. The include:
 While there are not always ready-to-use wrappers for specific environments, this list contains some recipes to integrate `sw-precache` in your workflow:
 
 - [Gradle wrapper for offline JavaDoc](https://gist.github.com/TimvdLippe/4c39b99e3b0ffbcdd8814a31e2969ed1)
+- [Brunch starter for Phoenix Framework](https://gist.github.com/natecox/b19c4e08408a5bf0d4cf4d74f1902260)
 
 ## Acknowledgements
 
