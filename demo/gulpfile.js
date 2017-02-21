@@ -111,15 +111,16 @@ gulp.task('copy-dev-to-dist', function() {
     .pipe(gulp.dest(DIST_DIR));
 });
 
-gulp.task('generate-precache-manifest', (callback) => {
-  const manifestConfig = {
-    globPatterns: [`./${DIST_DIR}/**/*`],
+gulp.task('generate-precache-manifest', () => {
+  return swBuild.generateFileManifest({
+    dest: `${DIST_DIR}/manifest.js`,
+    format: 'es',
+    globPatterns: [
+      `./${DIST_DIR}/{css,images,js}/**/*`,
+      `./${DIST_DIR}/index.html`,
+    ],
     rootDirectory: DIST_DIR,
-  };
-
-  const entries = swBuild.getFileManifestEntries(manifestConfig);
-  const manifest = `export default ${JSON.stringify(entries)};`;
-  fs.writeFile(path.join(DIST_DIR, 'manifest.js'), manifest, callback);
+  });
 });
 
 gulp.task('generate-service-worker', ['generate-precache-manifest'], () => {
