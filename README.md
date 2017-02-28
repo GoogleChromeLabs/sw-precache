@@ -585,11 +585,17 @@ community tailored to specific build environments. They include:
 There are also several starter kits or scaffolding projects that incorporate
 `sw-precache` into their build process, giving you a full service worker out of
 the box. The include:
+
+### CLIs
+
 - [`polymer-cli`](https://github.com/Polymer/polymer-cli)
-- [Polymer Starter Kit](https://github.com/polymerelements/polymer-starter-kit)
 - [`create-react-pwa`](https://github.com/jeffposnick/create-react-pwa)
-- [Web Starter Kit](https://github.com/google/web-starter-kit)
+
+### Starter Kits
+
 - [`react-redux-universal-hot-example`](https://github.com/bertho-zero/react-redux-universal-hot-example)
+- [Polymer Starter Kit](https://github.com/polymerelements/polymer-starter-kit)
+- [Web Starter Kit](https://github.com/google/web-starter-kit)
 
 ### Recipes for writing a custom wrapper
 
