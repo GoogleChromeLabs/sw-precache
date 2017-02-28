@@ -164,7 +164,7 @@ thread as soon as the service worker is installed. You should be judicious in wh
 more data then is strictly necessary.
 
 - Precaching doesn't make sense for all types of resources (see the previous
-point). Other caching strategies, like those outlined in the [Offline Cookbook](http://jakearchibald.com/2014/offline-cookbook/), can be used in
+point). Other caching strategies, like those outlined in the [Offline Cookbook](https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/), can be used in
 conjunction with `sw-precache` to provide the best experience for your users. If
 you do implement additional caching logic, put the code in a separate JavaScript
 file and include it using the `importScripts()` method.
