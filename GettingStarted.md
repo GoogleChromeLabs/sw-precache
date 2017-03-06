@@ -122,7 +122,7 @@ located as subdirectories of an `app` directory, might look like:
 
 Once you've chosen an appropriate caching strategy to use for your dynamic
 content, you can tell `sw-precache` which
-[strategies](https://github.com/GoogleChrome/sw-toolbox#built-in-handlers) to
+[strategies](https://googlechrome.github.io/sw-toolbox/api.html#handlers) to
 use for runtime requests that match specific URL patterns:
 
 ```js
@@ -146,7 +146,7 @@ use for runtime requests that match specific URL patterns:
 
 If you use the `runtimeCaching` option, `sw-precache` will automatically include
 the [`sw-toolbox` library](https://github.com/GoogleChrome/sw-toolbox) and the
-corresponding [routing configuration](https://github.com/GoogleChrome/sw-toolbox#basic-routes)
+corresponding [routing configuration](https://googlechrome.github.io/sw-toolbox/usage.html#basic-routes)
 in the service worker file that it generates.
 
 ### Server-side Templating
