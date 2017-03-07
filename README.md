@@ -557,7 +557,7 @@ _Default_: `{}`
 The path to the  ([lo-dash](https://lodash.com/docs#template)) template used to
 generate `service-worker.js`. If you need to add additional functionality to the
 generated service worker code, it's recommended that you use the
-[`importScripts`](#importscripts) option to include extra JavaScript rather than
+[`importScripts`](#importscripts-arraystring) option to include extra JavaScript rather than
 using a different template. But if you do need to change the basic generated
 service worker code, please make a copy of the [original template](https://github.com/googlechrome/sw-precache/blob/master/service-worker.tmpl),
 modify it locally, and use this option to point to your template file.
