@@ -369,7 +369,7 @@ the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
 `home.jade`.
 
 As of v5.1.0, and alternative value for the mapping is supported as well. You can now specify
-a literal string rather than an array of file names. If you use this option, then the
+a string rather than an array of file names. If you use this option, then the
 hash of the string will be used to determine whether the URL used as a key has changed.
 For example, `'/pages/dynamic': dynamicStringValue` could be used if the contents of
 `/pages/dynamic` changes whenever the string stored in `dynamicStringValue` changes.
