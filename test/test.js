@@ -474,6 +474,17 @@ describe('generateRuntimeCaching', function() {
     }]);
     assert.equal(code, '\ntoolbox.router.get("/*", toolbox.testHandler, {"origin":"http://www.example.com"});');
   });
+
+  it('should handle successResponses regex', function() {
+    var code = generateRuntimeCaching([{
+      urlPattern: '/*',
+      handler: 'testHandler',
+      options: {
+        successResponses: /^200$/
+      }
+    }]);
+    assert.equal(code, '\ntoolbox.router.get("/*", toolbox.testHandler, {"successResponses":/^200$/});');
+  });
 });
 
 describe('cleanResponse', function() {
