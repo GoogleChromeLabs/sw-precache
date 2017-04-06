@@ -401,8 +401,7 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 _Default_: `[/^utm_/]`
 
 #### importScripts [Array&#;String&#;] 
-Writes calls to [`importScripts()`]
-(https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries) 
+Writes calls to [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries) 
 to the resulting service worker to import the specified scripts.
 
 _Default_: `[]`
