@@ -365,7 +365,7 @@ the entire request URL. As of v5.0.0, it only matches against the URL's
 
 _Default_: not set
 
-#### dynamicUrlToDependencies [Object&#;String,Array&#;String&#;&#;]  
+#### dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]  
 Maps a dynamic URL string to an array of all the files that URL's contents
 depend on. E.g., if the contents of `/pages/home` are generated server-side via
 the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
@@ -389,7 +389,7 @@ would always be served from the service worker cache.
 
 _Default_: `true`
 
-#### ignoreUrlParametersMatching [Array&#;Regex&#;]
+#### ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]
 `sw-precache` finds matching cache entries by doing a comparison with the full request URL. It's
 common for sites to support URL query parameters that don't affect the site's content and should
 be effectively ignored for the purposes of cache matching. One example is the
@@ -400,9 +400,8 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 
 _Default_: `[/^utm_/]`
 
-#### importScripts [Array&#;String&#;] 
-Writes calls to [`importScripts()`]
-(https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries) 
+#### importScripts [Array&#x27e8;String&#x27e9;] 
+Writes calls to [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)
 to the resulting service worker to import the specified scripts.
 
 _Default_: `[]`
@@ -437,7 +436,7 @@ the request is a navigation.
 
 _Default_: `''`
 
-#### navigateFallbackWhitelist [Array&#;RegExp&#;] 
+#### navigateFallbackWhitelist [Array&#x27e8;RegExp&#x27e9;]
 Works to limit the effect of `navigateFallback`, so that the fallback only
 applies to requests for URLs with paths that match at least one
 [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
@@ -470,7 +469,7 @@ and replace it with '/public/'.
 
 _Default_: `''`
 
-#### runtimeCaching [Array&#;Object&#;]
+#### runtimeCaching [Array&#x27e8;Object&#x27e9;]
 Configures runtime caching for dynamic content. If you use this option, the `sw-toolbox`
 library configured with the caching strategies you specify will automatically be included in
 your generated service worker file.
@@ -484,7 +483,7 @@ a `handler`, which should be either a string corresponding to one of the
 [request handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers).
 Optionally, `method` can be added to specify one of the [supported HTTP methods](https://googlechrome.github.io/sw-toolbox/api.html#expressive-approach) (_default: `'get'`_). There is also
 support for `options`, which corresponds to the same options supported by a
-[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers.
+[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers).
 
 For example, the following defines runtime caching behavior for two different URL patterns. It uses a
 different handler for each, and specifies a dedicated cache with maximum size for requests
@@ -531,7 +530,7 @@ until they're needed at runtime.
 
 _Default_: `true`
 
-#### staticFileGlobs [Array&#;String&#;]
+#### staticFileGlobs [Array&#x27e8;String&#x27e9;]
 An array of one or more string patterns that will be passed in to
 [`glob`](https://github.com/isaacs/node-glob).
 All files matching these globs will be automatically precached by the generated service worker.
