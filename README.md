@@ -483,7 +483,7 @@ a `handler`, which should be either a string corresponding to one of the
 [request handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers).
 Optionally, `method` can be added to specify one of the [supported HTTP methods](https://googlechrome.github.io/sw-toolbox/api.html#expressive-approach) (_default: `'get'`_). There is also
 support for `options`, which corresponds to the same options supported by a
-[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers.
+[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers).
 
 For example, the following defines runtime caching behavior for two different URL patterns. It uses a
 different handler for each, and specifies a dedicated cache with maximum size for requests
