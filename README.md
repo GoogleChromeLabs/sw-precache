@@ -17,7 +17,7 @@ to wait for any network responses.
 The module can be used in JavaScript-based build scripts,
 like those written with [`gulp`](http://gulpjs.com/), and it also provides a
 [command-line interface](#command-line-interface). You can use the module
-directly, or if you'd prefer, use of the [wrappers](#wrappers-and-starter-kits)
+directly, or if you'd prefer, use one of the [wrappers](#wrappers-and-starter-kits)
 around `sw-precache` for specific build environments, like
 [`webpack`](https://webpack.github.io/).
 
@@ -166,7 +166,7 @@ There's no overhead/breakage for older browsers if you add `sw-precache` to your
 thread as soon as the service worker is installed. You should be judicious in what you list in the
 `dynamicUrlToDependencies` and `staticFileGlobs` options, since listing files that are non-essential
 (large images that are not shown on every page, for instance) will result in browsers downloading
-more data then is strictly necessary.
+more data than is strictly necessary.
 
 - Precaching doesn't make sense for all types of resources (see the previous
 point). Other caching strategies, like those outlined in the [Offline Cookbook](https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/), can be used in
@@ -483,7 +483,7 @@ a `handler`, which should be either a string corresponding to one of the
 [request handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers).
 Optionally, `method` can be added to specify one of the [supported HTTP methods](https://googlechrome.github.io/sw-toolbox/api.html#expressive-approach) (_default: `'get'`_). There is also
 support for `options`, which corresponds to the same options supported by a
-[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers.
+[`sw-toolbox` handler](https://googlechrome.github.io/sw-toolbox/api.html#handlers).
 
 For example, the following defines runtime caching behavior for two different URL patterns. It uses a
 different handler for each, and specifies a dedicated cache with maximum size for requests
