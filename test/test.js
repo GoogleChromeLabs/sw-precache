@@ -332,9 +332,9 @@ describe('stripIgnoredUrlParameters', function() {
     done();
   });
 
-  it('should work when there\'s a hash fragment', function(done) {
+  it('should remove the hash fragment', function(done) {
     var strippedUrl = externalFunctions.stripIgnoredUrlParameters(testUrl + '#hash', [/^t/, /^f/]);
-    assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1#hash');
+    assert.strictEqual(strippedUrl, 'http://example.com/index.html?one=1');
     done();
   });
 });
