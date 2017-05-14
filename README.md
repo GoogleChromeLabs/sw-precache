@@ -53,7 +53,7 @@ by [Huang Xuan](https://twitter.com/Huxpro).
     - [clientsClaim [Boolean]](#clientsclaim-boolean)
     - [directoryIndex [String]](#directoryindex-string)
     - [dontCacheBustUrlsMatching [Regex]](#dontcachebusturlsmatching-regex)
-    - [dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringarraystring)
+    - [dynamicUrlToDependencies [Object&#x27e8;String,Buffer,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringarraystring)
     - [handleFetch [boolean]](#handlefetch-boolean)
     - [ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]](#ignoreurlparametersmatching-arrayregex)
     - [importScripts [Array&#x27e8;String&#x27e9;]](#importscripts-arraystring)
@@ -364,7 +364,7 @@ the entire request URL. As of v5.0.0, it only matches against the URL's
 
 _Default_: not set
 
-#### dynamicUrlToDependencies [Object&#;String,Array&#;String&#;&#;]
+#### dynamicUrlToDependencies [Object&#;String,Buffer,Array&#;String&#;&#;]
 Maps a dynamic URL string to an array of all the files that URL's contents
 depend on. E.g., if the contents of `/pages/home` are generated server-side via
 the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
@@ -372,9 +372,9 @@ the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
 `/pages/home` has changed will depend on the hashes of both `layout.jade` and
 `home.jade`.
 
-As of v5.1.0, and alternative value for the mapping is supported as well. You can now specify
-a string rather than an array of file names. If you use this option, then the
-hash of the string will be used to determine whether the URL used as a key has changed.
+An alternative value for the mapping is supported as well. You can specify
+a string or a Buffer instance rather than an array of file names. If you use this option, then the
+hash of the string/Buffer will be used to determine whether the URL used as a key has changed.
 For example, `'/pages/dynamic': dynamicStringValue` could be used if the contents of
 `/pages/dynamic` changes whenever the string stored in `dynamicStringValue` changes.
 
