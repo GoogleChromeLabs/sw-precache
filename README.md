@@ -624,7 +624,7 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 Both sw-precache and sw-toolbox are **actively maintained** and we plan to continue supporting them. A large number of [production](https://medium.com/dev-channel/progressive-web-app-libraries-in-production-b52cad37d34#.16kxwhu92) Progressive Web Apps are successfully using them today and we are happy to review issues or PRs related to either project. 
 
-In parallel, we are working on the next generation of Service Worker tooling over in [sw-helpers](https://github.com/GoogleChrome/sw-helpers). This new work is more modular and will enable a number of libraries with additional capabilities to be built. We will announce further plans around the roadmap for this work in the future.
+In parallel, we are working on the next generation of Service Worker tooling over in [Workbox](https://github.com/GoogleChrome/workbox). This new work is more modular and will enable a number of libraries with additional capabilities to be built. We will announce further plans around the roadmap for this work in the future.
 
 
 ## License
