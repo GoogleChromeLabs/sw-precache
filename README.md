@@ -208,7 +208,7 @@ subdirectory of the current directory, you could run
 ```sh
 $ sw-precache --root=dist --static-file-globs='dist/**/*.html'
 ```
- 
+
 **Note:** Be sure to use quotes around parameter values that have special meanings
 to your shell (such as the `*` characters in the sample command line above,
 for example).
@@ -276,10 +276,10 @@ The `sw-precache` module has the ability to include the `sw-toolbox` code and co
 
 The `sw-precache` module exposes two methods: `generate` and `write`.
 
-#### generate(options, callback) 
+#### generate(options, callback)
 
-`generate` takes in [options](#options), generates a service worker 
-from them and passes the result to a callback function, which must 
+`generate` takes in [options](#options), generates a service worker
+from them and passes the result to a callback function, which must
 have the following interface:
 
 `callback(error, serviceWorkerString)`
@@ -290,10 +290,10 @@ exposed by the module.
 Since 2.2.0, `generate()` also returns a
 [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 
-#### write(filePath, options, callback) 
-`write` takes in [options](#options), generates a service worker from them, 
-and writes the service worker to a specified file. This method always 
-invokes `callback(error)`. If no error was found, the `error` parameter will 
+#### write(filePath, options, callback)
+`write` takes in [options](#options), generates a service worker from them,
+and writes the service worker to a specified file. This method always
+invokes `callback(error)`. If no error was found, the `error` parameter will
 be `null`
 
 Since 2.2.0, `write()` also returns a [`Promise`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
@@ -322,13 +322,13 @@ navigation.
 
 _Default_: `true`
 
-#### directoryIndex [String] 
-Sets a default filename to return for URL's formatted like directory paths (in 
-other words, those ending in `'/'`). `sw-precache` will take that translation 
-into account and serve the contents a relative `directoryIndex` file when 
-there's no other match for a URL ending in `'/'`. To turn off this behavior, 
-set `directoryIndex` to `false` or `null`. To override this behavior for one 
-or more URLs, use the `dynamicUrlToDependencies` option to explicitly set up 
+#### directoryIndex [String]
+Sets a default filename to return for URL's formatted like directory paths (in
+other words, those ending in `'/'`). `sw-precache` will take that translation
+into account and serve the contents a relative `directoryIndex` file when
+there's no other match for a URL ending in `'/'`. To turn off this behavior,
+set `directoryIndex` to `false` or `null`. To override this behavior for one
+or more URLs, use the `dynamicUrlToDependencies` option to explicitly set up
 mappings between a directory URL and a corresponding file.
 
 _Default_: `'index.html'`
@@ -365,7 +365,7 @@ the entire request URL. As of v5.0.0, it only matches against the URL's
 
 _Default_: not set
 
-#### dynamicUrlToDependencies [Object&#;String,Array&#;String&#;&#;]  
+#### dynamicUrlToDependencies [Object&#;String,Array&#;String&#;&#;]
 Maps a dynamic URL string to an array of all the files that URL's contents
 depend on. E.g., if the contents of `/pages/home` are generated server-side via
 the templates `layout.jade` and `home.jade`, then specify `'/pages/home':
@@ -381,10 +381,10 @@ For example, `'/pages/dynamic': dynamicStringValue` could be used if the content
 
 _Default_: `{}`
 
-#### handleFetch [boolean] 
-Determines whether the `fetch` event handler is included in the generated 
-service worker code. It is useful to set this to `false` in development builds, 
-to ensure that features like live reload still work. Otherwise, the content 
+#### handleFetch [boolean]
+Determines whether the `fetch` event handler is included in the generated
+service worker code. It is useful to set this to `false` in development builds,
+to ensure that features like live reload still work. Otherwise, the content
 would always be served from the service worker cache.
 
 _Default_: `true`
@@ -400,13 +400,13 @@ To ignore all parameters, use `[/./]`. To take all parameters into account when 
 
 _Default_: `[/^utm_/]`
 
-#### importScripts [Array&#;String&#;] 
-Writes calls to [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries) 
+#### importScripts [Array&#;String&#;]
+Writes calls to [`importScripts()`](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/basic_usage#Importing_scripts_and_libraries)
 to the resulting service worker to import the specified scripts.
 
 _Default_: `[]`
 
-#### logger [function] 
+#### logger [function]
 
 Specifies a callback function for logging which resources are being precached and
 a precache size. Use `function() {}` if you'd prefer that nothing is logged.
@@ -419,10 +419,22 @@ Sets the maximum allowed size for a file in the precache list.
 
 _Default_: `2097152` (2 megabytes)
 
-#### navigateFallback [String] 
-Sets an HTML document to use as a fallback for URLs not found in the cache. To
-be effective, this fallback URL should be already cached via `staticFileGlobs`
-or `dynamicUrlToDependencies`.
+#### navigateFallback [String]
+Sets an HTML document to use as a fallback for URLs not found in the `sw-precahe` cache. This
+fallback URL needs to be cached via `staticFileGlobs` or `dynamicUrlToDependencies` otherwise it
+won't work.
+
+```js
+// via staticFileGlobs
+staticFileGlobs: ['/shell.html']
+navigateFallback: '/shell.html'
+
+// via dynamicUrlToDependencies
+dynamicUrlToDependencies: {
+  '/shell': ['/shell.hbs']
+},
+navigateFallback: '/shell'
+```
 
 This comes in handy when used with a web application that performs client-side URL routing
 using the [History API](https://developer.mozilla.org/en-US/docs/Web/API/History). It allows any
@@ -436,7 +448,7 @@ the request is a navigation.
 
 _Default_: `''`
 
-#### navigateFallbackWhitelist [Array&#;RegExp&#;] 
+#### navigateFallbackWhitelist [Array&#;RegExp&#;]
 Works to limit the effect of `navigateFallback`, so that the fallback only
 applies to requests for URLs with paths that match at least one
 [`RegExp`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
@@ -538,7 +550,7 @@ You'll almost always want to specify something for this.
 
 _Default_: `[]`
 
-#### stripPrefix [String] 
+#### stripPrefix [String]
 Removes a specified string from the beginning of path URL's at runtime. Use this
 option when there's a discrepancy between a relative path at build time and
 the same path at run time. For example, if all your local files are under
@@ -622,7 +634,7 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 
 ## Future of Service Worker tooling
 
-Both sw-precache and sw-toolbox are **actively maintained** and we plan to continue supporting them. A large number of [production](https://medium.com/dev-channel/progressive-web-app-libraries-in-production-b52cad37d34#.16kxwhu92) Progressive Web Apps are successfully using them today and we are happy to review issues or PRs related to either project. 
+Both sw-precache and sw-toolbox are **actively maintained** and we plan to continue supporting them. A large number of [production](https://medium.com/dev-channel/progressive-web-app-libraries-in-production-b52cad37d34#.16kxwhu92) Progressive Web Apps are successfully using them today and we are happy to review issues or PRs related to either project.
 
 In parallel, we are working on the next generation of Service Worker tooling over in [Workbox](https://github.com/GoogleChrome/workbox). This new work is more modular and will enable a number of libraries with additional capabilities to be built. We will announce further plans around the roadmap for this work in the future.
 
@@ -631,8 +643,8 @@ In parallel, we are working on the next generation of Service Worker tooling ove
 
 Copyright © 2017 Google, Inc.
 
-Licensed under the [Apache License, Version 2.0](LICENSE) (the "License"); 
-you may not use this file except in compliance with the License. You may 
+Licensed under the [Apache License, Version 2.0](LICENSE) (the "License");
+you may not use this file except in compliance with the License. You may
 obtain a copy of the License at
 
    http://www.apache.org/licenses/LICENSE-2.0
