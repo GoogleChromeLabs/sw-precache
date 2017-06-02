@@ -51,6 +51,7 @@ by [Huang Xuan](https://twitter.com/Huxpro).
   - [Options Parameter](#options-parameter)
     - [cacheId [String]](#cacheid-string)
     - [clientsClaim [Boolean]](#clientsclaim-boolean)
+    - [customOptions [Object]](#customoptions-object)
     - [directoryIndex [String]](#directoryindex-string)
     - [dontCacheBustUrlsMatching [Regex]](#dontcachebusturlsmatching-regex)
     - [dynamicUrlToDependencies [Object&#x27e8;String,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringarraystring)
@@ -322,13 +323,20 @@ navigation.
 
 _Default_: `true`
 
-#### directoryIndex [String] 
-Sets a default filename to return for URL's formatted like directory paths (in 
-other words, those ending in `'/'`). `sw-precache` will take that translation 
-into account and serve the contents a relative `directoryIndex` file when 
-there's no other match for a URL ending in `'/'`. To turn off this behavior, 
-set `directoryIndex` to `false` or `null`. To override this behavior for one 
-or more URLs, use the `dynamicUrlToDependencies` option to explicitly set up 
+#### customOptions [Object]
+An object that is passed to the template. Using `customOptions` you can pass
+arbitrary information to the template. This allows better control over what can
+be done in a custom template.
+
+_Default_: `null`
+
+#### directoryIndex [String]
+Sets a default filename to return for URL's formatted like directory paths (in
+other words, those ending in `'/'`). `sw-precache` will take that translation
+into account and serve the contents a relative `directoryIndex` file when
+there's no other match for a URL ending in `'/'`. To turn off this behavior,
+set `directoryIndex` to `false` or `null`. To override this behavior for one
+or more URLs, use the `dynamicUrlToDependencies` option to explicitly set up
 mappings between a directory URL and a corresponding file.
 
 _Default_: `'index.html'`
@@ -363,7 +371,7 @@ Note: Prior to `sw-precache` v5.0.0, `dontCacheBustUrlsMatching` matched against
 the entire request URL. As of v5.0.0, it only matches against the URL's
 [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname).
 
-_Default_: not set
+_Default_: `null`
 
 #### dynamicUrlToDependencies [Object&#;String,Array&#;String&#;&#;]  
 Maps a dynamic URL string to an array of all the files that URL's contents
