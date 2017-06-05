@@ -137,7 +137,6 @@ Here's a simpler gulp example for a basic use case. It assumes your site's resou
 
 ```js
 gulp.task('generate-service-worker', function(callback) {
-  var path = require('path');
   var swPrecache = require('sw-precache');
   var rootDir = 'app';
 
