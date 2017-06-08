@@ -207,6 +207,34 @@ describe('sw-precache core functionality', function() {
     });
   });
 
+  describe('with dynamicUrlToDependencies', function() {
+    it('should allow passing a string value', function() {
+      var config = {
+        logger: NOOP,
+        dynamicUrlToDependencies: {
+          'foo.png': 'abc'
+        }
+      };
+
+      return generate(config).then(function(responseString) {
+        assert.notEqual(responseString.indexOf('["foo.png","900150983cd24fb0d6963f7d28e17f72"]'), -1);
+      });
+    });
+
+    it('should allow passing a Buffer instance', function() {
+      var config = {
+        logger: NOOP,
+        dynamicUrlToDependencies: {
+          'foo.png': new Buffer([0x00, 0x01, 0x02])
+        }
+      };
+
+      return generate(config).then(function(responseString) {
+        assert.notEqual(responseString.indexOf('["foo.png","b95f67f61ebb03619622d798f45fc2d3"]'), -1);
+      });
+    });
+  });
+
   after(function() {
     fs.unlinkSync(TEMP_FILE);
   });
