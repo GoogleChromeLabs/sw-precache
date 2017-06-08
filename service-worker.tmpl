@@ -192,5 +192,5 @@ self.addEventListener('fetch', function(event) {
 <% } %>
 
 <% if (importScripts) { %>
-importScripts(<%= importScripts %>);
+importScripts(<%= importScripts.map(JSON.stringify).join(',') %>);
 <% } %>
