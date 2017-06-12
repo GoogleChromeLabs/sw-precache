@@ -53,7 +53,7 @@ by [Huang Xuan](https://twitter.com/Huxpro).
     - [clientsClaim [Boolean]](#clientsclaim-boolean)
     - [directoryIndex [String]](#directoryindex-string)
     - [dontCacheBustUrlsMatching [Regex]](#dontcachebusturlsmatching-regex)
-    - [dynamicUrlToDependencies [Object&#x27e8;String,Buffer,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringarraystring)
+    - [dynamicUrlToDependencies [Object&#x27e8;String,Buffer,Array&#x27e8;String&#x27e9;&#x27e9;]](#dynamicurltodependencies-objectstringbufferarraystring)
     - [handleFetch [boolean]](#handlefetch-boolean)
     - [ignoreUrlParametersMatching [Array&#x27e8;Regex&#x27e9;]](#ignoreurlparametersmatching-arrayregex)
     - [importScripts [Array&#x27e8;String&#x27e9;]](#importscripts-arraystring)
@@ -441,9 +441,11 @@ arbitrary URL that the client generates to map to a fallback cached HTML entry. 
 ideally should serve as an "application shell" that is able to load the appropriate resources
 client-side, based on the request URL.
 
-**Note:** The current implementation searches the request's `accept` header and
-triggers the fallback when `'text/html'` is found. It does this whether or not
-the request is a navigation.
+**Note:** This is **not** intended to be used to route failed navigations to a
+generic "offline fallback" page. The `navigateFallback` page is used whether the
+browser is online or offline. If you want to implement an "offline fallback",
+then using an approach similar to [this example](https://googlechrome.github.io/samples/service-worker/custom-offline-page/)
+is more appropriate.
 
 _Default_: `''`
 
@@ -480,7 +482,7 @@ and replace it with '/public/'.
 
 _Default_: `''`
 
-#### runtimeCaching [Array&#x27e8;Object&#x27e8;]
+#### runtimeCaching [Array&#x27e8;Object&#x27e9;]
 Configures runtime caching for dynamic content. If you use this option, the `sw-toolbox`
 library configured with the caching strategies you specify will automatically be included in
 your generated service worker file.
