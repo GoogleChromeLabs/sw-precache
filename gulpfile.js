@@ -33,7 +33,10 @@ gulp.task('update-markdown-toc', function() {
   return gulp.src('README.md')
     .pipe($.doctoc())
     // Get rid of the HTML character entities from the anchor values.
-    .pipe($.replace(/&x27e[89]/g, ''))
+    .pipe($.replace(/(\w)x27e[89]/g, '$1'))
+    // This needs to be run twice since there are additional HTML character
+    // entities picked up via the RegExp once the first stripping is done.
+    .pipe($.replace(/(\w)x27e[89]/g, '$1'))
     .pipe(gulp.dest('.'));
 });
 
