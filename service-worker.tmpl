@@ -164,6 +164,19 @@ self.addEventListener('fetch', function(event) {
         caches.open(cacheName).then(function(cache) {
           return cache.match(urlsToCacheKeys.get(url)).then(function(response) {
             if (response) {
+              if (event.request.headers.get('range')) {
+                var pos = Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
+                var ab = response.arrayBuffer();
+                return new Response(
+                  ab.slice(pos),
+                  {
+                    status: 206,
+                    statusText: 'Partial Content',
+                    headers: [
+                      ['Content-Range', 'bytes ' + pos + '-' + (ab.byteLength - 1) + '/' + ab.byteLength]
+                    ]
+                  });
+              }
               return response;
             }
             throw Error('The cached response that was expected is missing.');
