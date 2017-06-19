@@ -562,7 +562,7 @@ URL.
 _Default_: `''`
 
 #### stripPrefixMulti [Object]
-Maps mutliple strings to be stripped and replaced from the beginning of URL paths at runtime.
+Maps multiple strings to be stripped and replaced from the beginning of URL paths at runtime.
 Use this option when you have multiple discrepancies between relative paths at build time and
 the same path at run time.
 If `stripPrefix` and `replacePrefix` are not equal to `''`, they are automatically added to this option.
