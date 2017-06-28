@@ -362,7 +362,7 @@ Note1: Prior to `sw-precache` v5.0.0, `dontCacheBustUrlsMatching` matched agains
 the entire request URL. As of v5.0.0, it only matches against the URL's
 [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname).
 
-Note2: If you are using a CDN (e.g. Cloudflare), it's better to set the caching level as [Ignore Query String](https://support.cloudflare.com/hc/en-us/articles/200168256-What-are-Cloudflare-s-caching-levels-): Delivers the same resource to everyone independent of the query string. Otherwise, you would encounter a double fetch in the first load.
+Note2: If you are using a CDN (e.g. Cloudflare), it's better to set the caching level as [Ignore Query String](https://support.cloudflare.com/hc/en-us/articles/200168256-What-are-Cloudflare-s-caching-levels-): Delivers the same resource to everyone independent of the query string. Otherwise, you would encounter a "double fetch" in every first load after you modified files in `staticFileGlobs`.
 
 _Default_: not set
 
