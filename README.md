@@ -358,9 +358,11 @@ of each URL that's prefetched will be matched against this value.
 If there's a match, then the URL will be prefetched as-is, without an additional
 cache-busting URL parameter appended.
 
-Note: Prior to `sw-precache` v5.0.0, `dontCacheBustUrlsMatching` matched against
+Note1: Prior to `sw-precache` v5.0.0, `dontCacheBustUrlsMatching` matched against
 the entire request URL. As of v5.0.0, it only matches against the URL's
 [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname).
+
+Note2: If you are using a CDN (e.g. Cloudflare), it's better to set the caching level as [Ignore Query String](https://support.cloudflare.com/hc/en-us/articles/200168256-What-are-Cloudflare-s-caching-levels-): Delivers the same resource to everyone independent of the query string. Otherwise, you would encounter a double fetch in the first load.
 
 _Default_: not set
 
