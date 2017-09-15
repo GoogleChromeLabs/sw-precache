@@ -74,7 +74,7 @@ by [Huang Xuan](https://twitter.com/Huxpro).
   - [Starter Kits](#starter-kits)
   - [Recipes for writing a custom wrapper](#recipes-for-writing-a-custom-wrapper)
 - [Acknowledgements](#acknowledgements)
-- [Future of Service Worker tooling](#future-of-service-worker-tooling)
+- [Support](#support)
 - [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -633,12 +633,19 @@ Thanks to [Sindre Sorhus](https://github.com/sindresorhus) and
 [Addy Osmani](https://github.com/addyosmani) for their advice and code reviews.
 [Jake Archibald](https://github.com/jakearchibald) was kind enough to review the service worker logic.
 
-## Future of Service Worker tooling
+## Support
 
-Both sw-precache and sw-toolbox are **actively maintained** and we plan to continue supporting them. A large number of [production](https://medium.com/dev-channel/progressive-web-app-libraries-in-production-b52cad37d34#.16kxwhu92) Progressive Web Apps are successfully using them today and we are happy to review issues or PRs related to either project.
+The team behind `sw-toolbox` and `sw-precache` have been busy creating [Workbox](https://workboxjs.org), which is a collection of libraries and tools that make it easy to build offline web apps. It’s a joining of [sw-toolbox](https://github.com/GoogleChrome/sw-toolbox) and [sw-precache](https://github.com/GoogleChrome/sw-precache) with more features and a modern codebase.
 
-In parallel, we are working on the next generation of Service Worker tooling over in [Workbox](https://github.com/GoogleChrome/workbox). This new work is more modular and will enable a number of libraries with additional capabilities to be built. We will announce further plans around the roadmap for this work in the future.
+### What does this mean for sw-toolbox?
 
+For now, it means we’ll continue to support both `sw-toolbox` and `sw-precache` with critical bug fixes and releases. However, non-critical bugs are unlikely to be addressed.
+
+### Should you switch to Workbox?
+
+We would recommend Workbox for new projects, but there is no immediate need to switch if `sw-toolbox` / `sw-precache` meets all your needs in your current project. We will announce a deprecation plan for these modules once Workbox has feature parity with `sw-toolbox` and `sw-precache`.
+
+In the meantime, you can get updates by following [@workboxjs](https://twitter.com/workboxjs).
 
 ## License
 
