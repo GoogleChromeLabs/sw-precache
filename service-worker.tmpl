@@ -126,6 +126,22 @@ self.addEventListener('activate', function(event) {
 });
 
 <% if (handleFetch) { %>
+
+function handleRangeRequest(event, response) {
+  var pos = Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
+  var ab = response.arrayBuffer();
+  return new Response(
+    ab.slice(pos),
+    {
+      status: 206,
+      statusText: 'Partial Content',
+      headers: [
+        ['Content-Range', 'bytes ' + pos + '-' + (ab.byteLength - 1) + '/' + ab.byteLength]
+      ]
+    }
+  );
+}
+
 self.addEventListener('fetch', function(event) {
   if (event.request.method === 'GET') {
     // Should we call event.respondWith() inside this fetch event handler?
@@ -160,10 +176,12 @@ self.addEventListener('fetch', function(event) {
     // If shouldRespond was set to true at any point, then call
     // event.respondWith(), using the appropriate cache key.
     if (shouldRespond) {
+      var isRangeRequest = event.request.headers.get('range');
       event.respondWith(
         caches.open(cacheName).then(function(cache) {
           return cache.match(urlsToCacheKeys.get(url)).then(function(response) {
             if (response) {
+              if (isRangeRequest) return handleRangeRequest(event, response);
               return response;
             }
             throw Error('The cached response that was expected is missing.');
@@ -172,7 +190,10 @@ self.addEventListener('fetch', function(event) {
           // Fall back to just fetch()ing the request if some unexpected error
           // prevented the cached response from being valid.
           console.warn('Couldn\'t serve response for "%s" from cache: %O', event.request.url, e);
-          return fetch(event.request);
+          return fetch(event.request).then(function (response) {
+            if (isRangeRequest) return handleRangeRequest(event, response);
+            return response;
+          });
         })
       );
     }
