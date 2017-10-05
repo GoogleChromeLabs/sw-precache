@@ -122,8 +122,8 @@ located as subdirectories of an `app` directory, might look like:
 
 Once you've chosen an appropriate caching strategy to use for your dynamic
 content, you can tell `sw-precache` which
-[strategies](https://googlechrome.github.io/sw-toolbox/api.html#handlers) to
-use for runtime requests that match specific URL patterns:
+[strategies](https://github.com/GoogleChromeLabs/sw-toolbox/blob/master/docs/api.md#handlers)
+to use for runtime requests that match specific URL patterns:
 
 ```js
 {
