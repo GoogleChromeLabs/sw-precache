@@ -189,6 +189,9 @@ For those who would prefer not to use `sw-precache` as part of a `gulp` or
 [options listed](#options-parameter) in the API, provided via flags or an
 external JavaScript configuration file.
 
+Hypenated flags are converted to camelCase [options](#options-parameter).  
+Options starting with `--no` prefix negate the boolean value. For example, `--no-clients-claim` sets the value of `clientsClaim` to `false`.
+
 **Warning:** When using `sw-precache` "by hand", outside of an automated build process, it's your
 responsibility to re-run the command each time there's a change to any local resources! If `sw-precache`
 is not run again, the previously cached local resources will be reused indefinitely.
