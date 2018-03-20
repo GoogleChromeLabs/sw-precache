@@ -101,6 +101,28 @@ describe('sw-precache core functionality', function() {
     });
   });
 
+
+  it('should ignore folder two', function(done) {
+    var configOne = {
+      logger: NOOP,
+      staticFileGlobs: ['test/data/**']
+    };
+
+    var configTwo = {
+      logger: NOOP,
+      staticFileGlobs: ['test/data/**', '!test/data/two/**']
+    };
+
+    generate(configOne, function(error, responseStringOne) {
+      assert.ifError(error);
+      generate(configTwo, function(error, responseStringTwo) {
+        assert.ifError(error);
+        assert.notStrictEqual(responseStringOne, responseStringTwo);
+        done();
+      });
+    });
+  });
+
   it('should produce the same output regardless of which order the globs are in', function(done) {
     var config = {
       logger: NOOP,
