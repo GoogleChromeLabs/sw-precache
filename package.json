@@ -9,6 +9,7 @@
   },
   "homepage": "https://github.com/googlechrome/sw-precache",
   "main": "lib/sw-precache.js",
+  "types": "index.d.ts",
   "keywords": [
     "caching",
     "offline",
@@ -62,7 +63,8 @@
   "files": [
     "cli.js",
     "lib",
-    "service-worker.tmpl"
+    "service-worker.tmpl",
+    "index.d.ts"
   ],
   "bin": {
     "sw-precache": "cli.js"
