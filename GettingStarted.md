@@ -156,7 +156,7 @@ construct your App Shell's HTML, it's important to let `sw-precache` know about
 those dependencies.
 
 For example, if your web app has two pages, `/home` and `/about`, each of which
-depends on a both a shared master template and a page-specific template, you can
+depends on both a shared master template and a page-specific template, you can
 represent those dependencies as follows:
 
 ```js
