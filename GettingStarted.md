@@ -149,6 +149,8 @@ the [`sw-toolbox` library](https://github.com/GoogleChrome/sw-toolbox) and the
 corresponding [routing configuration](https://googlechromelabs.github.io/sw-toolbox/usage.html#basic-routes)
 in the service worker file that it generates.
 
+Note, however, that the runtime cache does not apply for requests that sw-precache can serve from its cache - in other words, even if an urlPattern matches an URL, it will not be requested from the network if it can be served from the cache, even if the handler is `networkFirst` or `networkOnly`.
+
 ### Server-side Templating
 
 If your web app relies on server-side templating to use several partial files to
