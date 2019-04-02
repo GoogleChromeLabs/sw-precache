@@ -1,10 +1,10 @@
-# Deprecated
+# ⚠️ sw-precache ⚠️
 
 `sw-toolbox` and `sw-precache` are deprecated in favor of Workbox.
 Please read [this migration guide](https://developers.google.com/web/tools/workbox/guides/migrations/migrate-from-sw)
 for information on upgrading.
 
-## Service Worker Precache
+## About
 
 Service Worker Precache is a module for generating a service worker that
 precaches resources. It integrates with your build process. Once configured, it
