@@ -41,6 +41,9 @@ function setDefaults(cli, configFileFlags) {
   compositeFlags.stripPrefixMulti = compositeFlags.stripPrefixMulti ||
     configFileFlags.stripPrefixMulti || {};
 
+  compositeFlags.handleFetch = compositeFlags.handleFetch ||
+    configFileFlags.handleFetch;
+
   compositeFlags.swFile = compositeFlags.swFile || configFileFlags.swFile ||
     'service-worker.js';
   compositeFlags.swFilePath = compositeFlags.swFilePath ||
